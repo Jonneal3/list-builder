@@ -1,0 +1,22 @@
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.vercel/
+
+# Python / Backend
+backend/__pycache__/
+backend/.pytest_cache/
+backend/.venv/
+backend/api.log
+
+# OS / Editors
+.DS_Store
+*.log
+.env
+.env.local
+.env.*.local
+
+# Misc
+ai-industry-explorer (1).zip
+streamlit.log
