@@ -23,7 +23,7 @@ async function main() {
   const industry = argv.industry || 'flooring';
   const city = argv.city || 'New York';
   const ypPages = Number.isFinite(Number(argv.ypPages)) ? Number(argv.ypPages) : Number(argv.pages || 1);
-  const ypConcurrency = Math.max(1, Number(argv.ypConcurrency || 2));
+  let ypConcurrency = Math.max(1, Number(argv.ypConcurrency || 2));
   const minDelayMs = Number.isFinite(Number(argv.minDelayMs)) ? Number(argv.minDelayMs) : 200;
   const maxDelayMs = Number.isFinite(Number(argv.maxDelayMs)) ? Number(argv.maxDelayMs) : 500;
   const useBrowserFallback = String(argv.browserFallback || 'false').toLowerCase() === 'true';
@@ -42,6 +42,9 @@ async function main() {
   const pageJitterMaxMs = Math.max(pageJitterMinMs, Number(argv.pageJitterMaxMs || 2000));
   const rotateViewport = String(argv.rotateViewport || 'false').toLowerCase() === 'true';
   const exhaustCity = String(argv.exhaustCity || 'false').toLowerCase() === 'true';
+  if (exhaustCity && typeof argv.ypConcurrency === 'undefined') {
+    ypConcurrency = 1; // strictly sequential per-city to fully exhaust YP pages
+  }
   const maxPasses = Math.max(1, Number(argv.maxPasses || 1));
   const stalePasses = Math.max(1, Number(argv.stalePasses || 1));
   const autoMaxPagesYp = Math.max(1, Number(argv.autoMaxPagesYp || argv.autoMaxPages || 50));
@@ -143,6 +146,21 @@ async function main() {
           maxDelayMs,
           autoMaxPages: autoMaxPagesYp,
           onDebug: (e) => emit({ type: 'debug', source: 'yellowpages', city: cityName, ...e }),
+          onRows: (pageRows, pageNum) => {
+            try {
+              for (const row of Array.isArray(pageRows) ? pageRows : []) {
+                upsertCompany(db, {
+                  name: row.name,
+                  website: row.website || null,
+                  industry,
+                  location: cityName,
+                  source_list: ['yellowpages'],
+                  size_category: null,
+                });
+                emit({ type: 'row', name: row.name, website: row.website || null, industry, location: cityName, source: 'yellowpages', method: row.method || 'yp-cheerio', page: pageNum, query: industry, fallback_used: Boolean(row.fallback_used) });
+              }
+            } catch {}
+          },
           useBrowserFallback,
           pageTimeoutMs,
           puppeteerProxy,
@@ -165,18 +183,8 @@ async function main() {
           emit({ type: 'status', source: 'yellowpages', message: 'total', city: cityName, total: yp.total });
           log.info(`YellowPages reported total ~${yp.total}`);
         }
-        log.info(`YellowPages rows: ${ypRows.length}`);
-        for (const row of ypRows) {
-          upsertCompany(db, {
-            name: row.name,
-            website: row.website || null,
-            industry,
-            location: cityName,
-            source_list: ['yellowpages'],
-            size_category: null,
-          });
-          emit({ type: 'row', name: row.name, website: row.website || null, industry, location: cityName, source: 'yellowpages', method: row.method || 'yp-cheerio', fallback_used: Boolean(row.fallback_used) });
-        }
+        // Rows already streamed via onRows; log summary only
+        log.info(`YellowPages rows (summary): ${ypRows.length}`);
       } catch (err) {
         log.warn(`YellowPages fetch skipped for ${cityName}: ${err?.message || err}`);
         emit({ type: 'status', source: 'yellowpages', message: 'skipped', city: cityName, error: String(err?.message || err) });
@@ -199,12 +207,36 @@ async function main() {
       if (!exhaustCity) break;
     }
     emit({ type: 'status', message: 'city_done', city: cityName });
+
+    // Per-city export before moving to next city
+    try {
+      const rowsAll = listCompanies(db);
+      const rowsCity = rowsAll.filter(r => r.location === cityName);
+      const stamp = new Date().toISOString().slice(0, 10);
+      const slugCity = String(cityName).replace(/\s+/g, '-').toLowerCase();
+      const slugIndustry = String(industry).replace(/\s+/g, '-').toLowerCase();
+      fs.mkdirSync(outDir, { recursive: true });
+      if (format === 'csv' || format === 'both') {
+        const csvPath = path.join(outDir, `${stamp}_${slugIndustry}_${slugCity}.csv`);
+        exportToCsv(rowsCity, csvPath);
+        log.info(`CSV exported (city): ${csvPath} (${rowsCity.length} rows)`);
+        emit({ type: 'export', format: 'csv', path: csvPath, rows: rowsCity.length, city: cityName });
+      }
+      if (format === 'json' || format === 'both') {
+        const jsonPath = path.join(outDir, `${stamp}_${slugIndustry}_${slugCity}.json`);
+        exportToJson(rowsCity, jsonPath);
+        log.info(`JSON exported (city): ${jsonPath} (${rowsCity.length} rows)`);
+        emit({ type: 'export', format: 'json', path: jsonPath, rows: rowsCity.length, city: cityName });
+      }
+    } catch (e) {
+      log.warn(`Per-city export failed for ${cityName}: ${e?.message || e}`);
+    }
   }
 
   const rows = listCompanies(db);
   const stamp = new Date().toISOString().slice(0, 10);
   fs.mkdirSync(outDir, { recursive: true });
-  const base = `${stamp}_${industry}_${city.replace(/\s+/g,'-').toLowerCase()}`;
+  const base = allCities ? `${stamp}_${industry}_all-cities` : `${stamp}_${industry}_${city.replace(/\s+/g,'-').toLowerCase()}`;
   if (format === 'csv' || format === 'both') {
     const csvPath = path.join(outDir, `${base}.csv`);
     exportToCsv(rows, csvPath);

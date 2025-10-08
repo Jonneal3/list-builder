@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Row = { name: string; website: string; city?: string; query?: string; source?: string; revenueScore?: number };
 
@@ -101,7 +101,7 @@ export default function Home() {
             const queued = pendingRowsRef.current.splice(0);
             if (queued.length) {
               setRows((prev) => {
-                const next = queued.concat(prev);
+                const next = prev.concat(queued);
                 if (next.length > MAX_ROWS) next.length = MAX_ROWS;
                 return next;
               });
@@ -242,7 +242,7 @@ export default function Home() {
         const queued = pendingRowsRef.current.splice(0);
         if (queued.length) {
           setRows((prev) => {
-            const next = queued.concat(prev);
+            const next = prev.concat(queued);
             if (next.length > MAX_ROWS) next.length = MAX_ROWS;
             return next;
           });
@@ -284,7 +284,7 @@ export default function Home() {
     const queued = pendingRowsRef.current.splice(0);
     if (queued.length) {
       setRows((prev) => {
-        const next = queued.concat(prev);
+        const next = prev.concat(queued);
         if (next.length > MAX_ROWS) next.length = MAX_ROWS;
         return next;
       });
@@ -340,63 +340,119 @@ export default function Home() {
     });
   }
 
+  function exportVisibleCsv() {
+    const headers = ["Name","Website","City","Query","Source"];
+    const csvRows = rows.map((r) => [
+      (r.name || "").replace(/\s+/g, " ").trim(),
+      r.website || "",
+      r.city || "",
+      r.query || "",
+      r.source || "",
+    ]);
+    const csv = [headers, ...csvRows]
+      .map((cols) => cols.map((c) => {
+        const s = String(c ?? "");
+        if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      }).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${(industry || "results").trim().replace(/\s+/g, "_")}_companies.csv`;
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
+  }
+
+  function clearRows() {
+    setRows([]);
+    seenKeysRef.current.clear();
+    setStatus("");
+    setIsLoading(false);
+    try { if (esRef.current) { esRef.current.close(); esRef.current = null; } } catch {}
+  }
+
   return (
-    <main className="max-w-full mx-auto p-3">
-      <div className="flex items-center gap-3 mb-3">
-        <h1 className="text-lg font-semibold whitespace-nowrap">AI List Builder</h1>
-        <input
-          className="border rounded-md px-2 py-1 w-[360px] focus:outline-none focus:ring focus:ring-blue-200"
-          placeholder="Industry (e.g., nail salons)"
-          value={industry}
-          onChange={(e) => setIndustry(e.target.value)}
-        />
-        {/* City input removed: orchestrator iterates city list automatically */}
-        <button
-          className="bg-gray-200 text-gray-900 px-2 py-1 rounded-md disabled:opacity-60"
-          disabled={!isLoading}
-          onClick={() => (isPaused ? resumeStream() : pauseStream())}
-        >
-          {isPaused ? "Resume" : "Pause"}
-        </button>
-        <button
-          className="bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-700 disabled:opacity-60"
-          disabled={!isLoading}
-          onClick={stopStream}
-        >
-          Stop
-        </button>
-        <button className="bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 disabled:opacity-60" disabled={isLoading} onClick={() => runStream(industry.trim()) }>
-          {isLoading ? (
-            <span className="inline-flex items-center gap-2">
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0"></path></svg>
-              Working…
-            </span>
-          ) : (
-            "Search"
-          )}
-        </button>
-        {currentTerm && (
-          <span className="text-xs text-gray-700">Now scraping: <span className="font-medium">{currentTerm}</span></span>
-        )}
-        {currentCity && (
-          <span className="text-xs text-gray-700">City: <span className="font-medium">{currentCity}</span></span>
-        )}
-        <span className="text-xs text-gray-700">Rows: <span className="font-medium">{rowCount}</span></span>
-        <span className="text-xs text-gray-700">Pages: <span className="font-medium">{pageCount}</span></span>
-        <button className="text-xs text-blue-600 underline" onClick={() => setShowLogs((v) => !v)}>
-          {showLogs ? "Hide details" : "Show details"}
-        </button>
-        {status && (
-          <p className="text-xs text-gray-600 inline-flex items-center gap-2">
-            <svg className="animate-spin h-3 w-3 text-blue-600" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0"></path></svg>
-            {status}
-          </p>
-        )}
-        {/* planning UI removed */}
+    <main className="h-screen flex flex-col bg-gradient-to-b from-slate-50 to-white">
+      <div className="sticky top-0 z-20 border-b bg-white/80 backdrop-blur">
+        <div className="px-2 py-1">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
+              <div className="h-6 w-6 rounded-md bg-gradient-to-br from-blue-500 to-blue-700 shadow-sm" />
+              <h1 className="text-xs font-semibold tracking-tight">AI List Builder</h1>
+            </div>
+            <div className="flex-1 flex items-center gap-2">
+              <input
+                className="border rounded-full px-3 h-8 text-xs w-full max-w-[520px] bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                placeholder="Industry (e.g., nail salons)"
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+              />
+              <button className="h-8 px-3 text-[11px] rounded-full text-white bg-gradient-to-br from-blue-600 to-blue-700 shadow hover:from-blue-700 hover:to-blue-800 disabled:opacity-60" disabled={isLoading} onClick={() => runStream(industry.trim()) }>
+                {isLoading ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0"></path></svg>
+                    Working…
+                  </span>
+                ) : (
+                  "Search"
+                )}
+              </button>
+            </div>
+            {currentTerm && (
+              <span className="hidden md:inline text-[11px] text-blue-700 bg-blue-50 border border-blue-100 rounded-full px-2 py-0.5">Now: <span className="font-medium">{currentTerm}</span></span>
+            )}
+            {currentCity && (
+              <span className="hidden md:inline text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">City: <span className="font-medium">{currentCity}</span></span>
+            )}
+            <span className="text-[11px] text-gray-700 bg-gray-100 rounded-full px-2 py-0.5">Rows: <span className="font-medium">{rowCount}</span></span>
+            <span className="text-[11px] text-gray-700 bg-gray-100 rounded-full px-2 py-0.5">Pages: <span className="font-medium">{pageCount}</span></span>
+            <button
+              className="h-8 px-3 text-[11px] rounded-full border bg-white hover:bg-gray-50 disabled:opacity-60"
+              disabled={!isLoading}
+              onClick={() => (isPaused ? resumeStream() : pauseStream())}
+            >
+              {isPaused ? "Resume" : "Pause"}
+            </button>
+            <button
+              className="h-8 px-3 text-[11px] rounded-full text-white bg-gradient-to-br from-rose-500 to-rose-600 shadow hover:from-rose-600 hover:to-rose-700 disabled:opacity-60"
+              disabled={!isLoading}
+              onClick={stopStream}
+            >
+              Stop
+            </button>
+            <button className="text-[11px] text-blue-700 underline" onClick={() => setShowLogs((v) => !v)}>
+              {showLogs ? "Hide details" : "Show details"}
+            </button>
+            <div className="ml-auto flex items-center gap-2">
+              <button
+                className="h-8 px-3 text-[11px] rounded-full border bg-white hover:bg-gray-50 text-blue-700"
+                onClick={exportVisibleCsv}
+              >
+                Export
+              </button>
+              <button
+                className="h-8 px-3 text-[11px] rounded-full border bg-white hover:bg-gray-50 text-blue-700"
+                onClick={clearRows}
+              >
+                Clear
+              </button>
+              {status && (
+                <p className="text-[11px] text-gray-700 inline-flex items-center gap-1.5">
+                  <svg className="animate-spin h-3 w-3 text-blue-600" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0"></path></svg>
+                  {status}
+                </p>
+              )}
+              <ExportsMenu />
+            </div>
+          </div>
+        </div>
       </div>
 
       {showLogs && (
-        <section className="bg-white rounded-md border p-2 shadow-sm mb-2">
+        <section className="w-full bg-white rounded-md border p-2 shadow-sm mb-2 px-2">
           <div className="flex items-center justify-between mb-1">
             <h3 className="font-medium text-sm">Activity</h3>
             <div className="flex items-center gap-2">
@@ -404,7 +460,7 @@ export default function Home() {
               <button className="text-xs text-blue-600" onClick={() => setLogs([])}>Clear</button>
             </div>
           </div>
-          <div className="max-h-40 overflow-auto text-xs font-mono leading-5">
+          <div className="max-h-32 overflow-auto text-[11px] font-mono leading-5">
             <ul className="space-y-1">
               {logs.map((l, i) => (
                 <li key={i} className={l.level === 'error' ? 'text-red-600' : l.level === 'debug' ? 'text-gray-600' : 'text-gray-800'}>
@@ -419,71 +475,44 @@ export default function Home() {
         </section>
       )}
 
-      <section className="bg-white rounded-md border p-2 shadow-sm">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="font-semibold">Results</h2>
-          <div className="flex items-center gap-3">
-            <button
-              className="text-sm text-blue-600"
-              onClick={() => {
-                // Export visible rows to CSV
-                const headers = ["Name","Website","City","Query","Source"];
-                const csvRows = rows.map((r) => [
-                  (r.name || "").replace(/\s+/g, " ").trim(),
-                  r.website || "",
-                  r.city || "",
-                  r.query || "",
-                  r.source || "",
-                ]);
-                const csv = [headers, ...csvRows]
-                  .map((cols) => cols.map((c) => {
-                    const s = String(c ?? "");
-                    if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
-                    return s;
-                  }).join(",")).join("\n");
-                const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = `${(industry || "results").trim().replace(/\s+/g, "_")}_companies.csv`;
-                document.body.appendChild(a);
-                a.click();
-                URL.revokeObjectURL(url);
-                a.remove();
-              }}
-            >
-              Export CSV
-            </button>
-            <button className="text-sm text-blue-600" onClick={() => { setRows([]); seenKeysRef.current.clear(); setStatus(""); setIsLoading(false); if (esRef.current) { esRef.current.close(); esRef.current = null; } }}>Clear</button>
-          </div>
-        </div>
-        <div className="overflow-hidden rounded-lg border">
-          <div className="max-h-[calc(100vh-140px)] overflow-auto">
-            <table className="min-w-full border-collapse text-sm table-fixed">
+      <section className="w-full mt-1 bg-white p-0">
+        <div>
+          <div className="max-h-[calc(100vh-64px)] overflow-auto">
+            <table className="min-w-full border-collapse text-[11px] table-fixed leading-5">
+              <colgroup>
+                <col style={{ width: '4%' }} />
+                <col style={{ width: '34%' }} />
+                <col style={{ width: '34%' }} />
+                <col style={{ width: '12%' }} />
+                <col style={{ width: '8%' }} />
+                <col style={{ width: '8%' }} />
+              </colgroup>
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="sticky top-0 bg-gray-100 z-10 text-left p-2 border w-1/3">Name</th>
-                  <th className="sticky top-0 bg-gray-100 z-10 text-left p-2 border w-1/3">Website</th>
-                  <th className="sticky top-0 bg-gray-100 z-10 text-left p-2 border w-1/6">City</th>
-                  <th className="sticky top-0 bg-gray-100 z-10 text-left p-2 border w-1/6">Query</th>
-                  <th className="sticky top-0 bg-gray-100 z-10 text-left p-2 border w-1/6">Source</th>
+                <tr className="bg-white">
+                  <th className="sticky top-0 bg-white z-10 text-right p-2 border-b-2 border-gray-200 text-[10px] uppercase tracking-wider text-slate-600">#</th>
+                  <th className="sticky top-0 bg-white z-10 text-left p-2 border-b-2 border-gray-200 text-[10px] uppercase tracking-wider text-slate-600">Name</th>
+                  <th className="sticky top-0 bg-white z-10 text-left p-2 border-b-2 border-gray-200 text-[10px] uppercase tracking-wider text-slate-600">Website</th>
+                  <th className="sticky top-0 bg-white z-10 text-left p-2 border-b-2 border-gray-200 text-[10px] uppercase tracking-wider text-slate-600">City</th>
+                  <th className="sticky top-0 bg-white z-10 text-left p-2 border-b-2 border-gray-200 text-[10px] uppercase tracking-wider text-slate-600">Query</th>
+                  <th className="sticky top-0 bg-white z-10 text-left p-2 border-b-2 border-gray-200 text-[10px] uppercase tracking-wider text-slate-600">Source</th>
                 </tr>
               </thead>
               <tbody>
                 {rows
                   .slice()
                   .map((r, i) => (
-                    <tr key={`${r.website}-${i}`} className="odd:bg-white even:bg-gray-50">
-                      <td className="p-2 border align-top">{r.name || ""}</td>
-                      <td className="p-2 border align-top break-words"><a className="text-blue-600 hover:underline" href={r.website} target="_blank" rel="noreferrer">{r.website}</a></td>
-                      <td className="p-2 border align-top">{r.city || ""}</td>
-                      <td className="p-2 border align-top">{r.query || ""}</td>
-                      <td className="p-2 border align-top">{r.source || ""}</td>
+                    <tr key={`${r.website}-${i}`} className="odd:bg-white even:bg-slate-50 hover:bg-slate-50">
+                      <td className="p-2 border-b border-r border-gray-200 align-top text-right text-[11px] text-gray-500 last:border-r-0">{i + 1}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top last:border-r-0">{r.name || ""}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top break-words last:border-r-0"><a className="text-blue-700 hover:underline" href={r.website} target="_blank" rel="noreferrer">{r.website}</a></td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top last:border-r-0">{r.city || ""}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top last:border-r-0">{r.query || ""}</td>
+                      <td className="p-2 border-b border-gray-200 align-top">{r.source || ""}</td>
                     </tr>
                   ))}
                 {rows.length === 0 && (
                   <tr>
-                    <td className="p-6 text-gray-500 text-center border" colSpan={5}>No results yet. Click Search to start.</td>
+                    <td className="p-6 text-gray-500 text-center border-b text-xs" colSpan={6}>No results yet. Click Search to start.</td>
                   </tr>
                 )}
               </tbody>
@@ -492,5 +521,55 @@ export default function Home() {
         </div>
       </section>
     </main>
+  );
+}
+
+function ExportsMenu() {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [files, setFiles] = useState<Array<{ name: string; size: number; mtimeMs: number; href: string; ext: string }>>([]);
+  async function refresh() {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/exports/list', { cache: 'no-store' });
+      const json = await res.json();
+      setFiles(Array.isArray(json.files) ? json.files : []);
+    } catch {
+      setFiles([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+  useEffect(() => { if (open) { refresh(); } }, [open]);
+  return (
+    <div className="relative">
+      <button aria-label="Exports" className="h-8 w-8 rounded-full border bg-white hover:bg-gray-50 flex items-center justify-center shadow-sm" onClick={() => setOpen(v => !v)}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 text-gray-700"><path fillRule="evenodd" d="M12 3.75a.75.75 0 01.75.75v8.69l2.47-2.47a.75.75 0 011.06 1.06l-3.75 3.75a.75.75 0 01-1.06 0l-3.75-3.75a.75.75 0 111.06-1.06l2.47 2.47V4.5A.75.75 0 0112 3.75zm-6 12a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H6.75a.75.75 0 01-.75-.75z" clipRule="evenodd"/></svg>
+      </button>
+      {open && (
+        <div className="absolute right-0 mt-2 w-80 bg-white border rounded-md shadow-lg z-20">
+          <div className="flex items-center justify-between p-2 border-b">
+            <span className="text-sm font-medium">Recent exports</span>
+            <button className="text-xs text-blue-600" onClick={refresh} disabled={loading}>{loading ? '...' : 'Refresh'}</button>
+          </div>
+          <div className="max-h-64 overflow-auto">
+            <ul className="divide-y">
+              {files.map((f, i) => (
+                <li key={i} className="p-2 text-sm flex items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="truncate">{f.name}</div>
+                    <div className="text-[10px] text-gray-500">{Math.round(f.size/1024)} KB • {new Date(f.mtimeMs).toLocaleString()}</div>
+                  </div>
+                  <a className="text-xs text-blue-700 whitespace-nowrap hover:underline" href={f.href}>Download</a>
+                </li>
+              ))}
+              {files.length === 0 && (
+                <li className="p-2 text-xs text-gray-500">No exports yet.</li>
+              )}
+            </ul>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

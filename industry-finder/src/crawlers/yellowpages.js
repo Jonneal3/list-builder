@@ -155,11 +155,12 @@ function parseTotalCount(html) {
   return null;
 }
 
-async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency: 2, minDelayMs: 200, maxDelayMs: 500, autoMaxPages: 50, onDebug: null, proxyList: [], rotateProxies: false, initialBackoffMs: 500, useBrowserFallback: true, pageTimeoutMs: 20000, headless: true, puppeteerProxy: null, puppeteerProxyUser: null, puppeteerProxyPass: null, maxRetriesPerPage: 2, forceBrowserFirst: false, pageJitterMinMs: 800, pageJitterMaxMs: 2000, rotateViewport: false }) {
+async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency: 2, minDelayMs: 200, maxDelayMs: 500, autoMaxPages: 50, onDebug: null, onRows: null, proxyList: [], rotateProxies: false, initialBackoffMs: 500, useBrowserFallback: true, pageTimeoutMs: 20000, headless: true, puppeteerProxy: null, puppeteerProxyUser: null, puppeteerProxyPass: null, maxRetriesPerPage: 2, forceBrowserFirst: false, pageJitterMinMs: 800, pageJitterMaxMs: 2000, rotateViewport: false }) {
   const terms = termsFromIndustry(industry);
   const totalPages = Number(pages) === -1 ? -1 : Math.max(1, Number(pages || 1));
   const limit = Math.max(1, Math.min(8, Number(opts.concurrency || 2)));
   const onDebug = typeof opts.onDebug === 'function' ? opts.onDebug : null;
+  const onRows = typeof opts.onRows === 'function' ? opts.onRows : null;
 
   function debug(event) {
     try { if (onDebug) onDebug(event); } catch {}
@@ -520,20 +521,22 @@ async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency:
     perPageEstimate = rows1.length || null;
     results.push(...rows1);
     debug({ page: 1, info: 'first_page_parsed', totalFromFirst, perPageEstimate, rows: rows1.length });
+    try { if (onRows && rows1.length) onRows(rows1, 1); } catch {}
 
     if (totalFromFirst && perPageEstimate) {
       const maxPages = Math.max(1, Number(opts.autoMaxPages || 50));
       const totalPagesCalc = Math.min(maxPages, Math.ceil(totalFromFirst / perPageEstimate));
       const pagesToFetch = Math.max(0, totalPagesCalc - 1);
       if (pagesToFetch > 0) {
-        const tasks = Array.from({ length: pagesToFetch }, (_, i) => 2 + i).map(p => async () => fetchPage(p));
+        const tasks = Array.from({ length: pagesToFetch }, (_, i) => 2 + i).map(p => async () => ({ out: await fetchPage(p), page: p }));
         let idx = 0;
         async function runNext() {
           if (idx >= tasks.length) return;
           const my = idx++;
-          const out = await tasks[my]();
+          const { out, page } = await tasks[my]();
           const rows = Array.isArray(out) ? out : out?.rows || [];
           results.push(...rows);
+          try { if (onRows && rows.length) onRows(rows, page); } catch {}
           return runNext();
         }
         await Promise.all(Array.from({ length: Math.min(limit, tasks.length) }, runNext));
@@ -547,19 +550,21 @@ async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency:
         const rows = Array.isArray(out) ? out : out?.rows || [];
         if (!rows.length) break;
         results.push(...rows);
+        try { if (onRows && rows.length) onRows(rows, p); } catch {}
         p += 1;
       }
       debug({ info: 'incremental_done', lastPage: p - 1, totalAccumulated: results.length });
     }
   } else {
-    const tasks = Array.from({ length: totalPages }, (_, i) => i + 1).map(p => async () => fetchPage(p));
+    const tasks = Array.from({ length: totalPages }, (_, i) => i + 1).map(p => async () => ({ out: await fetchPage(p), page: p }));
     let idx = 0;
     async function runNext() {
       if (idx >= tasks.length) return;
       const my = idx++;
-      const out = await tasks[my]();
+      const { out, page } = await tasks[my]();
       const rows = Array.isArray(out) ? out : out?.rows || [];
       results.push(...rows);
+      try { if (onRows && rows.length) onRows(rows, page); } catch {}
       return runNext();
     }
     await Promise.all(Array.from({ length: Math.min(limit, tasks.length) }, runNext));

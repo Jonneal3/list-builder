@@ -76,6 +76,8 @@ export async function GET(req: NextRequest) {
         `--pageJitterMaxMs=${String(pageJitterMaxMs)}`,
         `--rotateViewport=${rotateViewport ? 'true' : 'false'}`,
         `--exhaustCity=${exhaustCity ? 'true' : 'false'}`,
+        // enforce sequential pages per city when exhausting
+        ...(exhaustCity ? ["--ypConcurrency=1"] : []),
         "--stream",
         "--verbose=false",
       ];

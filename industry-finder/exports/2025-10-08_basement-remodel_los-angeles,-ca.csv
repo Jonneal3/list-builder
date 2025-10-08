@@ -1,0 +1,665 @@
+id,name,website,normalized_domain,industry,location,size_category,source_list,method,fallback_used,first_seen,last_seen
+1264,Wallbeds N More San Diego,https://sdmurphybeds.com/,sdmurphybeds.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.841Z,2025-10-08T05:31:46.841Z
+1265,Menzie International,https://menzie.net/,menzie.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.846Z,2025-10-08T05:31:46.846Z
+1266,Furniture,https://cbsfurnituremfg.com,cbsfurnituremfg.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.846Z,2025-10-08T05:31:46.846Z
+1267,Tony's Glass & Mirror,https://www.tonysglass.net,tonysglass.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.847Z,2025-10-08T05:31:46.847Z
+1268,EuroLux Furniture Inc.,http://www.euroluxfurniture.com,euroluxfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.847Z,2025-10-08T05:31:46.847Z
+1269,Landon Cole Furniture,http://www.landoncole.com,landoncole.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.847Z,2025-10-08T05:31:46.847Z
+1270,"Blueprint, Inc.",http://blueprintfurniture.wordpress.com,blueprintfurniture.wordpress.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.847Z,2025-10-08T05:31:46.847Z
+1271,Living Spaces,http://www.livingspaces.com,livingspaces.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.847Z,2025-10-08T05:31:46.847Z
+1272,Rapport International Furniture,http://www.rapportusa.com,rapportusa.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.847Z,2025-10-08T05:31:46.847Z
+1273,La Bella Cosa,http://www.labellacosa.com,labellacosa.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.847Z,2025-10-08T05:31:46.847Z
+1274,In Mode,http://www.inmodehome.com,inmodehome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.847Z,2025-10-08T05:31:46.847Z
+1275,Berry Furniture & Appliance Inc,http://wengerfurniture.com,wengerfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.847Z,2025-10-08T05:31:46.890Z
+1276,Italy 2000,http://italy2000usa.com,italy2000usa.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.848Z,2025-10-08T05:31:46.848Z
+1277,Casablanca Furniture,http://www.casablancafurniturela.com,casablancafurniturela.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.848Z,2025-10-08T05:31:46.848Z
+1278,Haven & Co,http://havenandcompany.com,havenandcompany.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.848Z,2025-10-08T05:31:46.848Z
+1279,Westfall Commercial Furniture Inc,https://westfall.com/contact-us,westfall.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.848Z,2025-10-08T05:31:46.848Z
+1280,Mission Furniture,http://www.missionfurnituremfg.com,missionfurnituremfg.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.848Z,2025-10-08T05:31:46.848Z
+1281,Morning Sun,http://butsudan.com,butsudan.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.848Z,2025-10-08T05:31:46.848Z
+1282,Pampa,http://www.pampafurniture.net,pampafurniture.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.848Z,2025-10-08T05:31:46.848Z
+1283,Harveys On Beverly,http://www.harveysonbeverly.com,harveysonbeverly.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.849Z,2025-10-08T05:31:46.849Z
+1284,Roche Bobois,https://www.roche-bobois.com/en-US/showrooms/los-angeles-west-hollywood,roche-bobois.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.849Z,2025-10-08T05:31:46.849Z
+1285,Furniture Row,https://www.furniturerow.com/sale?utm_source=FurnitureRowYP&utm_medium=cpc&utm_campaign=FR,furniturerow.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.849Z,2025-10-08T05:31:46.849Z
+1286,Ashley HomeStore,https://www.ashleyfurniturehomestore.com,ashleyfurniturehomestore.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.849Z,2025-10-08T05:31:46.849Z
+1287,HD Buttercup,http://www.hdbuttercup.com,hdbuttercup.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.849Z,2025-10-08T05:31:46.849Z
+1288,HP Furniture Store,http://www.hphomecenter.com,hphomecenter.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.849Z,2025-10-08T05:31:46.849Z
+1289,A Plus R Inc,https://aplusrstore.com/pages/about-us,aplusrstore.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.850Z,2025-10-08T05:31:46.872Z
+1290,CB2,https://www.cb2.com/stores/west-hollywood/str52,cb2.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.850Z,2025-10-08T05:31:46.850Z
+1291,Wesley Allen Inc,http://www.wesleyallen.com,wesleyallen.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.850Z,2025-10-08T05:31:46.850Z
+1292,PoshBin,http://www.poshbin.com,poshbin.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.850Z,2025-10-08T05:31:46.850Z
+1293,West Elm,https://www.westelm.com/stores/us-ca-los-angeles-broadway-palace,westelm.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.850Z,2025-10-08T05:31:46.850Z
+1294,Valentino Design Furniture,http://royalfurniture.com,royalfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.850Z,2025-10-08T05:31:46.850Z
+1295,Perfect Sofa,https://perfectsofa.com,perfectsofa.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.853Z,2025-10-08T05:31:46.853Z
+1296,Modani Furniture Los Angeles,https://www.modani.com/los-angeles,modani.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.854Z,2025-10-08T05:31:46.854Z
+1297,Rejuvenation,http://rejuvenation.com,rejuvenation.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.854Z,2025-10-08T05:31:46.854Z
+1298,Room & Board,https://www.roomandboard.com/stores/los-angeles?Camp=loc_culvercity,roomandboard.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.862Z,2025-10-08T05:31:46.862Z
+1299,Scandinavian Designs Furniture,https://scandinaviandesigns.com,scandinaviandesigns.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.863Z,2025-10-08T05:31:46.863Z
+1300,Bassett Furniture,https://bassettfurniture.com/stores/s/los-angeles-ca,bassettfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.864Z,2025-10-08T05:31:46.864Z
+1301,Marina Furniture Store,http://www.furnishingnetwork.com/MARINAFURNITURE,furnishingnetwork.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.864Z,2025-10-08T05:31:46.917Z
+1302,West Coast Modern LA,http://westcoastmodernla.com,westcoastmodernla.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.865Z,2025-10-08T05:31:46.865Z
+1303,Hautehouse,http://hautehousehome.com,hautehousehome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.865Z,2025-10-08T05:31:46.865Z
+1304,Boho Upcycle,http://bohoupcycle.com,bohoupcycle.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.865Z,2025-10-08T05:31:46.865Z
+1305,Rapport International Furniture,http://www.rapportfurniture.com,rapportfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.866Z,2025-10-08T05:31:46.866Z
+1306,6 Plus Custom Furniture,http://6pluscustomfurniture.com,6pluscustomfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.866Z,2025-10-08T05:31:46.866Z
+1307,Spring Furniture,http://furniturecollection.us,furniturecollection.us,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.866Z,2025-10-08T05:31:46.890Z
+1308,Dougs Furniture Co. Inc.,http://dougsfurniture.com,dougsfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.867Z,2025-10-08T05:31:46.867Z
+1309,Jaxon Home Furnishings,http://laleatherfurniture.com,laleatherfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.867Z,2025-10-08T05:31:46.867Z
+1310,Sigla Furniture Corp,https://www.siglafurniture.com,siglafurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.867Z,2025-10-08T05:31:46.867Z
+1311,DDC (Domus Design Collection),https://www.ddcnyc.com/contact,ddcnyc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.867Z,2025-10-08T05:31:46.867Z
+1312,Gustav Carroll Inc,https://www.gustavcarroll.com,gustavcarroll.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.867Z,2025-10-08T05:31:46.867Z
+1313,Vitality Furniture Group,http://vitalityfurniture.com,vitalityfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.868Z,2025-10-08T05:31:46.868Z
+1314,La-Z-Boy Furniture Galleries,http://www.lazboy.com,lazboy.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.868Z,2025-10-08T05:31:46.868Z
+1315,Olsen Craig,https://craigolsendesign.com,craigolsendesign.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.868Z,2025-10-08T05:31:46.868Z
+1316,Bob’s Discount Furniture and Mattress Store,https://www.mybobs.com/store/california/la-mid-city?utm_medium=local&utm_source=maps&utm_campaign=Yext&utm_term=california&utm_content=los_angeles,mybobs.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.869Z,2025-10-08T05:31:46.893Z
+1317,Jennifer Convertibles,http://jenniferfurniture.com,jenniferfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.869Z,2025-10-08T05:31:46.869Z
+1318,Landeros Furniture Outlet,https://www.landerosfurnitureoutlet.com/pages/contact,landerosfurnitureoutlet.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.870Z,2025-10-08T05:31:46.870Z
+1319,Design Mix Incorporated,http://mixfurniture.com,mixfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.870Z,2025-10-08T05:31:46.916Z
+1320,B & A Furniture,http://lafurniturestore.com/special/2910-floor-model-sale.html,lafurniturestore.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.870Z,2025-10-08T05:31:46.929Z
+1321,Seva,https://www.sevahome.com,sevahome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.870Z,2025-10-08T05:31:46.870Z
+1322,Svan Unlimited,https://www.svanunltd.com/contact,svanunltd.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.871Z,2025-10-08T05:31:46.871Z
+1323,As of Now,http://asofnowstore.com,asofnowstore.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.871Z,2025-10-08T05:31:46.871Z
+1324,Cleveland Art,http://clevelandart.com,clevelandart.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.871Z,2025-10-08T05:31:46.871Z
+1325,Affordable Furniture,http://affordfurniture.com,affordfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.872Z,2025-10-08T05:31:46.872Z
+1326,Jamesdar,https://jamesdar.com/pages/store-policies,jamesdar.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.872Z,2025-10-08T05:31:46.872Z
+1327,Sabtex Home,https://www.sabtexhome.com,sabtexhome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.872Z,2025-10-08T05:31:46.872Z
+1328,Motley,http://www.motley.la/contact,motley.la,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.872Z,2025-10-08T05:31:46.872Z
+1329,Cain Modern,https://cainmodern.com,cainmodern.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.872Z,2025-10-08T05:31:46.872Z
+1330,Dante Restorations,https://danterestorations.com,danterestorations.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.872Z,2025-10-08T05:31:46.872Z
+1331,Shalom Furniture,https://shalomfurniture.wordpress.com/about,shalomfurniture.wordpress.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.872Z,2025-10-08T05:31:46.872Z
+1332,Trend Setters,https://afs.net,afs.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.872Z,2025-10-08T05:31:46.872Z
+1333,Bobby Berk Home,http://bobbyberk.com,bobbyberk.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.872Z,2025-10-08T05:31:46.872Z
+1334,Rustiq Table,http://rustiqtable.com,rustiqtable.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.872Z,2025-10-08T05:31:46.872Z
+1335,Dudley Props,https://www.dudleyprops.com,dudleyprops.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.873Z,2025-10-08T05:31:46.873Z
+1336,Betos Furniture,https://www.betson.com,betson.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.873Z,2025-10-08T05:31:46.873Z
+1337,Pampa Furniture,https://pampafurniturela.com/contact-pampa-furniture/?v=7516fd43adaa,pampafurniturela.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.873Z,2025-10-08T05:31:46.873Z
+1338,Design Theory,https://www.design-theory.com/accessibility.html,design-theory.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.873Z,2025-10-08T05:31:46.873Z
+1339,Enstyle Sofa,https://enstylesofa.com/contact,enstylesofa.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.873Z,2025-10-08T05:31:46.873Z
+1340,Veronica Furniture,http://oocities.org/veronicasfurniture,oocities.org,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.874Z,2025-10-08T05:31:46.874Z
+1341,Furniture Express,http://mygfurniture.com,mygfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.874Z,2025-10-08T05:31:46.892Z
+1342,Dekor & Co,https://dekorliving.com/pages/locations,dekorliving.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.874Z,2025-10-08T05:31:46.874Z
+1343,Zambrano's Furniture & Upholstery,http://www.zbrosfurniture.com/beige,zbrosfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.874Z,2025-10-08T05:31:46.874Z
+1344,EZ2Get Furniture,https://www.easy2getfurniture.com,easy2getfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.874Z,2025-10-08T05:31:46.874Z
+1345,Stephie's Furniture,http://www.stephiesfurniture.com,stephiesfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.874Z,2025-10-08T05:31:46.882Z
+1346,Prime Classic Design,https://www.primeclassicdesign.com,primeclassicdesign.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.874Z,2025-10-08T05:31:46.874Z
+1347,Heaven Antique and Customer Furniture,http://heavenantiquefurniture.com,heavenantiquefurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.874Z,2025-10-08T05:31:46.923Z
+1348,Burrow House Los Angeles,https://burrow.com,burrow.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.874Z,2025-10-08T05:31:46.874Z
+1349,Whyrhymer,http://www.whyrhymer.com,whyrhymer.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.874Z,2025-10-08T05:31:46.874Z
+1350,Posse Furniture,http://possefurniture.com,possefurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.875Z,2025-10-08T05:31:46.875Z
+1351,Croft House,https://www.crofthouse.com/pages/contact,crofthouse.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.875Z,2025-10-08T05:31:46.875Z
+1352,Kathleen Stewart at Home,https://www.furnishnearme.com/stores/kathleen-stewart-at-home/1cbf1d3d9181e1a05572101327d8c2d0,furnishnearme.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.875Z,2025-10-08T05:31:46.875Z
+1353,Mortise & Tenon,http://www.mortisetenon.com,mortisetenon.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.875Z,2025-10-08T05:31:46.875Z
+1354,Regal Furniture Mfg,https://www.regalfurniturecollection.com/lets-eat,regalfurniturecollection.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.875Z,2025-10-08T05:31:46.875Z
+1355,Chen J F Antiques,http://www.jfchen.com,jfchen.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.876Z,2025-10-08T05:31:46.917Z
+1356,Modshop,https://modshop1.com/pages/store-locations,modshop1.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.876Z,2025-10-08T05:31:46.876Z
+1357,Tara Design,https://tara-design.com/pages/directions,tara-design.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.876Z,2025-10-08T05:31:46.876Z
+1358,Christopher Guy,https://www.christopherguy.com,christopherguy.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.876Z,2025-10-08T05:31:46.876Z
+1359,Union Furniture,http://unionfurn.com,unionfurn.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.876Z,2025-10-08T05:31:46.876Z
+1360,Baby Furniture Superstore,https://www.kidsfurnituresuperstore.us/contact,kidsfurnituresuperstore.us,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.876Z,2025-10-08T05:31:46.876Z
+1361,Nativa Furniture,http://www.nativa-online.com,nativa-online.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.876Z,2025-10-08T05:31:46.876Z
+1362,Furniture Innovations,https://www.inovationsfurnitureinc.com/contact-us,inovationsfurnitureinc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.877Z,2025-10-08T05:31:46.877Z
+1363,In House Furniture,https://inhousefurniture.com/index_1.html,inhousefurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.877Z,2025-10-08T05:31:46.877Z
+1364,Little Rooms,https://littlerooms.com,littlerooms.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.877Z,2025-10-08T05:31:46.877Z
+1365,Robert Kuo Ltd,https://robertkuo.com/html/contact.html,robertkuo.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.877Z,2025-10-08T05:31:46.877Z
+1366,Denmark 50,http://denmark50.com,denmark50.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.877Z,2025-10-08T05:31:46.877Z
+1367,Kim Salmela Atelier,http://kimsalmela.com,kimsalmela.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.877Z,2025-10-08T05:31:46.877Z
+1368,House of Sri,https://nichebeverly.com,nichebeverly.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.877Z,2025-10-08T05:31:46.877Z
+1369,Maison Bertet,http://bertet.com/Bertet/BIENVENUE_MAISON_BERTET.html,bertet.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.877Z,2025-10-08T05:31:46.877Z
+1370,Cisco Brothers Corp,http://www.ciscobrothers.com,ciscobrothers.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.878Z,2025-10-08T05:31:46.878Z
+1371,Z Gallerie,http://zgallerie.com,zgallerie.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.878Z,2025-10-08T05:31:46.878Z
+1372,Una Malan,https://unamalan.com/contact-una-malan,unamalan.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.878Z,2025-10-08T05:31:46.878Z
+1373,Mckennon Harris,https://www.mckinnonharris.com/showrooms/los-angeles,mckinnonharris.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.878Z,2025-10-08T05:31:46.878Z
+1374,Leather Center,http://beverlycenter.com,beverlycenter.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.878Z,2025-10-08T05:31:46.878Z
+1375,Melaaura,https://melaaura.com,melaaura.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.878Z,2025-10-08T05:31:46.878Z
+1376,Furniture Love,http://bebitalia.com,bebitalia.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.879Z,2025-10-08T05:31:46.920Z
+1377,Luminaire,https://www.luminaire.com,luminaire.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.879Z,2025-10-08T05:31:46.879Z
+1378,Merit Los Angeles,https://merit-la.com/pages/locations,merit-la.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.879Z,2025-10-08T05:31:46.879Z
+1379,Arenbeology,http://www.arenbeology.com,arenbeology.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.880Z,2025-10-08T05:31:46.880Z
+1380,Convertibles Only Inc,http://www.heritageclassics.com,heritageclassics.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.880Z,2025-10-08T05:31:46.880Z
+1381,Twentieth,https://www.twentieth.net/contact,twentieth.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.880Z,2025-10-08T05:31:46.880Z
+1382,Marquis Collection Inc,http://www.marquiscollection.com,marquiscollection.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.880Z,2025-10-08T05:31:46.880Z
+1383,Purchasing Solutions Inc,https://www.jaggaer.com,jaggaer.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.880Z,2025-10-08T05:31:46.880Z
+1384,Casa,https://jualkasurinoac.com,jualkasurinoac.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.880Z,2025-10-08T05:31:46.880Z
+1385,Alexandra Von Furstenberg,https://alexandravonfurstenberg.com/pages/contact-us,alexandravonfurstenberg.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.880Z,2025-10-08T05:31:46.880Z
+1386,Crate Barrel,http://shop.nordstrom.com/st/nordstrom-century-city#restaurants?cm_mmc=google_lcl-_-gcm-_-rest-_-26384,shop.nordstrom.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.881Z,2025-10-08T05:31:46.881Z
+1387,Urban Home,http://www.urbanhome.com,urbanhome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.881Z,2025-10-08T05:31:46.881Z
+1388,Ital West,http://ninewest.com,ninewest.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.881Z,2025-10-08T05:31:46.881Z
+1389,Gazaf,https://www.gazaf.com,gazaf.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.881Z,2025-10-08T05:31:46.881Z
+1390,"Reagan Hayes, Inc.",http://www.reaganhayes.com,reaganhayes.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.881Z,2025-10-08T05:31:46.881Z
+1391,Living Room,http://livingroom411.com,livingroom411.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.881Z,2025-10-08T05:31:46.881Z
+1392,Terra Nova Asian Furniture,http://www.terranovadesigns.com,terranovadesigns.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.881Z,2025-10-08T05:31:46.920Z
+1393,Revolution Furniture Corp,http://www.revolutionfurniturecorp.com,revolutionfurniturecorp.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.881Z,2025-10-08T05:31:46.881Z
+1394,Graye,http://www.graye-la.com,graye-la.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.881Z,2025-10-08T05:31:46.881Z
+1395,Diva Furniture,http://www.divafurniture.com,divafurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.882Z,2025-10-08T05:31:46.882Z
+1396,Sofa Clubs,http://www.sofaclubonline.com,sofaclubonline.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.882Z,2025-10-08T05:31:46.882Z
+1397,Casa Grande Furniture,https://www.casagrandefurniture.com,casagrandefurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.882Z,2025-10-08T05:31:46.882Z
+1398,Casa Victoria Vintage Furniture,https://www.casavictoriala.com/contact,casavictoriala.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.882Z,2025-10-08T05:31:46.882Z
+1399,Big Daddy's Antiques,http://www.bdantiques.com,bdantiques.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.883Z,2025-10-08T05:31:46.883Z
+1400,Yewon House of Jade,https://www.yewonusa.com,yewonusa.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.883Z,2025-10-08T05:31:46.883Z
+1401,Princess Beatriz Furniture,http://princesfurniture.com,princesfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.883Z,2025-10-08T05:31:46.883Z
+1402,R & H Furniture,http://rhfurniture.com,rhfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.883Z,2025-10-08T05:31:46.883Z
+1403,Ferrous Hardware,http://ferroushardware.com,ferroushardware.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.883Z,2025-10-08T05:31:46.883Z
+1404,Daoudi Fatiha,http://www.mosaikevents.com,mosaikevents.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.883Z,2025-10-08T05:31:46.883Z
+1405,Whittier Furniture,http://www.furniturecasalinda.com,furniturecasalinda.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.883Z,2025-10-08T05:31:46.883Z
+1406,Sannean Corp,https://www.sleepexquisite.com/contact.html,sleepexquisite.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.884Z,2025-10-08T05:31:46.884Z
+1407,Keystone Furniture,https://keystonefurniture.com/index.php/contact-and-directions,keystonefurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.884Z,2025-10-08T05:31:46.884Z
+1408,Ace Furniture,http://centuryfurniture.com,centuryfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.884Z,2025-10-08T05:31:46.892Z
+1409,Environment Furniture,http://www.environmentfurniture.com,environmentfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.884Z,2025-10-08T05:31:46.884Z
+1410,Resource Furniture,https://resourcefurniture.com/showrooms/los-angeles,resourcefurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.884Z,2025-10-08T05:31:46.884Z
+1411,Furniture Vision,http://www.furniturevision.com,furniturevision.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.885Z,2025-10-08T05:31:46.885Z
+1412,The Living Room,http://www.livingroomhome.com,livingroomhome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.887Z,2025-10-08T05:31:46.887Z
+1413,Charli,http://charlibeautybar.com,charlibeautybar.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.889Z,2025-10-08T05:31:46.889Z
+1414,Tell Furniture,http://cityscuba.com,cityscuba.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.889Z,2025-10-08T05:31:46.889Z
+1415,Cisco Brothers Corp,https://ciscohome.net/pages/redirect,ciscohome.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.889Z,2025-10-08T05:31:46.923Z
+1416,Surfing Cowboys,http://www.surfingcowboys.com,surfingcowboys.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.889Z,2025-10-08T05:31:46.889Z
+1417,Monroe Work Shop,https://www.monroeworkshop.com,monroeworkshop.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.890Z,2025-10-08T05:31:46.890Z
+1418,Baldo's Custom Furniture,http://jvcfurniture.com,jvcfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.890Z,2025-10-08T05:31:46.927Z
+1419,Thrive Furniture,http://www.thrivefurniture.com,thrivefurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.891Z,2025-10-08T05:31:46.891Z
+1420,Milano Fine Furniture Inc,http://www.milanoitalianfurniture.com,milanoitalianfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.891Z,2025-10-08T05:31:46.891Z
+1421,Jasmine's Design Furniture,http://jasminesdesignfurniture.com,jasminesdesignfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.891Z,2025-10-08T05:31:46.903Z
+1422,Shanghai Tien 03,http://shanghaitien.com,shanghaitien.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.891Z,2025-10-08T05:31:46.891Z
+1423,Workplace Resla,http://pivotinteriors.com,pivotinteriors.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.891Z,2025-10-08T05:31:46.891Z
+1424,Baker Furniture Co,http://bakerfurniture.com,bakerfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.891Z,2025-10-08T05:31:46.891Z
+1425,Liliput And Co,https://www.shabbychic.com,shabbychic.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.891Z,2025-10-08T05:31:46.891Z
+1426,Sheridan Group,http://www.sheridaninc.com,sheridaninc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.891Z,2025-10-08T05:31:46.891Z
+1427,Monarch Sofas,http://www.monarchsofas.com,monarchsofas.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.891Z,2025-10-08T05:31:46.891Z
+1428,Restoration Hardware,http://restorationhardware.com,restorationhardware.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.892Z,2025-10-08T05:31:46.892Z
+1429,Eden La,http://edenla.com,edenla.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.892Z,2025-10-08T05:31:46.892Z
+1430,Furniture Town,https://www.furnituretownplus.com/en/contactus,furnituretownplus.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.892Z,2025-10-08T05:31:46.892Z
+1431,Fashion Furniture Rental,https://fashionfurniture.com,fashionfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.892Z,2025-10-08T05:31:46.892Z
+1432,Cantoni,http://cantoni.com,cantoni.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.893Z,2025-10-08T05:31:46.893Z
+1433,Plushpod International Inc,http://plushpod.com,plushpod.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.893Z,2025-10-08T05:31:46.893Z
+1434,Dream & Rest Mattress,http://www.dreamandrest.com,dreamandrest.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.893Z,2025-10-08T05:31:46.893Z
+1435,Jonathan Adler,http://jonathanadler.com,jonathanadler.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.893Z,2025-10-08T05:31:46.893Z
+1436,Out of Asia,http://outofasia.com,outofasia.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.893Z,2025-10-08T05:31:46.893Z
+1437,Portabella,http://www.portabelladesign.com,portabelladesign.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.893Z,2025-10-08T05:31:46.893Z
+1438,Deluxe Funiture Design,http://premiumdesignfurniture.com,premiumdesignfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.893Z,2025-10-08T05:31:46.893Z
+1439,Sears,https://www.sears.com/stores/california/los-angeles/0001008.html,sears.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.894Z,2025-10-08T05:31:46.894Z
+1440,Kulture Bomb,http://www.kulturebomb.com,kulturebomb.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.894Z,2025-10-08T05:31:46.894Z
+1441,Naturepedic Organic Mattress Gallery Beverly Hills,http://www.naturepedic.com/beverlyhills,naturepedic.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.895Z,2025-10-08T05:31:46.895Z
+1442,Lamps Plus,https://www.lampsplus.com/stores/california-southern/los-angeles-90025,lampsplus.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.895Z,2025-10-08T05:31:46.895Z
+1443,Brookstone,http://www.brookstone.com,brookstone.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.895Z,2025-10-08T05:31:46.895Z
+1444,Vaughan Benz,https://www.vaughanbenz.com/contact,vaughanbenz.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.895Z,2025-10-08T05:31:46.895Z
+1445,Parkman Woodworks,https://www.parkmanwoodworks.com,parkmanwoodworks.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.895Z,2025-10-08T05:31:46.895Z
+1446,Muebleria Ayutla,https://ayutlafurniture.com,ayutlafurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.895Z,2025-10-08T05:31:46.895Z
+1447,Daisy's Antiques & Furniture,http://daisysantiques.com?page_id=5,daisysantiques.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.895Z,2025-10-08T05:31:46.895Z
+1448,Sofa U Love,http://www.sofaulove.com,sofaulove.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.895Z,2025-10-08T05:31:46.895Z
+1449,Rehab Vintage Interiors,http://rehabvintage.net,rehabvintage.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.896Z,2025-10-08T05:31:46.896Z
+1450,Hernandez Furniture,http://goodoldfurniture.tumblr.com,goodoldfurniture.tumblr.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.896Z,2025-10-08T05:31:46.896Z
+1451,Ortho Mattress,https://www.orthomattress.com,orthomattress.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.896Z,2025-10-08T05:31:46.896Z
+1452,Poliform Los Angeles,http://www.poliformusa.com,poliformusa.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.897Z,2025-10-08T05:31:46.897Z
+1453,TB Contract Furniture,http://www.tbcontractfurniture.com,tbcontractfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.897Z,2025-10-08T05:31:46.897Z
+1454,Mattress Firm,http://www.mattressfirm.com,mattressfirm.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.901Z,2025-10-08T05:31:46.901Z
+1455,Versa Products,http://www.versaproducts.com,versaproducts.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.901Z,2025-10-08T05:31:46.901Z
+1456,Valyou Furniture,http://valyoufurniture.com,valyoufurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.901Z,2025-10-08T05:31:46.901Z
+1457,McQueen Home,https://macqueenhome.com/contact,macqueenhome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.901Z,2025-10-08T05:31:46.901Z
+1458,R P Brooks & Son Inc,http://rpbrooksoutdoor.com,rpbrooksoutdoor.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.902Z,2025-10-08T05:31:46.902Z
+1459,At Gigi's,http://at-gigis.com,at-gigis.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.902Z,2025-10-08T05:31:46.902Z
+1460,Cordrey Collection,https://www.cordreycollection.com/contact,cordreycollection.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.902Z,2025-10-08T05:31:46.902Z
+1461,Vienna Woods & Maszhiewicz Bros,http://viennawoodsla.com,viennawoodsla.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.902Z,2025-10-08T05:31:46.902Z
+1462,Murano,http://www.muranoshades.com/letsworktogether,muranoshades.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.902Z,2025-10-08T05:31:46.902Z
+1463,Home Mart,https://homemartinternational.com/products/king-chair-special,homemartinternational.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.902Z,2025-10-08T05:31:46.902Z
+1464,Furniture Access,http://wayborn.com,wayborn.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.902Z,2025-10-08T05:31:46.902Z
+1465,Los Angeles Mattress Stores - Western,https://mattressstoreslosangeles.com/pages/koreatown-mattress,mattressstoreslosangeles.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.902Z,2025-10-08T05:31:46.923Z
+1466,Potted,http://pottedstore.com,pottedstore.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.902Z,2025-10-08T05:31:46.902Z
+1467,Wertz Brothers Furniture Inc,http://www.wertzbrothers.com,wertzbrothers.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.902Z,2025-10-08T05:31:46.902Z
+1468,Huntedfox,https://huntedfox.co/pages/contact-us,huntedfox.co,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.903Z
+1469,Mattress Stop,https://www.mattress-stop.com/locations/los_angeles_venice.html,mattress-stop.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.915Z
+1470,The Hunt,http://www.thehuntvintage.com,thehuntvintage.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.903Z
+1471,Kidsland,https://www.kidslandusa.com,kidslandusa.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.903Z
+1472,Sunbeam Vintage,https://sunbeamvintage.com,sunbeamvintage.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.903Z
+1473,The Futon Shop,https://www.thefutonshop.com/the-futon-shop-los-angeles,thefutonshop.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.903Z
+1474,Custom Furniture,http://plantationdesign.com,plantationdesign.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.903Z
+1475,Bo Tree,http://botreesource.com,botreesource.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.903Z
+1476,Smart Home Furniture,http://smarthome.com,smarthome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.916Z
+1477,Hercules,http://www.herculesfurniture.com/contactpage.htm,herculesfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.903Z
+1478,Sam's Furniture,https://www.samsfurniture.com,samsfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.903Z
+1479,Artistic Designs,http://artisticdesign.org,artisticdesign.org,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.903Z,2025-10-08T05:31:46.903Z
+1480,Dream Bedding,http://dreambeddingcorp.com,dreambeddingcorp.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.906Z,2025-10-08T05:31:46.906Z
+1481,Earth,http://eatzla.com,eatzla.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.906Z,2025-10-08T05:31:46.906Z
+1482,Axis Furniture,http://axisfurniture.com,axisfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.906Z,2025-10-08T05:31:46.906Z
+1483,C & L Designs,http://www.candldesignsofas.com/contact.html,candldesignsofas.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.906Z,2025-10-08T05:31:46.906Z
+1484,Custom Furniture & Cabinets,http://www.customfurniturela.com,customfurniturela.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.906Z,2025-10-08T05:31:46.917Z
+1485,Paramount Mattress Inc,http://paramountmatt.com,paramountmatt.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.906Z,2025-10-08T05:31:46.906Z
+1486,Rubbish Interiors,https://www.rubbishinteriors.com,rubbishinteriors.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.906Z,2025-10-08T05:31:46.906Z
+1487,Hollywood Glam Furniture,https://www.hollywoodglamfurniture.com,hollywoodglamfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.906Z,2025-10-08T05:31:46.906Z
+1488,Nileon Office Furniture,https://nileon.com,nileon.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.914Z,2025-10-08T05:31:46.914Z
+1489,"Alan Desk Business Interiors, Inc",https://alandesk.com,alandesk.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.914Z,2025-10-08T05:31:46.914Z
+1490,Bluehaus Interiors,http://www.bluehausinteriors.com,bluehausinteriors.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.914Z,2025-10-08T05:31:46.914Z
+1491,Bradco Kitchens and Baths,http://www.bradcokitchen.com,bradcokitchen.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.914Z,2025-10-08T05:31:46.914Z
+1492,Arhaus,https://www.arhaus.com/pages/los-angeles-ca,arhaus.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.915Z,2025-10-08T05:31:46.915Z
+1493,Naurelle,https://www.naurelle.com,naurelle.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.915Z,2025-10-08T05:31:46.915Z
+1494,HomeGoods,http://www.homegoods.com,homegoods.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.915Z,2025-10-08T05:31:46.915Z
+1495,Robles Custom Furniture,http://rigosfurniture.com,rigosfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.915Z,2025-10-08T05:31:46.920Z
+1496,Serena Interiors,http://www.serenainteriors.com,serenainteriors.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.915Z,2025-10-08T05:31:46.915Z
+1497,Gennaro Rosetti,http://bermanrosetti.com,bermanrosetti.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.915Z,2025-10-08T05:31:46.915Z
+1498,D & J Custom Benchworks,https://www.djcustombenchworks.com/contact,djcustombenchworks.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1499,R U Summit,http://quantumleapappliance.com,quantumleapappliance.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1500,OurLosAngeles,https://us.hem.com,us.hem.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1501,Palecek Imports L A,https://www.palecek.com/contact.php,palecek.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1502,Dress For Success Worldwide,http://worldwidewest.dressforsuccess.org,worldwidewest.dressforsuccess.org,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1503,Sunset Bazaar,http://www.sunsetbazaar.org,sunsetbazaar.org,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1504,Lawson Fenning,http://www.lawsonfenning.com,lawsonfenning.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.918Z
+1505,Spiegelman K Interiors,http://kspiegelmaninteriors.com,kspiegelmaninteriors.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1506,Urban Manufacturing,https://urban-mfg.myshopify.com,urban-mfg.myshopify.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1507,House Of Cindy,https://www.houseofcindy.com,houseofcindy.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1508,Decor Fabrics,http://decor-international.com,decor-international.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1509,Jesse's Upholstsery,https://www.theporticocollection.net/contact,theporticocollection.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1510,Martin of London Antiqs,http://martinoflondon.com,martinoflondon.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1511,Nusa Furniture,http://www.nusafurniture.com,nusafurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1512,L. A. Rocking Chair Store,http://larockingchair.com,larockingchair.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1513,Cheviot Furniture Finishing,http://www.agoodantique.com,agoodantique.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.916Z,2025-10-08T05:31:46.916Z
+1514,Sit 'n Sleep,https://www.sitnsleep.com,sitnsleep.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1515,Furniture By Rob,https://furniturebyrob.com,furniturebyrob.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1516,L G Antique Restoration,http://www.ifixantiques.com,ifixantiques.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1517,J Furniture,http://jonathansfurniture2.com/product-page/i-m-a-product#!,jonathansfurniture2.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1518,Dovetail Furniture,https://www.dovetailhome.com/contact-us,dovetailhome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1519,Mash Studio,http://mashstudios.com,mashstudios.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1520,Total Office Furniture,http://tofficefurniture.com,tofficefurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1521,Herman Miller,http://www.hermanmiller.com,hermanmiller.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1522,Versa Tables,https://versatables.com,versatables.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1523,Atmosphere Interiors,http://atmosphereinteriors.com,atmosphereinteriors.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1524,OFS Brands,https://ofs.com,ofs.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1525,Design Alliance,https://www.designalliancela.com,designalliancela.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1526,Western Office Interiors,https://www.westernoffice.com,westernoffice.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1527,Interior Illusions,http://www.interiorillusionshome.com,interiorillusionshome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1528,Office Furniture Group Inc,https://www.ofginc.com,ofginc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1529,Interior Define (Open By Appointment Only),https://www.interiordefine.com/locations/los-angeles,interiordefine.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1530,Maison Midi,https://www.maison-midi.com,maison-midi.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1531,Decorator Laminating,https://www.deco-lam.com,deco-lam.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.917Z,2025-10-08T05:31:46.917Z
+1532,Svenska Mobler,http://www.svenskamobler.com,svenskamobler.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1533,Ralph Pucci West Coast,https://ralphpucci.com/about/contact,ralphpucci.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1534,Alla Moda,https://allamodafurniture.com,allamodafurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1535,Hollywood at Home,http://hollywoodathome.com,hollywoodathome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1536,Cost Plus World Market,http://www.worldmarket.com,worldmarket.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1537,Michal and Company,http://michalandcompany.com,michalandcompany.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1538,Good Night Naturals,http://www.goodnightnaturals.com,goodnightnaturals.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1539,Bigsunday,http://www.bigsunday.org,bigsunday.org,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1540,"Sales Depot, Inc",https://salesdepot.com,salesdepot.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1541,Modernica,http://modernica.net,modernica.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1542,Dos Gallos,http://dosgallos.com,dosgallos.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1543,Eccola Inc,https://ma39shop.com,ma39shop.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1544,Bleu Moon,http://www.bleumoon.us,bleumoon.us,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1545,ABC Warehouse,http://www.abaappliance.com,abaappliance.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.918Z,2025-10-08T05:31:46.918Z
+1546,Mulligan's Primitive American Country,https://www.mulligansusa.com/contact,mulligansusa.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1547,Custom Craft Upholsterers Inc,http://www.customcraftuph.com,customcraftuph.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1548,Burke Decor,https://www.burkedecor.com/pages/locations,burkedecor.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1549,Mogul,http://www.mogullife.com,mogullife.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1550,Designer Imports,http://www.jalexanderfurniture.com,jalexanderfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1551,Indigo Seas,http://www.theivyrestaurants.com,theivyrestaurants.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1552,Alberto Fine Art Furniture,http://albertos-fine-arts-furniture.ueniweb.com,albertos-fine-arts-furniture.ueniweb.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1553,J Man Custom Upholstery,http://dannycustomupholstery.com,dannycustomupholstery.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.926Z
+1554,Acceptance Now,http://acceptancenow.com,acceptancenow.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1555,Barbara Barry Inc,http://www.barbarabarry.com,barbarabarry.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1556,JC Upholstery,http://jcupholsteryinc.com,jcupholsteryinc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1557,Eames Replica By Artdigest,https://www.eamesreplica.com,eamesreplica.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1558,Designer's Realm,http://designrealm.com,designrealm.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1559,Pronto Moving and Delivery Service,http://prontomovinganddelivery.com,prontomovinganddelivery.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1560,Rug Trader International,http://www.americanfloorcoveringcenter.com,americanfloorcoveringcenter.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1561,Dulce Modern Living,http://www.dulceml.com,dulceml.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1562,Mattress King,https://www.mattresskingla.com,mattresskingla.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1563,Lovick Design,http://lovickdesign.com,lovickdesign.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1564,Nadeau Los Angeles,http://www.furniturewithasoul.com,furniturewithasoul.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.919Z,2025-10-08T05:31:46.919Z
+1565,Plantation,http://www.pixelplantation.com,pixelplantation.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1566,Floor Plan Home Furnishing,http://floorplanhomeliving.com,floorplanhomeliving.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1567,Avila Wood Turning,http://avilawoodturning.com,avilawoodturning.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1568,Rummage,http://www.rummagehome.com,rummagehome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1569,World Market,https://stores.worldmarket.com/ca/los-angeles/6333-west-3rd-street.html,stores.worldmarket.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1570,Massage Central,http://www.mcla.com,mcla.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1571,BIF Furniture inc.,http://www.bifinc.com,bifinc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1572,El Alacran Furniture,http://www.elalacranfurniture.com,elalacranfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1573,Grain,http://grainla.com,grainla.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1574,L & A Custom Furniture,http://lloydscustomfurniture.com,lloydscustomfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.923Z
+1575,Mattress Warehouse,http://www.mattresswarehouse.net,mattresswarehouse.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1576,FrameStore,http://www.customframestore.com,customframestore.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1577,"LINEA, Inc.",http://www.linea-inc.com,linea-inc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1578,Olivia Art and Finishing,http://www.oliviaartandfinishing.com,oliviaartandfinishing.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1579,Office Link Design,https://www.unispace.com,unispace.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1580,Designer's Choice Drapery,https://placestars.com/wp-signup.php?new=designers-choice-drapery.placestars.us,placestars.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1581,Further,http://furthurla.com,furthurla.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1582,PJs Sleep Company,http://pjssleep.com,pjssleep.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1583,Blue Moon Glass & Mirrors,http://www.bluemoonglass.us,bluemoonglass.us,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.920Z,2025-10-08T05:31:46.920Z
+1584,A & S Glass Inc.,http://www.aandsglass.com,aandsglass.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1585,Artisan Restoration Center,http://www.artisanrestorationcenter.com,artisanrestorationcenter.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1586,Best Los Angeles Mattress Sale,http://www.bestlosangelesmattresssale.com,bestlosangelesmattresssale.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1587,Staples Travel Services,https://stores.staples.com/ca/los-angeles/1701-south-figueroa/travel-services,stores.staples.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1588,Staples,http://www.staples.com,staples.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1589,Furniture Max,http://officedepot.com,officedepot.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.927Z
+1590,AtoZ Upholstery,http://atozcustomupholstery.com,atozcustomupholstery.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1591,Rebecca Both Fine Arts,http://rebeccabothfinearts.simplesite.com,rebeccabothfinearts.simplesite.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1592,Steven Anthony Inc,https://stevenanthonyinc.com/contact,stevenanthonyinc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1593,Twin Appliances Inc.,http://www.twinappliancesinc.com,twinappliancesinc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1594,Egg And Dart La,http://egganddarthome.com,egganddarthome.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1595,Hastens On Beverly,https://www.hastens.com/us/retail/us/westhollywood/beverlyblvd,hastens.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1596,"Club Chair, Inc. - Fine Custom Upholstery",http://www.finecustomupholstery.com,finecustomupholstery.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1597,E & M Custom Furniture Mfg Co,https://www.emcustomfurniture.com,emcustomfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1598,Futon Factory,http://www.futonfactoryla.com,futonfactoryla.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1599,L.A. Decks,http://la-decks.com,la-decks.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1600,Melrose Trading Post,http://melrosetradingpost.org,melrosetradingpost.org,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1601,Goodwill Stores,http://www.goodwillsocal.org,goodwillsocal.org,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1602,Co-op,http://www.coop28.com,coop28.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1603,Bay Street Finishing,http://broad-think.com,broad-think.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1604,Oscar's Furniture Refinishing Inc,http://oscarsrefinishing.com,oscarsrefinishing.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.921Z,2025-10-08T05:31:46.921Z
+1605,Pottery Barn Kids,http://potterybarnkids.com,potterybarnkids.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1606,The Things And Stuff,http://thethingsandstuff.com,thethingsandstuff.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1607,Goodwill Stores,http://www.goodwill.org,goodwill.org,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1608,Cross Campus,http://www.crosscamp.us/locations/downtown-la,crosscamp.us,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1609,Copier Elite,http://copierelite.com,copierelite.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1610,OfficeMax,http://www.officemax.com/DIRECTORY,officemax.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1611,Rose Furniture & Upholstery,http://rose-furniture.jany.io,rose-furniture.jany.io,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1612,Barroco Custom Upholstery,http://www.barrococustom.wix.com/barroco,barrococustom.wix.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1613,Madera Deco Inc,http://www.maderadeco.com,maderadeco.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1614,Willis James E,http://alexander-willis.com,alexander-willis.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1615,Customized By Jerry,http://www.customizedbyjerry.weebly.com,customizedbyjerry.weebly.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1616,"Nolen Niu, Inc.",http://www.nolenniu.com,nolenniu.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1617,Amsterdam Modern,http://amsterdammodern.com/about,amsterdammodern.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1618,SaintArbor,http://www.houzz.com/pro/saintarbor,houzz.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1619,Bowen House,http://www.bowenhousela.com,bowenhousela.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1620,Affordable Solution,http://www.affordable-solution.blogspot.com,affordable-solution.blogspot.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1621,District Millworks,http://districtmills.com,districtmills.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1622,C A Finishing,http://finishingstudio.com,finishingstudio.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.922Z,2025-10-08T05:31:46.922Z
+1623,Pacific Western Wood,http://www.pacificwesternwoodproducts.com,pacificwesternwoodproducts.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.923Z,2025-10-08T05:31:46.923Z
+1624,Salvare Goods,http://www.salvaregoods.com,salvaregoods.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.923Z,2025-10-08T05:31:46.923Z
+1625,La Mattress,http://mattress.org,mattress.org,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.923Z,2025-10-08T05:31:46.923Z
+1626,Gk Cabinet Manufacturing Inc,https://custom-kitchen-cabinets.com/california/gk-cabinet-manufacturing-inc,custom-kitchen-cabinets.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.923Z,2025-10-08T05:31:46.923Z
+1627,Unique Custom Upholstery,http://atozupholsteryandreupholstery.com,atozupholsteryandreupholstery.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.923Z,2025-10-08T05:31:46.923Z
+1628,Gordon's Furniture Refinishing,http://www.gordonsrefinishing.com,gordonsrefinishing.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.923Z,2025-10-08T05:31:46.923Z
+1629,Noho Modern,http://nohomodern.com,nohomodern.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.923Z,2025-10-08T05:31:46.923Z
+1630,Paul Marra Design,http://1stdibs.com/dealers/paul-marra-design,1stdibs.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.923Z,2025-10-08T05:31:46.923Z
+1631,Entry Door & Furniture Refinishing,http://www.raulsfauxfinishing.com,raulsfauxfinishing.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.923Z,2025-10-08T05:31:46.923Z
+1632,Mattress One,http://www.rmattress.com,rmattress.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.925Z,2025-10-08T05:31:46.925Z
+1633,Wise Living Inc,https://www.wiselivinginc.com,wiselivinginc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.925Z,2025-10-08T05:31:46.925Z
+1634,Russ Andrade Custom,http://russandradecustom.com,russandradecustom.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.925Z,2025-10-08T05:31:46.925Z
+1635,A J Interiors,http://a-j-interiors-los-angeles-ca.placestars.com,a-j-interiors-los-angeles-ca.placestars.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.925Z,2025-10-08T05:31:46.925Z
+1636,Kipper Furniture Restoration,https://www.kipperdesigns.com/contact,kipperdesigns.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.925Z,2025-10-08T05:31:46.925Z
+1637,Philippa Radon Design,http://philipparadondesign.com,philipparadondesign.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.925Z,2025-10-08T05:31:46.925Z
+1638,Craft Brothers Upholstery,http://www.craftbrosupholstery.com,craftbrosupholstery.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1639,Axel Bloom Beds,https://www.axelbloom.com/contact,axelbloom.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1640,Paco's Upholstery,http://chemosupholstery.com,chemosupholstery.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1641,Styledevie,http://www.styledevie.com,styledevie.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1642,Canterbury,http://canterburyintl.com,canterburyintl.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1643,Tellez Upholstery,https://www.tellezcustom.com,tellezcustom.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1644,Lacf & Reproductions Inc,https://lacfreproductions.com,lacfreproductions.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1645,California Closets,https://www.californiaclosets.com,californiaclosets.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1646,A & G Finishing,https://cabinetrefinishinglosangeles.com/company/a-g-finishing-90047,cabinetrefinishinglosangeles.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1647,Creative Arts Maker Inc,http://creativeartmakers.com,creativeartmakers.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1648,LATEXPEDIC MATTRESSES,http://www.latex-pedic.com,latex-pedic.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1649,Classic Furniture Upholstery & Woodworks,http://classic-furniture.com,classic-furniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1650,Jtk Studios,https://www.johnkaaiohelo.com,johnkaaiohelo.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1651,Lonni Paul Design,http://designlifenetwork.com/wp-signup.php?new=lonnipauldesign.com,designlifenetwork.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1652,Antique Stove,http://antiquestoveheaven.com,antiquestoveheaven.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1653,Systems Source Inc,https://systemsource.com/contact-us,systemsource.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1654,Haworth Inc.,http://haworth.com,haworth.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.926Z,2025-10-08T05:31:46.926Z
+1655,Summer Somewhere Showroom,https://www.summersomewhere.com,summersomewhere.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1656,Office Star Products,https://www.officestar.net,officestar.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1657,Copier Line USA,https://www.copier4less.com,copier4less.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1658,Icon Business,http://www.iconbm.com,iconbm.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1659,Moore Co Inc,http://www.fulflex.com,fulflex.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1660,Ace Bankcard Service,http://usbsi.com,usbsi.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1661,Smart Business Systems,https://www.sbsdigitalcopiers.com?attachment_id=13423,sbsdigitalcopiers.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1662,Oasis Business Supply Corp,http://oasisbsc.com,oasisbsc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1663,Swipe Payment Solutions,http://swipellc.com,swipellc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1664,Office Design Studio,https://officedesignstudio.com/contact-us,officedesignstudio.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1665,One Source Facilities Group,http://cpmonesource.com,cpmonesource.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1666,"A-Stand ""The Modern Digital Easel for Tablets, Surface, I Pad Pro""",http://www.a-stand.com,a-stand.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1667,Clover,http://www.cloversilverlake.com,cloversilverlake.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1668,Vioski Inc,https://www.vioski.com/contact-form,vioski.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.930Z
+1669,LA Stripping & Refinishing Center,http://lastripping.com,lastripping.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1670,Furniture Medic,http://www.furnituremedic.com,furnituremedic.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1671,F & R Interiors and Window Treatments,http://www.fandrinteriors.com,fandrinteriors.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1672,D & R Upholstery,http://www.dandrupholstery.com,dandrupholstery.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1673,Aristo Office Equipment,http://www.aristoofficefurniture.com,aristoofficefurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1674,Roman Upholstery,http://customfurniturelosangeles.net,customfurniturelosangeles.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1675,Cane & Basket Supply Co.,http://www.caneandbasket.com/default.asp,caneandbasket.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1676,Stylnn,https://www.furniturelosangelesca.com,furniturelosangelesca.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.927Z,2025-10-08T05:31:46.927Z
+1677,Bespoke Furniture Inc,http://bespokefurnitureinc.com/contact,bespokefurnitureinc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.928Z,2025-10-08T05:31:46.928Z
+1678,Vigs Furniture,http://vigfurniture.com,vigfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.928Z,2025-10-08T05:31:46.928Z
+1679,Michaels Furniture,http://furnituredecorators.com/michaels,furnituredecorators.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.928Z,2025-10-08T05:31:46.928Z
+1680,Casa Bella Furniture,https://casabellafurnitures.com,casabellafurnitures.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.928Z,2025-10-08T05:31:46.928Z
+1681,Trend Living Collect,http://trendlivingcollections.com,trendlivingcollections.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.928Z,2025-10-08T05:31:46.928Z
+1682,Camila Furniture,http://michaelsfurniturestore.net,michaelsfurniturestore.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.928Z,2025-10-08T05:31:46.928Z
+1683,Antico,http://anticofurniture.com,anticofurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.928Z,2025-10-08T05:31:46.928Z
+1684,Flores Deisgn Inc,http://floresdesigninc.com,floresdesigninc.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.928Z,2025-10-08T05:31:46.930Z
+1685,Entrada Collection,http://www.entradacollection.com,entradacollection.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.928Z,2025-10-08T05:31:46.928Z
+1686,ElectropedicsBeds.Com Chairs & Mobility,http://www.latexpedic.com,latexpedic.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.929Z,2025-10-08T05:31:46.929Z
+1687,Melrose Discount Furniture,http://www.furniturestorelosangeles.com,furniturestorelosangeles.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.929Z,2025-10-08T05:31:46.929Z
+1688,Riviera Convertible Sofa Bed & Upholstery,http://www.angieslist.com/companylist/us/ca/los-angeles/riviera-reupholstery-reviews-3342768.htm,angieslist.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.929Z,2025-10-08T05:31:46.929Z
+1689,Tempo Industries,https://www.tempo-furniture.com/tempo-industries-lifetime-warranty?srsltid=AfmBOoq0mZMJEBuzbHX87zfeiqq2eyAedAL8NO0CrMF_HA9PCtEGVywD,tempo-furniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.929Z,2025-10-08T05:31:46.929Z
+1690,JCPenney,http://www.jcpenney.com,jcpenney.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.929Z,2025-10-08T05:31:46.929Z
+1691,Aria Home,https://www.aria-home.com,aria-home.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.929Z,2025-10-08T05:31:46.929Z
+1692,Pacifica Upholstery Richter,http://alliedfeather.com,alliedfeather.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.930Z,2025-10-08T05:31:46.930Z
+1693,The Tac Room,http://pinktaco.com,pinktaco.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.930Z,2025-10-08T05:31:46.930Z
+1694,Essential Decor And Beyond,https://essentialdecor.net,essentialdecor.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.930Z,2025-10-08T05:31:46.930Z
+1695,Creative Comfort Design,http://creativecomfortdesigns.com,creativecomfortdesigns.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.930Z,2025-10-08T05:31:46.930Z
+1696,Fernando Diaz & Associates,http://fernandodiazinteriors.com,fernandodiazinteriors.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.930Z,2025-10-08T05:31:46.930Z
+1697,Cultured Living,http://www.culturedliving.com,culturedliving.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.930Z,2025-10-08T05:31:46.930Z
+1698,Najarian Trading Inc,http://www.najariantrading.com,najariantrading.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.930Z,2025-10-08T05:31:46.930Z
+1699,Legacy Customs Upholstery Inc,https://www.legacycustomupholstery.net,legacycustomupholstery.net,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.930Z,2025-10-08T05:31:46.930Z
+1700,Spanish Revival Furniture,http://www.spanishrevivalfurniture.com,spanishrevivalfurniture.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.930Z,2025-10-08T05:31:46.930Z
+1701,Wallbeds N More Pasadena,https://pasadenawallbeds.com,pasadenawallbeds.com,furniture,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:31:46.930Z,2025-10-08T05:31:46.930Z
+5909,KB Home Corp,http://www.kbhome.com,kbhome.com,siding,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:58:10.874Z,2025-10-08T05:58:10.874Z
+5910,Ramati Inc,https://www.ramatiinc.com/generallandingpage,ramatiinc.com,siding,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:58:10.875Z,2025-10-08T05:58:10.875Z
+5911,Epic Home Upgrades & Construction,http://epichomeupgrades.com,epichomeupgrades.com,siding,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:58:10.875Z,2025-10-08T05:58:10.875Z
+5912,Williams Painting Company,http://williamspaintingsocal.com,williamspaintingsocal.com,siding,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:58:10.875Z,2025-10-08T05:58:10.875Z
+5913,C T Roofing Inc,http://ctroofing.com,ctroofing.com,siding,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:58:10.876Z,2025-10-08T05:58:10.876Z
+5914,Allied Building Products,http://www.alliedbuilding.com,alliedbuilding.com,siding,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:58:10.876Z,2025-10-08T05:58:10.876Z
+5915,ARK ALL CORP.,https://arkallcorporation.com,arkallcorporation.com,siding,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T05:58:10.876Z,2025-10-08T05:58:10.876Z
+7596,F & R Interiors and Window Treatments,http://www.fandrinteriors.com,fandrinteriors.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.485Z,2025-10-08T06:11:53.485Z
+7597,Blue Moon Glass & Mirrors,http://www.bluemoonglass.us,bluemoonglass.us,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.492Z,2025-10-08T06:11:53.492Z
+7598,Quality Windows,https://www.qualitywindows-doors.com/index.php,qualitywindows-doors.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.493Z,2025-10-08T06:11:53.493Z
+7599,Charles J Ward Sales Inc,http://www.charlesjwardsales.com,charlesjwardsales.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.493Z,2025-10-08T06:11:53.493Z
+7600,Brother's Home Improvement,http://www.brothershomeimprovement.net,brothershomeimprovement.net,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.493Z,2025-10-08T06:11:53.493Z
+7601,Economy Window Coating & Shade,http://www.flatglasswindowtint.com,flatglasswindowtint.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.494Z,2025-10-08T06:11:53.494Z
+7602,Anawalt Lumber Co,http://anawaltlumber.com,anawaltlumber.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.494Z,2025-10-08T06:11:53.494Z
+7603,Abel Glass & Screen Co,http://abelglass4414.wix.com/abel-glass,abelglass4414.wix.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.494Z,2025-10-08T06:11:53.494Z
+7604,Hernan Glass Installation Services,http://www.hernanglass.com,hernanglass.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.494Z,2025-10-08T06:11:53.494Z
+7605,G T O Auto Glass,http://www.gtoautoglass.com,gtoautoglass.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.494Z,2025-10-08T06:11:53.494Z
+7606,Tony's Glass & Mirror,https://www.tonysglass.net,tonysglass.net,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.494Z,2025-10-08T06:11:53.494Z
+7607,Sylvan's & Phillip's Drapes & Blinds,http://www.sylvansdrapesandblinds.com,sylvansdrapesandblinds.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.494Z,2025-10-08T06:11:53.494Z
+7608,J & A Windows,https://www.jawindowsinc.com,jawindowsinc.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.494Z,2025-10-08T06:11:53.494Z
+7609,"Starlite Screen & Glass, Inc.",http://starlitescreenandglass.com,starlitescreenandglass.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.495Z,2025-10-08T06:11:53.495Z
+7610,A & S Glass Inc.,http://www.aandsglass.com,aandsglass.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.495Z,2025-10-08T06:11:53.495Z
+7611,Stoneside Blinds & Shades Downtown Los Angeles,https://www.stoneside.com/office/downtown-los-angeles-california?utm_source=ExtNet&utm_medium=Yext,stoneside.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.495Z,2025-10-08T06:11:53.495Z
+7612,S. Zamora Glass,http://www.szamoraglass.com,szamoraglass.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.496Z,2025-10-08T06:11:53.496Z
+7613,Paul's Windows,http://www.paulswindows.com,paulswindows.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.497Z,2025-10-08T06:11:53.497Z
+7614,S. Zamora Glass,https://glassrepairlosangelesca.com,glassrepairlosangelesca.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.497Z,2025-10-08T06:11:53.497Z
+7615,Restoration Hardware,http://restorationhardware.com,restorationhardware.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.497Z,2025-10-08T06:11:53.497Z
+7616,PINKYS Iron Doors,http://www.pinkys.com,pinkys.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.497Z,2025-10-08T06:11:53.497Z
+7617,Handyman Daniel,https://handymandanielenlosangeles.com,handymandanielenlosangeles.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.500Z,2025-10-08T06:11:53.500Z
+7618,Alex Window Team,http://alexwindowtinting.com,alexwindowtinting.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.500Z,2025-10-08T06:11:53.500Z
+7619,Leon Glass,http://www.leonglass.com,leonglass.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.500Z,2025-10-08T06:11:53.500Z
+7620,HSG Inc,https://www.hsg-inc.com/contact,hsg-inc.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.500Z,2025-10-08T06:11:53.500Z
+7621,Door and Window Center,https://www.doorsandwindowscenter.com/,doorsandwindowscenter.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.500Z,2025-10-08T06:11:53.500Z
+7622,American Majestic Windows,https://www.americanmajesticwindows.com,americanmajesticwindows.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.500Z,2025-10-08T06:11:53.500Z
+7623,Taylor Brothers Architectural Products,http://www.taybros.com,taybros.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.500Z,2025-10-08T06:11:53.500Z
+7624,G & I Shades,http://gishades.com,gishades.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.501Z,2025-10-08T06:11:53.501Z
+7625,Jenkins Construction of Los Angeles,https://www.jenkins-construction-la.com,jenkins-construction-la.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.501Z,2025-10-08T06:11:53.501Z
+7626,Edey Manufacturing Co,http://edeydoors.com,edeydoors.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.501Z,2025-10-08T06:11:53.501Z
+7627,Tint Factory,http://tintfactory.net,tintfactory.net,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.501Z,2025-10-08T06:11:53.501Z
+7628,LA Shades and Blinds,http://losangelesshadesandblinds.com/index.php,losangelesshadesandblinds.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.501Z,2025-10-08T06:11:53.501Z
+7629,Peninsula Mobile Screens,http://www.peninsulamobilescreens.com,peninsulamobilescreens.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.501Z,2025-10-08T06:11:53.501Z
+7630,Like New Glass Inc.,http://www.likenewglass.com,likenewglass.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.502Z,2025-10-08T06:11:53.502Z
+7631,"Budget Blinds of South Pasadena, Highland Park, and Alhambra",https://budgetblinds.com/highland-park-ca,budgetblinds.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.502Z,2025-10-08T06:11:53.502Z
+7632,Mereekh Construction,https://www.mereekhconstruction.com,mereekhconstruction.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.502Z,2025-10-08T06:11:53.502Z
+7633,Pella Windows,https://www.pella.com/locations/ca/south-pasadena,pella.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.502Z,2025-10-08T06:11:53.511Z
+7634,Martinez Custom Glass,http://martinezcustomglassla.com,martinezcustomglassla.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.502Z,2025-10-08T06:11:53.502Z
+7635,A Window Between Worlds,https://awbw.org/about-us/contact-us,awbw.org,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.502Z,2025-10-08T06:11:53.502Z
+7636,New Projection Windows,http://www.newprojection-windows.com,newprojection-windows.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.502Z,2025-10-08T06:11:53.502Z
+7637,Imperial Windows and Doors,https://impwdc.com,impwdc.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.502Z,2025-10-08T06:11:53.502Z
+7638,Enegy Star Windows,http://energystarwindows68.wix.com/info,energystarwindows68.wix.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.502Z,2025-10-08T06:11:53.502Z
+7639,The Window La,https://thewindowla.com/pages/contact,thewindowla.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.503Z,2025-10-08T06:11:53.503Z
+7640,California Window Depot,http://www.californiawindowdepot.com/contact-us.html,californiawindowdepot.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.503Z,2025-10-08T06:11:53.503Z
+7641,Motion Windows,http://motionwindowsglass.com,motionwindowsglass.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.504Z,2025-10-08T06:11:53.504Z
+7642,Luxe Windows and Doors,https://www.luxewd.com,luxewd.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.504Z,2025-10-08T06:11:53.504Z
+7643,Number,http://ym-inc.com,ym-inc.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.505Z,2025-10-08T06:11:53.505Z
+7644,CBW-Windows & Doors,http://www.cbw-doors.com/modern-entry-doors?pp=1,cbw-doors.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.506Z,2025-10-08T06:11:53.506Z
+7645,Window King,https://thewindowking.me,thewindowking.me,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.506Z,2025-10-08T06:11:53.506Z
+7646,Pioneer Window Holdings Inc,https://www.pioneerwindows.net/about-1-1,pioneerwindows.net,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.507Z,2025-10-08T06:11:53.507Z
+7647,West L A Mirror & Glass Co,https://wlamirror.com/contact-us,wlamirror.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.507Z,2025-10-08T06:11:53.507Z
+7648,Door Service,http://losangeles.united-garage-door-repair-service.com,losangeles.united-garage-door-repair-service.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.507Z,2025-10-08T06:11:53.507Z
+7649,L A Shoji & Decorative Product,https://www.lashoji.com/contact,lashoji.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.507Z,2025-10-08T06:11:53.507Z
+7650,BusNeeds.com,https://www.busneeds.com,busneeds.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.507Z,2025-10-08T06:11:53.507Z
+7651,Pristine Windows,https://www.pristinewindows.com,pristinewindows.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.507Z,2025-10-08T06:11:53.507Z
+7652,Best Little Door House In Town,https://westsidedoor.com,westsidedoor.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.507Z,2025-10-08T06:11:53.507Z
+7653,Lion Windows & Doors,http://www.lionwindowsanddoors.com,lionwindowsanddoors.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.507Z,2025-10-08T06:11:53.507Z
+7654,The Sliding Door Company,https://www.slidingdoorco.com/culver-city,slidingdoorco.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.507Z,2025-10-08T06:11:53.511Z
+7655,SOS Door & Glass Services LLC,https://glassinstalls.com,glassinstalls.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.510Z,2025-10-08T06:11:53.510Z
+7656,Epic Home Upgrades & Construction,http://epichomeupgrades.com,epichomeupgrades.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.510Z,2025-10-08T06:11:53.510Z
+7657,Tashman Home Center,http://www.tashmans.com,tashmans.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.511Z,2025-10-08T06:11:53.511Z
+7658,Pico,https://www.picoglassinc.com,picoglassinc.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.511Z,2025-10-08T06:11:53.511Z
+7659,American Vision Windows and Bath,https://www.americanvisionwindows.com/locations/san-diego,americanvisionwindows.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.511Z,2025-10-08T06:11:53.511Z
+7660,Mother Of Pearl & Sons Trading Co,http://motherofpearlusa.com,motherofpearlusa.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.511Z,2025-10-08T06:11:53.511Z
+7661,Vitrocsa USA Division of Goldbrecht Inc.,http://www.vitrocsausa.com,vitrocsausa.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.511Z,2025-10-08T06:11:53.511Z
+7662,Window Tints Southern Ca Inc,http://windowtintsglendale.com,windowtintsglendale.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.511Z,2025-10-08T06:11:53.511Z
+7663,Number,http://vagaro.com/number147,vagaro.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.511Z,2025-10-08T06:11:53.511Z
+7664,Jeld-Wen Windows & Doors,http://jeld-wen.com,jeld-wen.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.511Z,2025-10-08T06:11:53.511Z
+7665,Pure Windows By Vitrocsa,https://pure-window.com,pure-window.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.511Z,2025-10-08T06:11:53.511Z
+7666,Mission Millworks,http://mission-millworks.com,mission-millworks.com,windows,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:11:53.512Z,2025-10-08T06:11:53.512Z
+9933,Walker Drawas,https://www.walkerdrawas.com/contact-walker-drawas,walkerdrawas.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.202Z,2025-10-08T06:23:06.202Z
+9934,Stone Masons of Los Angeles,http://www.mikepearsonconstruction.com,mikepearsonconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.203Z,2025-10-08T06:23:06.203Z
+9935,Cavalier Builders Inc,http://www.cavalierbuildersinc.com,cavalierbuildersinc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.203Z,2025-10-08T06:23:06.203Z
+9936,Prestige Construction & Design,http://www.prestigeremodel.com,prestigeremodel.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.203Z,2025-10-08T06:23:06.203Z
+9937,Joel & Co. Construction,http://www.losangelesgeneralcontractor.com,losangelesgeneralcontractor.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.204Z,2025-10-08T06:23:06.204Z
+9938,Home Builders,http://www.martinsconstruction.net,martinsconstruction.net,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.204Z,2025-10-08T06:23:19.841Z
+9939,Remodeling Construction Design,http://www.remodelingconstructiondesign.com,remodelingconstructiondesign.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.205Z,2025-10-08T06:23:06.205Z
+9940,Juan de Jesus Inc. General Contractors,https://www.juandejesusinc.com,juandejesusinc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.206Z,2025-10-08T06:23:06.206Z
+9941,Wilshire Tile,http://www.wiltile.com,wiltile.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.206Z,2025-10-08T06:23:06.206Z
+9942,Ace Handyman Services Santa Monica,https://www.acehandymanservices.com/offices/santa-monica,acehandymanservices.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.206Z,2025-10-08T06:23:06.206Z
+9943,AHAE Designs,https://www.ahaedesignsinc.com,ahaedesignsinc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.207Z,2025-10-08T06:23:06.207Z
+9944,Interium Cabinets,http://interiumcabinets.com,interiumcabinets.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.207Z,2025-10-08T06:23:06.207Z
+9945,Southern Construction & Development Inc,http://southernconstructions.com,southernconstructions.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.207Z,2025-10-08T06:23:06.207Z
+9946,"Paul White General Contractor, Inc.",http://paulwhitegc.com,paulwhitegc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.207Z,2025-10-08T06:23:06.207Z
+9947,JS Building Construction Inc.,http://www.jsbuild.com,jsbuild.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.207Z,2025-10-08T06:23:06.207Z
+9948,ARP Contractor Corp,http://arpcontractorcorp.com,arpcontractorcorp.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.207Z,2025-10-08T06:23:06.207Z
+9949,Marco General Construction Inc,https://remodelerinlosangeles.com,remodelerinlosangeles.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:06.207Z,2025-10-08T06:23:06.207Z
+9950,: Fuentes General Contractor,https://losangeles-caremodeler.com,losangeles-caremodeler.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.781Z,2025-10-08T06:23:09.781Z
+9951,Bathroom Remodeling Experts,https://remodellosangelesca.com,remodellosangelesca.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.782Z,2025-10-08T06:23:09.782Z
+9952,L & A Construction,https://remodellosangeles-ca.com,remodellosangeles-ca.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.782Z,2025-10-08T06:23:09.782Z
+9953,JML Construction and Demolition,https://jmlconstructiondemolition.com,jmlconstructiondemolition.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.782Z,2025-10-08T06:23:09.782Z
+9954,Handyman Daniel,https://handymandanielenlosangeles.com,handymandanielenlosangeles.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.783Z,2025-10-08T06:23:09.783Z
+9955,Na Designs,http://www.nadesignbuilders.com,nadesignbuilders.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.783Z,2025-10-08T06:23:09.783Z
+9956,Martins Construction,http://www.martinsconstruction.org,martinsconstruction.org,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.783Z,2025-10-08T06:23:09.783Z
+9957,Meridian Design Build,https://www.meridiandesignbuildinc.com,meridiandesignbuildinc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.783Z,2025-10-08T06:23:09.783Z
+9958,GreenTech Builders Inc.,http://www.greentechbuildersinc.com,greentechbuildersinc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.783Z,2025-10-08T06:23:09.783Z
+9959,Westside Bath,http://www.westsidebath.com,westsidebath.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.784Z,2025-10-08T06:23:09.784Z
+9960,Misong Construction,http://www.misongconstruction.com,misongconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.784Z,2025-10-08T06:23:09.784Z
+9961,Manny Walls: Home Improvements,https://mannywalls.com,mannywalls.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.784Z,2025-10-08T06:23:09.784Z
+9962,Rooster Roofing,http://www.roosterroofing.com,roosterroofing.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.784Z,2025-10-08T06:23:09.784Z
+9963,MEL'S BUILDERS & DESIGN,https://melsbuilders.com,melsbuilders.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.784Z,2025-10-08T06:23:09.784Z
+9964,SA Home Remodeling and Restoration,https://sahomerestoration.com,sahomerestoration.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.784Z,2025-10-08T06:23:09.784Z
+9965,NRG Solar,http://www.nrgcleanpower.com,nrgcleanpower.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.785Z,2025-10-08T06:23:09.785Z
+9966,Exposition Park Top Kitchen Remodeling,https://enriquecade.wixsite.com/expositikitchenremod,enriquecade.wixsite.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.785Z,2025-10-08T06:23:09.785Z
+9967,Harvard Heights Top Bathroom Remodeling,https://harvardheightstopb.wixsite.com/harvardbathroomremod,harvardheightstopb.wixsite.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:09.785Z,2025-10-08T06:23:09.785Z
+9968,Compliment Builder,https://www.complimentbuildersca.com,complimentbuildersca.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.453Z,2025-10-08T06:23:13.453Z
+9969,West Side Reglazing,http://www.westsidereglazing.com,westsidereglazing.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.453Z,2025-10-08T06:23:13.453Z
+9970,Mega Granite And Marble Inc.,http://www.choicegranitehollywood.com,choicegranitehollywood.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.454Z,2025-10-08T06:23:13.454Z
+9971,Butel Construction Inc,http://www.butelconstruction.com,butelconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.454Z,2025-10-08T06:23:13.454Z
+9972,Eye4Design and Renovation,http://eye4la.com,eye4la.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.454Z,2025-10-08T06:23:13.454Z
+9973,Jenkins Construction of Los Angeles,https://www.jenkins-construction-la.com,jenkins-construction-la.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.455Z,2025-10-08T06:23:13.455Z
+9974,Saris Painting Corp,https://sarisconstruction.com/contact.html,sarisconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.455Z,2025-10-08T06:23:13.455Z
+9975,Mantis Builders,https://mantisbuilders.com,mantisbuilders.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.457Z,2025-10-08T06:23:13.457Z
+9976,Flat Rate,http://flatrateremodeling.com,flatrateremodeling.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.458Z,2025-10-08T06:23:13.458Z
+9977,Onyx General Construction Company,https://onyxgeneralconstruction.com,onyxgeneralconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.458Z,2025-10-08T06:23:13.458Z
+9978,Legno Hardwood,https://www.legnohardwood.com,legnohardwood.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.458Z,2025-10-08T06:23:13.458Z
+9979,26 Remodeling,https://26remodeling.com,26remodeling.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.459Z,2025-10-08T06:23:13.459Z
+9980,Chef's Kitchen,http://www.chefskitchens.com,chefskitchens.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.459Z,2025-10-08T06:23:13.459Z
+9981,MDM Custom Remodeling Inc,https://www.mdmcustomremodeling.com,mdmcustomremodeling.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.459Z,2025-10-08T06:23:13.459Z
+9982,Maingreen Remodel & Construction,https://maingreenconstruction.com/roofing-contractor-los-angeles-ca,maingreenconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.459Z,2025-10-08T06:23:13.459Z
+9983,Cedars Remodeling,http://www.cedars-construction.com,cedars-construction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.460Z,2025-10-08T06:23:13.460Z
+9984,Contech Inc,https://www.contechincca.com,contechincca.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.460Z,2025-10-08T06:23:13.460Z
+9985,Rancho Park Best Bathroom Remodeling,http://heatherdarkbabysem.wixsite.com/ranchoparkremodeling,heatherdarkbabysem.wixsite.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.460Z,2025-10-08T06:23:13.460Z
+9986,Green Design Builders Inc,https://greendesignbuilding.com/contact-us,greendesignbuilding.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.460Z,2025-10-08T06:23:13.460Z
+9987,Silver Hammer Builders Roofing I Construction I Design,https://silverhammerbuilders.com,silverhammerbuilders.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.460Z,2025-10-08T06:23:13.460Z
+9988,Osborne Building Corp.,http://www.osbornebuilding.com,osbornebuilding.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.460Z,2025-10-08T06:23:13.460Z
+9989,NewForm Builders,https://newformbuilders.com,newformbuilders.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.461Z,2025-10-08T06:23:13.461Z
+9990,KB Home Corp,http://www.kbhome.com,kbhome.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:13.461Z,2025-10-08T06:23:13.461Z
+9991,Southwest Construction & Home Improvement,http://www.southwestimprovements.com,southwestimprovements.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.882Z,2025-10-08T06:23:16.882Z
+9992,Remodelup -,http://remodelup.com,remodelup.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.883Z,2025-10-08T06:23:16.883Z
+9993,CB Evolution,https://remodelerlosangeles-ca.com,remodelerlosangeles-ca.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.883Z,2025-10-08T06:23:16.883Z
+9994,J.C. Construction,https://remodelingsvc-ca.com,remodelingsvc-ca.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.883Z,2025-10-08T06:23:16.883Z
+9995,Renaissance Man Restoration,http://www.renaissancemanrestoration.net,renaissancemanrestoration.net,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.883Z,2025-10-08T06:23:16.883Z
+9996,"General Contractors, Kitchen, Bathroom, Construction",http://www.findlicensedcontractor.com,findlicensedcontractor.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.884Z,2025-10-08T06:23:16.884Z
+9997,Snow Construction,https://framinglosangeles.com,framinglosangeles.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.884Z,2025-10-08T06:23:16.884Z
+9998,Mereekh Construction,https://www.mereekhconstruction.com,mereekhconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.884Z,2025-10-08T06:23:33.799Z
+9999,David Smith Design + Build,https://davidsmithdesignplusbuild.com,davidsmithdesignplusbuild.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.884Z,2025-10-08T06:23:16.884Z
+10000,Fig Tree Construction And Remodeling,https://www.figtreela.com,figtreela.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.885Z,2025-10-08T06:23:16.885Z
+10001,Best Choice Painting,http://www.bestchoicepaintingco.com,bestchoicepaintingco.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.885Z,2025-10-08T06:23:16.885Z
+10002,J Builders Inc,http://jbuildersinc.com,jbuildersinc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.885Z,2025-10-08T06:23:16.885Z
+10003,A. A. Allied,http://www.aaalliedconstr.com,aaalliedconstr.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.885Z,2025-10-08T06:23:16.885Z
+10004,JB Design Construction,http://www.jbdesignconstruction.com,jbdesignconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.885Z,2025-10-08T06:23:16.885Z
+10005,Stone Construction Co,https://www.stoneconstructioncompany.com/contact,stoneconstructioncompany.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.885Z,2025-10-08T06:23:16.885Z
+10006,Turtle Roofing Co,http://www.turtleideabank.com,turtleideabank.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.885Z,2025-10-08T06:23:38.245Z
+10007,CCLA,http://commercialcontractorlosangeles.com,commercialcontractorlosangeles.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:16.886Z,2025-10-08T06:23:16.886Z
+10008,Dream Remodeling Inc.,http://www.dreamremodelinginc.com,dreamremodelinginc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.838Z,2025-10-08T06:23:19.838Z
+10009,Washington Construction Co,http://www.washingtonconstruction.com,washingtonconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.838Z,2025-10-08T06:23:19.838Z
+10010,Grayson Construction,http://www.graysonconstructioninc.com,graysonconstructioninc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.839Z,2025-10-08T06:23:19.839Z
+10011,Caliwood Builders,http://www.caliwoodbuilders.com,caliwoodbuilders.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.839Z,2025-10-08T06:23:19.839Z
+10012,Argueta Construction,http://www.arguetaconstruction.com,arguetaconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.840Z,2025-10-08T06:23:19.840Z
+10013,Remodeling Design Specialist,https://1800remodel.com,1800remodel.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.841Z,2025-10-08T06:23:19.841Z
+10014,Sky High Builders Inc,http://skyhighbuilders.com,skyhighbuilders.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.841Z,2025-10-08T06:23:19.841Z
+10015,Ultra Built Kitchens,http://ultrabuiltkitchens.net,ultrabuiltkitchens.net,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.841Z,2025-10-08T06:23:19.841Z
+10016,A & H Remodeling & Construction,http://www.ah-remodeling.com,ah-remodeling.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.841Z,2025-10-08T06:23:19.841Z
+10017,Houck Construction,https://houckinc.com,houckinc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.841Z,2025-10-08T06:23:19.841Z
+10018,Giisamex Inc.,https://giisamex.com,giisamex.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.842Z,2025-10-08T06:23:19.842Z
+10019,Stonebridge Construction Group,http://www.stonebridgeconstructiongroup.com,stonebridgeconstructiongroup.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:19.842Z,2025-10-08T06:23:19.842Z
+10020,Mas Construction,https://www.rdmacconstruction.com/contact-us,rdmacconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:22.382Z,2025-10-08T06:23:22.382Z
+10021,Kitchen Remodeling Los Angeles,http://modernkitchenremodelinglosangeles.com,modernkitchenremodelinglosangeles.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:22.383Z,2025-10-08T06:23:22.383Z
+10022,Undisclosable Inc,http://undisclosable.co/contact/contact2,undisclosable.co,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:22.384Z,2025-10-08T06:23:22.384Z
+10023,Raw Development,http://www.rawdevelopment.com,rawdevelopment.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:22.384Z,2025-10-08T06:23:22.384Z
+10024,Bathroom Remodeling Los Angeles,https://www.losangelescontractors.org/the-best-office-contractors-in-los-angeles,losangelescontractors.org,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:22.384Z,2025-10-08T06:23:22.384Z
+10025,Novel Remodeling,https://www.novelremodeling.com,novelremodeling.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:22.384Z,2025-10-08T06:23:22.384Z
+10026,Bay Cities Kitchens & Appliance,http://www.baycitiesinc.com,baycitiesinc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:22.384Z,2025-10-08T06:23:22.384Z
+10027,Tri Pros Remodeling Inc,https://triprosremodeling.com,triprosremodeling.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:22.384Z,2025-10-08T06:23:22.384Z
+10028,R A Cortez,https://www.racdb.com,racdb.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:22.384Z,2025-10-08T06:23:22.384Z
+10029,Bernini Design,http://www.bernini-design.net,bernini-design.net,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:25.062Z,2025-10-08T06:23:25.062Z
+10030,Home 2 Renovate Inc,https://home2renovate.com,home2renovate.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:25.062Z,2025-10-08T06:23:25.062Z
+10031,Bathtub Refinishing and Fiberglass Expert,http://reglazinglosangeles.com,reglazinglosangeles.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:25.063Z,2025-10-08T06:23:25.063Z
+10032,mdesignhouse,https://www.mdesignhouseusa.com,mdesignhouseusa.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:25.063Z,2025-10-08T06:23:25.063Z
+10033,Paul Davis Restoration of Pasadena,https://pasadena.pauldavis.com,pasadena.pauldavis.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:25.063Z,2025-10-08T06:23:25.063Z
+10034,Go Green Remodeling Inc,https://www.ggrinc.net/enter,ggrinc.net,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:25.063Z,2025-10-08T06:23:25.063Z
+10035,Asbesto Instant Response Inc,http://www.airinc.ws,airinc.ws,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:25.064Z,2025-10-08T06:23:25.064Z
+10036,Josh Brown Design,http://www.joshbrowndesign.com,joshbrowndesign.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:25.064Z,2025-10-08T06:23:25.064Z
+10037,Modern Concepts Contracting,http://www.modernconceptsla.com,modernconceptsla.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:25.065Z,2025-10-08T06:23:25.065Z
+10038,Pacific Construction,http://www.sinaiconstruction.net,sinaiconstruction.net,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:28.757Z,2025-10-08T06:23:28.757Z
+10039,Kitchen and Bath Gallery,http://fergusonshowrooms.com/support/our-showrooms?cmpid=md_ntnl_shwrm_nat_yp___website,fergusonshowrooms.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:28.758Z,2025-10-08T06:23:28.758Z
+10040,Casablanca Moroccan Kitchens,http://www.casablancamoroccankitchens.com,casablancamoroccankitchens.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:28.758Z,2025-10-08T06:23:28.758Z
+10041,Powerfull Electric Inc,https://powerfullelectric.com/contact,powerfullelectric.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:28.758Z,2025-10-08T06:23:28.758Z
+10042,Maintenance Concierge,https://themaintenanceconciergeinc.xyz,themaintenanceconciergeinc.xyz,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:28.759Z,2025-10-08T06:23:28.759Z
+10043,L.A Xtreme by Rafal Trojan,https://latoprenovation.com/kitchen-remodeling-los-angeles,latoprenovation.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:28.759Z,2025-10-08T06:23:28.759Z
+10044,Up to Code Inc.,http://www.up2codeinc.com,up2codeinc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:28.759Z,2025-10-08T06:23:28.759Z
+10045,Elite Remodeling And Construction,http://www.elite-remodeling.com,elite-remodeling.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:28.760Z,2025-10-08T06:23:28.760Z
+10046,Moda Collection,https://www.moda-optica.de,moda-optica.de,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:31.842Z,2025-10-08T06:23:31.842Z
+10047,"Benchmark Construction, Inc",http://tenantimprovementconstruction.com,tenantimprovementconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:31.842Z,2025-10-08T06:23:31.842Z
+10048,Swinerton Builders,http://swinerton.com,swinerton.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:31.843Z,2025-10-08T06:23:31.843Z
+10049,Mergen Construction Inc,http://www.mergenconstruction.com,mergenconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:31.843Z,2025-10-08T06:23:31.843Z
+10050,Creative Choice Corp,https://www.newchoicecontractors.com,newchoicecontractors.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:31.843Z,2025-10-08T06:23:31.843Z
+10051,Kitchen Studio,https://kitchenstudiola.com/contact,kitchenstudiola.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:31.843Z,2025-10-08T06:23:31.843Z
+10052,Avi Construction,https://www.carvingdreamsinwood.com/contact.html,carvingdreamsinwood.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:31.844Z,2025-10-08T06:23:31.844Z
+10053,Danny's Kitchen Cabinets,http://dannyskc.com,dannyskc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:31.844Z,2025-10-08T06:23:31.844Z
+10054,Blackstone Remodeling Inc,https://www.blackstone-remodeling.com/contact-us,blackstone-remodeling.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:31.844Z,2025-10-08T06:23:31.844Z
+10055,Triangle Construction Inc,http://www.mcrdreambuilders.com,mcrdreambuilders.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:31.844Z,2025-10-08T06:23:31.844Z
+10056,Hoffman & Associates,https://www.habuildingcorp.com,habuildingcorp.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:33.798Z,2025-10-08T06:23:33.798Z
+10057,O L Building Projects,https://www.oplusl.com/modjeska-residence,oplusl.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:33.799Z,2025-10-08T06:23:33.799Z
+10058,Best Little Door House In Town,https://westsidedoor.com,westsidedoor.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:33.799Z,2025-10-08T06:23:33.799Z
+10059,Granite Transformations,http://www.granitetransformations.com,granitetransformations.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:33.799Z,2025-10-08T06:23:33.799Z
+10060,Integrity Solutions,http://integritysolutionsla.com,integritysolutionsla.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:33.799Z,2025-10-08T06:23:33.799Z
+10061,Pacific Home Remodeling,http://pacifichomeremodeling.com,pacifichomeremodeling.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:33.800Z,2025-10-08T06:23:33.800Z
+10062,Heltzer,http://www.heltzerdev.com,heltzerdev.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:33.800Z,2025-10-08T06:23:33.800Z
+10063,Howard Building Corporation,http://howardbuilding.com,howardbuilding.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:33.800Z,2025-10-08T06:23:33.800Z
+10064,Diversified Maintenance Systems,http://dmsutah.com,dmsutah.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:33.800Z,2025-10-08T06:23:33.800Z
+10065,Lattanzi Construction Inc,http://lattanziconstruction.com,lattanziconstruction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:36.271Z,2025-10-08T06:23:36.271Z
+10066,Wise Builders,http://www.wisebuilders.org,wisebuilders.org,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:36.273Z,2025-10-08T06:23:36.273Z
+10067,Shirley Construction Co,http://shirley-construction.com,shirley-construction.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:36.274Z,2025-10-08T06:23:36.274Z
+10068,Ramati Inc,https://www.ramatiinc.com/generallandingpage,ramatiinc.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:36.275Z,2025-10-08T06:23:36.275Z
+10069,Super Handyman Service,https://super-handyman.com,super-handyman.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:36.275Z,2025-10-08T06:23:36.275Z
+10070,Penaloza's Remodeling Services,https://penalozaremodeling.squarespace.com,penalozaremodeling.squarespace.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:36.275Z,2025-10-08T06:23:36.275Z
+10071,Steiner Contractors,http://www.steinerbros.com,steinerbros.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:36.276Z,2025-10-08T06:23:36.276Z
+10072,Safe Step Walk-In Tub Co.,http://local.yp.com/Listings/Details.aspx?NUM=a:13222853:13:4859924:14:0:7,local.yp.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:38.243Z,2025-10-08T06:23:38.243Z
+10073,Bath Planet,http://www.bathplanet.com/LOSANGELES,bathplanet.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:38.244Z,2025-10-08T06:23:38.244Z
+10074,Allen Exteriors,http://juanramirezpainting.com,juanramirezpainting.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:38.245Z,2025-10-08T06:23:38.245Z
+10075,Tactical Tile,http://www.tacticaltile.com,tacticaltile.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:38.245Z,2025-10-08T06:23:38.245Z
+10076,Apex Enterprise Roofing,http://www.apexentroofing.com,apexentroofing.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:38.245Z,2025-10-08T06:23:38.245Z
+10077,Joe Chavez Garage Doors,http://www.got-door.com/home.html,got-door.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:38.245Z,2025-10-08T06:23:38.245Z
+10078,Eurocraft Cabinets,http://www.aeurocraftcabinets.com,aeurocraftcabinets.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:38.245Z,2025-10-08T06:23:38.245Z
+10079,New Castle Remodeling,http://www.bestlaremodel.com,bestlaremodel.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:38.245Z,2025-10-08T06:23:38.245Z
+10080,La Design Build,https://www.ladesignbuild.com/contact,ladesignbuild.com,basement remodel,"Los Angeles, CA",,"[""yellowpages""]",,,2025-10-08T06:23:38.246Z,2025-10-08T06:23:38.246Z
