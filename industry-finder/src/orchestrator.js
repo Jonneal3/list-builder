@@ -79,21 +79,15 @@ async function main() {
       } catch {}
     }
     if (allCities) {
-      try {
-        const bundled = path.join(__dirname, '../../frontend/app/api/search/cities_us_35k.ts');
-        if (fs.existsSync(bundled)) {
-          const src = fs.readFileSync(bundled, 'utf8');
-          const match = src.match(/\[(.|\n|\r)*\]/m);
-          if (match) {
-            const jsonish = match[0]
-              .replace(/\s*\,\s*\]/g, ']')
-              .replace(/\“|\”|\‘|\’/g, '"')
-              .replace(/"([A-Za-z\s\-\.,]+),\s*([A-Z]{2})"/g, '"$1, $2"');
-            const arr = JSON.parse(jsonish);
-            if (Array.isArray(arr)) return arr.map(String);
-          }
-        }
-      } catch {}
+      // Built-in fallback list (population ~35k+). Keep small and fast.
+      const DEFAULT_US_CITIES_35K = [
+        'New York, NY','Los Angeles, CA','Chicago, IL','Houston, TX','Phoenix, AZ',
+        'Philadelphia, PA','San Antonio, TX','San Diego, CA','Dallas, TX','San Jose, CA',
+        'Austin, TX','Jacksonville, FL','Fort Worth, TX','Columbus, OH','Charlotte, NC',
+        'San Francisco, CA','Indianapolis, IN','Seattle, WA','Denver, CO','Washington, DC',
+        'Boston, MA','El Paso, TX','Nashville, TN','Detroit, MI','Oklahoma City, OK'
+      ];
+      return DEFAULT_US_CITIES_35K;
     }
     return [city];
   })();
@@ -164,6 +158,9 @@ async function main() {
           rotateViewport,
         });
         const ypRows = Array.isArray(yp) ? yp : yp?.rows || [];
+        if (yp && !Array.isArray(yp) && typeof yp.pagesFetched === 'number') {
+          emit({ type: 'status', source: 'yellowpages', message: 'pages_done', city: cityName, pagesFetched: yp.pagesFetched });
+        }
         if (yp && !Array.isArray(yp) && typeof yp.total === 'number') {
           emit({ type: 'status', source: 'yellowpages', message: 'total', city: cityName, total: yp.total });
           log.info(`YellowPages reported total ~${yp.total}`);
@@ -201,6 +198,7 @@ async function main() {
 
       if (!exhaustCity) break;
     }
+    emit({ type: 'status', message: 'city_done', city: cityName });
   }
 
   const rows = listCompanies(db);

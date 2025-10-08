@@ -87,18 +87,16 @@ function parseListingHtml(html, industryTerms, opts = {}) {
         const abs = extractWebsiteUrl(href);
         // Exclude YP internal links and map/directions
         if (/yellowpages\.com|\/directions|\/map\b|tel:|mailto:/i.test(abs)) return;
-        // Only accept external anchor if it looks related to industry
-        if (/^https?:\/\//i.test(abs) && hostOrPathContains(abs, industryTerms)) {
-          websiteCandidate = abs;
-        }
+        // Accept first external site; later filters will drop directories/generic
+        if (/^https?:\/\//i.test(abs)) { websiteCandidate = abs; }
       });
     }
     const website = extractWebsiteUrl(websiteCandidate);
     // Optional: mild name relevance; don't over-filter
     const lname = name.toLowerCase();
     const nameMatches = industryTerms.some(t => t && lname.includes(t));
-    // Enforce name relevance when requested
-    if (opts.requireIndustryInName !== false && industryTerms.length > 0 && !nameMatches) return;
+    // Only enforce name relevance when explicitly requested
+    if (opts.requireIndustryInName === true && industryTerms.length > 0 && !nameMatches) return;
     // Drop rows with no website when required
     if (opts.requireWebsite && !website) return;
     // Drop known generic/directory destinations

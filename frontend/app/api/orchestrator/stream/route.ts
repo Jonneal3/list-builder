@@ -15,7 +15,7 @@ function sse(obj: any, evt?: string) {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const industry = (searchParams.get("industry") || "").trim();
-  const city = (searchParams.get("city") || "New York").trim();
+  const cityParam = (searchParams.get("city") || "").trim();
   const queries = Math.max(1, Number(searchParams.get("queries") || "3"));
   const pages = Math.max(1, Number(searchParams.get("pages") || "1"));
   const ypPagesParam = (searchParams.get("ypPages") || "-1").trim();
@@ -38,6 +38,9 @@ export async function GET(req: NextRequest) {
   const pageJitterMinMs = Math.max(0, Number(searchParams.get("pageJitterMinMs") || "800"));
   const pageJitterMaxMs = Math.max(pageJitterMinMs, Number(searchParams.get("pageJitterMaxMs") || "2000"));
   const rotateViewport = String(searchParams.get("rotateViewport") || "false").toLowerCase() === "true";
+  const allCitiesParam = String(searchParams.get("allCities") || "false").toLowerCase() === "true";
+  const exhaustCity = String(searchParams.get("exhaustCity") || "false").toLowerCase() === "true";
+  const useAllCities = allCitiesParam || !cityParam;
 
   if (!industry) {
     return new Response("Missing industry", { status: 400 });
@@ -56,7 +59,8 @@ export async function GET(req: NextRequest) {
       const args = [
         scriptPath,
         `--industry=${industry}`,
-        `--city=${city}`,
+        // Only pass a specific city when not running all-cities mode
+        ...(useAllCities ? [] : [`--city=${cityParam || 'New York'}`]),
         `--queries=${String(queries)}`,
         `--pages=${String(pages)}`,
         `--ypPages=${String(ypPages)}`,
@@ -71,9 +75,11 @@ export async function GET(req: NextRequest) {
         `--pageJitterMinMs=${String(pageJitterMinMs)}`,
         `--pageJitterMaxMs=${String(pageJitterMaxMs)}`,
         `--rotateViewport=${rotateViewport ? 'true' : 'false'}`,
+        `--exhaustCity=${exhaustCity ? 'true' : 'false'}`,
         "--stream",
         "--verbose=false",
       ];
+      if (useAllCities) args.push("--allCities=true");
       if (fresh) args.push("--fresh=true");
 
       const child = spawn("node", args, { cwd: repoRoot, env: { ...process.env,
