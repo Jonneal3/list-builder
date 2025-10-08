@@ -1,3 +1,4 @@
+import "./globals.css";
 export const metadata = {
   title: "AI Industry Explorer",
   description: "Discover companies by industry",

@@ -1,0 +1,25 @@
+{
+  "name": "industry-finder",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Hybrid scraper to find companies by industry and location using free sources.",
+  "main": "src/orchestrator.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/orchestrator.js",
+    "run": "node src/orchestrator.js --industry=\"flooring\" --city=\"New York\" --queries=5 --pages=1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "better-sqlite3": "^9.4.0",
+    "cheerio": "^1.0.0-rc.12",
+    "minimist": "^1.2.8",
+    "puppeteer": "^23.4.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  }
+}
+

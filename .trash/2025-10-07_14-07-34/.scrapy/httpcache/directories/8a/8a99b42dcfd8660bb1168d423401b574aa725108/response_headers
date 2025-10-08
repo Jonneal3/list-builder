@@ -1,0 +1,11 @@
+Date: Mon, 06 Oct 2025 23:17:33 GMT
+Content-Type: text/html; charset=UTF-8
+Cf-Ray: 98a8df70bdb7391e-IAH
+X-Powered-By: PHP/8.1.13
+Set-Cookie: CAKEPHP=6varc3rvjo5rob1jj8k61uhifh; expires=Tue, 07-Oct-2025 03:17:32 GMT; Max-Age=14400; path=/; secure; HttpOnly
+Cf-Cache-Status: DYNAMIC
+Server-Timing: cfCacheStatus;desc="DYNAMIC"
+Server-Timing: cfOrigin;dur=136,cfEdge;dur=10
+Speculation-Rules: "/cdn-cgi/speculation"
+Server: cloudflare
+Alt-Svc: h3=":443"; ma=86400

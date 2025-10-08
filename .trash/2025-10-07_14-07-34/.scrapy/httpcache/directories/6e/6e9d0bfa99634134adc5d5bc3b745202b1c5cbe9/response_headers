@@ -1,0 +1,14 @@
+Date: Mon, 06 Oct 2025 23:17:32 GMT
+Content-Type: text/plain
+Content-Encoding: gzip
+Last-Modified: Tue, 25 Apr 2023 22:17:57 GMT
+Etag: W/"64485195-4f"
+Cache-Control: max-age=14400
+Cf-Cache-Status: REVALIDATED
+Server-Timing: cfCacheStatus;desc="REVALIDATED"
+Server-Timing: cfOrigin;dur=99,cfEdge;dur=94
+Vary: Accept-Encoding
+Speculation-Rules: "/cdn-cgi/speculation"
+Server: cloudflare
+Cf-Ray: 98a8df69db06391e-IAH
+Alt-Svc: h3=":443"; ma=86400

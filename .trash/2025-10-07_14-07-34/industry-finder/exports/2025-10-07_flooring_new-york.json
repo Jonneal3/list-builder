@@ -1,0 +1,422 @@
+[
+  {
+    "id": 1,
+    "name": "All Pro Cleaning & Restoration",
+    "website": "http://www.allprorestoration.com/",
+    "normalized_domain": "allprorestoration.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.711Z",
+    "last_seen": "2025-10-07T04:27:15.748Z"
+  },
+  {
+    "id": 2,
+    "name": "Wood Flooring USA",
+    "website": "http://www.woodflooringusa.com/",
+    "normalized_domain": "woodflooringusa.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.717Z",
+    "last_seen": "2025-10-07T04:27:15.750Z"
+  },
+  {
+    "id": 3,
+    "name": "New York Floorman",
+    "website": "http://www.ny-floorman.com/",
+    "normalized_domain": "ny-floorman.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.717Z",
+    "last_seen": "2025-10-07T04:27:15.738Z"
+  },
+  {
+    "id": 4,
+    "name": "Janos P Spitzer Flooring Co Inc",
+    "website": "http://www.janosspitzerflooring.com/",
+    "normalized_domain": "janosspitzerflooring.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:21:40.687Z"
+  },
+  {
+    "id": 5,
+    "name": "Woodcraft Floors Inc.",
+    "website": "http://woodcraftfloors.com/",
+    "normalized_domain": "woodcraftfloors.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:27:15.748Z"
+  },
+  {
+    "id": 6,
+    "name": "Blue Star Jets",
+    "website": "https://www.jets.com/contact",
+    "normalized_domain": "jets.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:21:40.687Z"
+  },
+  {
+    "id": 7,
+    "name": "Chelsea Floor Covering",
+    "website": "https://www.chelseafloors.com/",
+    "normalized_domain": "chelseafloors.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:27:15.749Z"
+  },
+  {
+    "id": 8,
+    "name": "Allstate Flooring",
+    "website": "https://www.allstateflooring.com/",
+    "normalized_domain": "allstateflooring.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:27:15.749Z"
+  },
+  {
+    "id": 9,
+    "name": "Big Apple Stone and Metal Care",
+    "website": "https://bigapplestonecareny.com/about-us",
+    "normalized_domain": "bigapplestonecareny.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:27:15.749Z"
+  },
+  {
+    "id": 10,
+    "name": "Diverzify, formerly RD Weis",
+    "website": "https://diverzify.com/",
+    "normalized_domain": "diverzify.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:27:15.749Z"
+  },
+  {
+    "id": 11,
+    "name": "Buono's Flooring",
+    "website": "https://www.buonoflooring.com/",
+    "normalized_domain": "buonoflooring.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:27:15.749Z"
+  },
+  {
+    "id": 12,
+    "name": "Raskin Carpets",
+    "website": "http://www.raskincarpets.com/",
+    "normalized_domain": "raskincarpets.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:21:40.688Z"
+  },
+  {
+    "id": 13,
+    "name": "Architectural Tile Restoration LLP",
+    "website": "https://afrny.com/",
+    "normalized_domain": "afrny.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:21:40.688Z"
+  },
+  {
+    "id": 14,
+    "name": "Dupont Flooring Systems",
+    "website": "http://wms.org/",
+    "normalized_domain": "wms.org",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:21:40.688Z"
+  },
+  {
+    "id": 15,
+    "name": "Consolidated Flooring",
+    "website": "https://consolidatedflooring.com/",
+    "normalized_domain": "consolidatedflooring.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:21:40.689Z"
+  },
+  {
+    "id": 16,
+    "name": "Floor Force",
+    "website": "http://floorforce.com/",
+    "normalized_domain": "floorforce.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:21:40.689Z"
+  },
+  {
+    "id": 17,
+    "name": "New York Wood Flooring",
+    "website": "http://www.nywflooring.com/",
+    "normalized_domain": "nywflooring.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:21:40.689Z"
+  },
+  {
+    "id": 18,
+    "name": "Grayfox Floors",
+    "website": "http://grayfoxflooring.com/",
+    "normalized_domain": "grayfoxflooring.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:11:35.718Z",
+    "last_seen": "2025-10-07T04:21:40.689Z"
+  },
+  {
+    "id": 19,
+    "name": "Eastside Floor Service Ltd",
+    "website": "http://eastsidefloors.com/",
+    "normalized_domain": "eastsidefloors.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.745Z",
+    "last_seen": "2025-10-07T04:27:15.745Z"
+  },
+  {
+    "id": 20,
+    "name": "My Home",
+    "website": "http://www.myhomeus.com/",
+    "normalized_domain": "myhomeus.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.747Z",
+    "last_seen": "2025-10-07T04:27:15.747Z"
+  },
+  {
+    "id": 21,
+    "name": "State of the Art Wood Floor Gallery DBA SOTA Floors",
+    "website": "https://www.sotafloors.com/",
+    "normalized_domain": "sotafloors.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.748Z",
+    "last_seen": "2025-10-07T04:27:15.748Z"
+  },
+  {
+    "id": 22,
+    "name": "212 Floormasters",
+    "website": "http://www.212floormasters.com/",
+    "normalized_domain": "212floormasters.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.748Z",
+    "last_seen": "2025-10-07T04:27:15.748Z"
+  },
+  {
+    "id": 23,
+    "name": "New York Flooring",
+    "website": "http://www.newyorkflooring.com/contact-us",
+    "normalized_domain": "newyorkflooring.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.749Z",
+    "last_seen": "2025-10-07T04:27:15.749Z"
+  },
+  {
+    "id": 24,
+    "name": "First Step Hardwood Floor Service Incorporated",
+    "website": "http://www.contractors.com/h/contractorinfo/details.html?contractor_id=3979031&affid=101",
+    "normalized_domain": "contractors.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.750Z",
+    "last_seen": "2025-10-07T04:27:15.750Z"
+  },
+  {
+    "id": 25,
+    "name": "Georgia Class Carpet",
+    "website": "http://manhattan.abbeycarpet.com/",
+    "normalized_domain": "manhattan.abbeycarpet.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.750Z",
+    "last_seen": "2025-10-07T04:27:15.750Z"
+  },
+  {
+    "id": 26,
+    "name": "Wood Floor Planet Inc",
+    "website": "http://www.citysearch.com/profile/743552070/new_york_ny/wood_floor_planet_inc.html",
+    "normalized_domain": "citysearch.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.750Z",
+    "last_seen": "2025-10-07T04:27:15.750Z"
+  },
+  {
+    "id": 27,
+    "name": "Scerri Quality Wood Floors & Paint",
+    "website": "http://www.gonefinishing.com/",
+    "normalized_domain": "gonefinishing.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.751Z",
+    "last_seen": "2025-10-07T04:27:15.751Z"
+  },
+  {
+    "id": 28,
+    "name": "Crafted Home NY",
+    "website": "http://www.craftedhomeny.com/",
+    "normalized_domain": "craftedhomeny.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.751Z",
+    "last_seen": "2025-10-07T04:27:15.751Z"
+  },
+  {
+    "id": 29,
+    "name": "Northeast Floor Coverings",
+    "website": "https://www.carpetfactoryoutlet.com/",
+    "normalized_domain": "carpetfactoryoutlet.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.751Z",
+    "last_seen": "2025-10-07T04:27:15.751Z"
+  },
+  {
+    "id": 30,
+    "name": "Country Floors Inc",
+    "website": "http://www.countryfloors.com/",
+    "normalized_domain": "countryfloors.com",
+    "industry": "flooring",
+    "location": "New York",
+    "size_category": null,
+    "source_list": [
+      "yellowpages"
+    ],
+    "first_seen": "2025-10-07T04:27:15.751Z",
+    "last_seen": "2025-10-07T04:27:15.751Z"
+  }
+]
