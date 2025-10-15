@@ -41,6 +41,15 @@ export async function GET(req: NextRequest) {
   const allCitiesParam = String(searchParams.get("allCities") || "false").toLowerCase() === "true";
   const exhaustCity = String(searchParams.get("exhaustCity") || "false").toLowerCase() === "true";
   const useAllCities = allCitiesParam || !cityParam;
+  const enableGmaps = String(searchParams.get("enableGmaps") || "true").toLowerCase() === "true";
+  const gmapsLimit = Math.max(1, Number(searchParams.get("gmapsLimit") || "25"));
+  const gmapsDetailClicks = Math.max(0, Number(searchParams.get("gmapsDetailClicks") || "5"));
+  const onlyGmaps = String(searchParams.get("onlyGmaps") || "false").toLowerCase() === "true";
+  const gmapsExhaust = String(searchParams.get("gmapsExhaust") || "false").toLowerCase() === "true";
+  const gmapsMaxTotal = Math.max(gmapsLimit, Number(searchParams.get("gmapsMaxTotal") || "600"));
+  const gmapsDetailAll = String(searchParams.get("gmapsDetailAll") || "false").toLowerCase() === "true";
+  const isVercel = Boolean(process.env.VERCEL);
+  const puppeteerPages = Math.max(1, Number(searchParams.get("puppeteerPages") || (isVercel ? "1" : "2")));
 
   if (!industry) {
     return new Response("Missing industry", { status: 400 });
@@ -50,6 +59,7 @@ export async function GET(req: NextRequest) {
   const repoRoot = path.resolve(process.cwd(), "..");
   const scriptPath = path.join(repoRoot, "industry-finder", "src", "orchestrator.js");
 
+  let childRef: import("child_process").ChildProcess | null = null;
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {
       const enc = new TextEncoder();
@@ -76,11 +86,35 @@ export async function GET(req: NextRequest) {
         `--pageJitterMaxMs=${String(pageJitterMaxMs)}`,
         `--rotateViewport=${rotateViewport ? 'true' : 'false'}`,
         `--exhaustCity=${exhaustCity ? 'true' : 'false'}`,
+        `--enableGmaps=${enableGmaps ? 'true' : 'false'}`,
+        `--gmapsLimit=${String(gmapsLimit)}`,
+        `--gmapsDetailClicks=${String(gmapsDetailClicks)}`,
+        `--gmapsExhaust=${gmapsExhaust ? 'true' : 'false'}`,
+        `--gmapsMaxTotal=${String(gmapsMaxTotal)}`,
+        `--gmapsDetailAll=${gmapsDetailAll ? 'true' : 'false'}`,
+        `--onlyGmaps=${onlyGmaps ? 'true' : 'false'}`,
+        `--puppeteerPages=${String(puppeteerPages)}`,
+        `--headless=${headless ? 'true' : 'false'}`,
+        // Disable Apollo for YellowPages-only runs
+        `--enableApollo=false`,
+        `--onlyApollo=false`,
         // enforce sequential pages per city when exhausting
         ...(exhaustCity ? ["--ypConcurrency=1"] : []),
         "--stream",
         "--verbose=false",
       ];
+      if (isVercel) {
+        // On Vercel, prefer conservative settings to avoid resource contention
+        // Ensure single-page concurrency for Puppeteer and YP
+        if (!args.some(a => a.startsWith('--ypConcurrency='))) args.push('--ypConcurrency=1');
+        // Avoid forcing browser-first in serverless
+        for (let i = 0; i < args.length; i++) {
+          if (args[i].startsWith('--forceBrowserFirst=')) args[i] = '--forceBrowserFirst=false';
+        }
+        // Cap auto pages for YP unless explicitly set by query
+        const hasAuto = args.some(a => a.startsWith('--autoMaxPagesYp='));
+        if (!hasAuto) args.push('--autoMaxPagesYp=12');
+      }
       if (useAllCities) args.push("--allCities=true");
       if (fresh) args.push("--fresh=true");
 
@@ -88,6 +122,7 @@ export async function GET(req: NextRequest) {
         PUPPETEER_EXECUTABLE_PATH: process.env.PUPPETEER_EXECUTABLE_PATH || '',
         IF_DB_PATH: process.env.IF_DB_PATH || "/tmp/industry-finder.sqlite",
       } });
+      childRef = child;
 
       let buf = "";
       child.stdout.on("data", (data: Buffer) => {
@@ -99,6 +134,10 @@ export async function GET(req: NextRequest) {
           if (!line) continue;
           try {
             const obj = JSON.parse(line);
+            // Ensure categories field is parsed as array if it's a JSON string
+            if (obj && typeof obj.categories === 'string') {
+              try { obj.categories = JSON.parse(obj.categories); } catch {}
+            }
             enqueue(sse(obj));
           } catch {
             enqueue(sse({ type: "log", message: line }));
@@ -119,7 +158,17 @@ export async function GET(req: NextRequest) {
         try { controller.close(); } catch {}
       });
     },
-    cancel() {},
+    async cancel() {
+      // Kill the spawned orchestrator when client disconnects (Stop button closes EventSource)
+      try {
+        if (childRef && !childRef.killed) {
+          try { childRef.kill('SIGTERM'); } catch {}
+          // Force kill after a short grace period
+          await new Promise(res => setTimeout(res, 1200));
+          try { if (childRef && !childRef.killed) childRef.kill('SIGKILL'); } catch {}
+        }
+      } catch {}
+    },
   });
 
   return new Response(stream, {
@@ -132,5 +181,3 @@ export async function GET(req: NextRequest) {
     },
   });
 }
-
-

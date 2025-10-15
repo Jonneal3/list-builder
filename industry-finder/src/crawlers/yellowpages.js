@@ -57,6 +57,13 @@ function parseListingHtml(html, industryTerms, opts = {}) {
   const $ = load(html);
   const results = [];
   const cards = $('div.result, div.srp-listing, article.srp-listing, div.business-card, div.info');
+  function absUrl(href) {
+    if (!href) return null;
+    try {
+      const u = new URL(href, 'https://www.yellowpages.com');
+      return u.toString();
+    } catch { return href; }
+  }
   function extractWebsiteUrl(raw) {
     if (!raw) return null;
     try {
@@ -73,6 +80,8 @@ function parseListingHtml(html, industryTerms, opts = {}) {
     // Do not aggressively drop on generic "ad"/"sponsored" text to avoid false positives
     const name = (node.find('a.business-name span').text().trim() || node.find('a.business-name').first().text().trim() || node.find('h2 a, h3 a').first().text().trim());
     if (!name) return;
+    // Listing URL on Yellow Pages
+    const listingUrl = absUrl(node.find('a.business-name').attr('href') || node.find('h2 a, h3 a').first().attr('href') || null);
     // Try multiple selectors for website links
     let websiteCandidate = node.find('a.track-visit-website').attr('href')
       || node.find('a.website, a.website-link').attr('href')
@@ -92,6 +101,57 @@ function parseListingHtml(html, industryTerms, opts = {}) {
       });
     }
     const website = extractWebsiteUrl(websiteCandidate);
+    // Phone number (prefer tel: link)
+    let phone = null;
+    const telHref = node.find('a[href^="tel:"]').attr('href') || node.find('a.phone[href^="tel:"]').attr('href') || null;
+    if (telHref) {
+      phone = telHref.replace(/^tel:/i, '').trim();
+    } else {
+      const rawPhone = (node.find('.phones, .phone, .contact, .contact-phone').first().text() || '').trim();
+      if (rawPhone) phone = rawPhone.replace(/\s+/g, ' ');
+    }
+    // Address parts
+    const street = (node.find('.street-address, .streetAddress, p.adr .street-address').first().text() || '').trim();
+    // locality often includes "City, ST"; split best-effort
+    const localityBlob = (node.find('.locality').first().text() || '').trim();
+    let city = '', state = '', postal = '';
+    const regionTxt = (node.find('.region').first().text() || '').trim();
+    const postalTxt = (node.find('.postal-code, .zip').first().text() || '').trim();
+    if (localityBlob) {
+      // Expected formats: "City, ST" or "City, ST ZIP"
+      const m = localityBlob.match(/^(.+?),\s*([A-Z]{2})(?:\s+(\d{5}(?:-\d{4})?))?$/i);
+      if (m) { city = (m[1] || '').trim(); state = (m[2] || '').trim().toUpperCase(); postal = (m[3] || '').trim(); }
+      else { city = localityBlob; }
+    }
+    if (!state && regionTxt) state = regionTxt.toUpperCase();
+    if (!postal && postalTxt) postal = postalTxt;
+    const addressLine2 = [city, state].filter(Boolean).join(', ');
+    const address = [street, [addressLine2, postal].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+    // Rating and reviews
+    let rating = null;
+    let reviewsCount = null;
+    const ratingAria = node.find('[aria-label*="star"]').attr('aria-label') || node.find('.result-rating').attr('aria-label') || '';
+    const mRating = String(ratingAria).match(/([0-9]+(?:\.[0-9]+)?)\s*star/i);
+    if (mRating) rating = parseFloat(mRating[1]);
+    if (rating == null) {
+      // Try data-rating or class-based ratings
+      const dataRating = node.find('[data-rating]').attr('data-rating');
+      if (dataRating && !isNaN(Number(dataRating))) rating = Number(dataRating);
+    }
+    const reviewsTxt = (node.find('.count, .review-count, .reviews').first().text() || '').trim();
+    const mReviews = reviewsTxt.match(/([0-9,]+)/);
+    if (mReviews) reviewsCount = parseInt(mReviews[1].replace(/,/g, ''), 10);
+    // Categories
+    const categories = [];
+    node.find('.categories a, .links a.category, .category').each((__, a) => {
+      const t = ($(a).text() || '').trim();
+      if (t) categories.push(t);
+    });
+    // Hours (best-effort text)
+    const hoursText = (node.find('.open-hours, .hours, .open-status, .business-hours').first().text() || '').trim() || null;
+    // Email if present
+    const emailHref = node.find('a[href^="mailto:"]').attr('href') || null;
+    const email = emailHref ? emailHref.replace(/^mailto:/i, '').trim() : null;
     // Optional: mild name relevance; don't over-filter
     const lname = name.toLowerCase();
     const nameMatches = industryTerms.some(t => t && lname.includes(t));
@@ -107,7 +167,22 @@ function parseListingHtml(html, industryTerms, opts = {}) {
         if (GENERIC_BLOCK.has(host) || DIRECTORY_BLOCK.has(host)) return;
       }
     } catch {}
-    results.push({ name, website: website || null });
+    results.push({
+      name,
+      website: website || null,
+      phone: phone || null,
+      address: address || null,
+      address_street: street || null,
+      address_city: city || null,
+      address_state: state || null,
+      address_postal_code: postal || null,
+      rating: rating == null ? null : rating,
+      reviews_count: reviewsCount == null ? null : reviewsCount,
+      categories: categories.length ? categories : null,
+      yp_listing_url: listingUrl || null,
+      hours_text: hoursText || null,
+      email: email || null,
+    });
   });
   return results;
 }
@@ -155,7 +230,7 @@ function parseTotalCount(html) {
   return null;
 }
 
-async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency: 2, minDelayMs: 200, maxDelayMs: 500, autoMaxPages: 50, onDebug: null, onRows: null, proxyList: [], rotateProxies: false, initialBackoffMs: 500, useBrowserFallback: true, pageTimeoutMs: 20000, headless: true, puppeteerProxy: null, puppeteerProxyUser: null, puppeteerProxyPass: null, maxRetriesPerPage: 2, forceBrowserFirst: false, pageJitterMinMs: 800, pageJitterMaxMs: 2000, rotateViewport: false }) {
+async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency: 2, minDelayMs: 200, maxDelayMs: 500, autoMaxPages: 50, onDebug: null, onRows: null, proxyList: [], rotateProxies: false, initialBackoffMs: 500, useBrowserFallback: true, pageTimeoutMs: 20000, headless: true, puppeteerProxy: null, puppeteerProxyUser: null, puppeteerProxyPass: null, maxRetriesPerPage: 2, forceBrowserFirst: false, pageJitterMinMs: 800, pageJitterMaxMs: 2000, rotateViewport: false, puppeteerPages: 1 }) {
   const terms = termsFromIndustry(industry);
   const totalPages = Number(pages) === -1 ? -1 : Math.max(1, Number(pages || 1));
   const limit = Math.max(1, Math.min(8, Number(opts.concurrency || 2)));
@@ -241,6 +316,25 @@ async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency:
 
   // Shared Puppeteer browser to reduce startup overhead
   let sharedPuppeteer = null;
+  // Limit the number of simultaneously open Puppeteer pages (tabs)
+  const maxPuppeteerPages = Math.max(1, Math.min(4, Number(opts.puppeteerPages || 1)));
+  let activePages = 0;
+  const waiters = [];
+  async function acquirePageSlot() {
+    if (activePages < maxPuppeteerPages) {
+      activePages += 1;
+      return;
+    }
+    return new Promise((resolve) => waiters.push(resolve));
+  }
+  function releasePageSlot() {
+    if (waiters.length > 0) {
+      const next = waiters.shift();
+      try { if (next) next(); } catch {}
+    } else {
+      activePages = Math.max(0, activePages - 1);
+    }
+  }
   async function ensurePuppeteerBrowser() {
     try {
       if (!puppeteerExtra) return null;
@@ -261,6 +355,7 @@ async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency:
   async function puppeteerFetchHtml(url, methodTag = 'puppeteer') {
     const browser = await ensurePuppeteerBrowser();
     if (!browser) return null;
+    await acquirePageSlot();
     const pageObj = await browser.newPage();
     try {
       // Authenticate to proxy if provided
@@ -280,6 +375,19 @@ async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency:
           await pageObj.setViewport({ width: w, height: h });
         } catch {}
       }
+      // Block heavy/irrelevant resources to speed up and reduce bandwidth
+      try {
+        await pageObj.setRequestInterception(true);
+        pageObj.on('request', (req) => {
+          try {
+            const type = String(req.resourceType()).toLowerCase();
+            const urlStr = String(req.url() || '').toLowerCase();
+            if (type === 'image' || type === 'media' || type === 'font' || type === 'stylesheet' || type === 'manifest') { return req.abort(); }
+            if (urlStr.includes('google-analytics') || urlStr.includes('googletagmanager') || urlStr.includes('doubleclick') || urlStr.includes('facebook.com/tr') || urlStr.includes('adsystem') || urlStr.includes('adservice') || urlStr.includes('hotjar') || urlStr.includes('segment')) { return req.abort(); }
+          } catch {}
+          try { return req.continue(); } catch {}
+        });
+      } catch {}
       const navTimeout = Math.max(5000, Math.min(60000, Number(opts.pageTimeoutMs || 20000)));
       await pageObj.goto(url, { waitUntil: 'domcontentloaded', timeout: navTimeout });
       // Best-effort consent dismissal and small scroll to trigger lazy content
@@ -313,9 +421,11 @@ async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency:
       } catch {}
       const html = await pageObj.content();
       await pageObj.close();
+      releasePageSlot();
       return { html, method: methodTag };
     } catch (e) {
       try { await pageObj.close(); } catch {}
+      releasePageSlot();
       throw e;
     }
   }

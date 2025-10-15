@@ -33,9 +33,37 @@ function initDb() {
       size_category TEXT,
       source_list TEXT,
       first_seen TEXT,
-      last_seen TEXT
+      last_seen TEXT,
+      phone TEXT,
+      address TEXT,
+      address_street TEXT,
+      address_city TEXT,
+      address_state TEXT,
+      address_postal_code TEXT,
+      rating REAL,
+      reviews_count INTEGER,
+      categories TEXT,
+      yp_listing_url TEXT,
+      hours_text TEXT,
+      email TEXT
     );
   `);
+  // Backfill columns for existing databases (best-effort)
+  const addCol = (name, type) => {
+    try { db.exec(`ALTER TABLE companies ADD COLUMN ${name} ${type};`); } catch (_) {}
+  };
+  addCol('phone', 'TEXT');
+  addCol('address', 'TEXT');
+  addCol('address_street', 'TEXT');
+  addCol('address_city', 'TEXT');
+  addCol('address_state', 'TEXT');
+  addCol('address_postal_code', 'TEXT');
+  addCol('rating', 'REAL');
+  addCol('reviews_count', 'INTEGER');
+  addCol('categories', 'TEXT');
+  addCol('yp_listing_url', 'TEXT');
+  addCol('hours_text', 'TEXT');
+  addCol('email', 'TEXT');
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_companies_domain ON companies(normalized_domain);
   `);
@@ -63,7 +91,8 @@ function normalizeDomain(url) {
 function upsertCompany(db, record) {
   const nowIso = new Date().toISOString();
   const normalizedDomain = record.normalized_domain || normalizeDomain(record.website);
-  if (!record.name || (!normalizedDomain && !record.website)) return 0;
+  // Allow saving rows that have a name even if website/domain is missing (e.g., Apollo list view)
+  if (!record.name) return 0;
   const incomingSources = Array.isArray(record.source_list) ? record.source_list : [];
 
   // Upsert by (normalized_domain, industry, location) when domain present.
@@ -81,7 +110,19 @@ function upsertCompany(db, record) {
               website=COALESCE(@website, website),
               size_category=COALESCE(@size_category, size_category),
               source_list=@source_list,
-              last_seen=@last_seen
+              last_seen=@last_seen,
+              phone=COALESCE(@phone, phone),
+              address=COALESCE(@address, address),
+              address_street=COALESCE(@address_street, address_street),
+              address_city=COALESCE(@address_city, address_city),
+              address_state=COALESCE(@address_state, address_state),
+              address_postal_code=COALESCE(@address_postal_code, address_postal_code),
+              rating=COALESCE(@rating, rating),
+              reviews_count=COALESCE(@reviews_count, reviews_count),
+              categories=COALESCE(@categories, categories),
+              yp_listing_url=COALESCE(@yp_listing_url, yp_listing_url),
+              hours_text=COALESCE(@hours_text, hours_text),
+              email=COALESCE(@email, email)
           WHERE id=@id;
         `);
         const info = update.run({
@@ -91,12 +132,24 @@ function upsertCompany(db, record) {
           size_category: rec.size_category || null,
           source_list: JSON.stringify(merged),
           last_seen: nowIso,
+          phone: rec.phone || null,
+          address: rec.address || null,
+          address_street: rec.address_street || null,
+          address_city: rec.address_city || null,
+          address_state: rec.address_state || null,
+          address_postal_code: rec.address_postal_code || null,
+          rating: (typeof rec.rating === 'number' ? rec.rating : null),
+          reviews_count: (Number.isFinite(rec.reviews_count) ? rec.reviews_count : null),
+          categories: rec.categories ? JSON.stringify(rec.categories) : null,
+          yp_listing_url: rec.yp_listing_url || null,
+          hours_text: rec.hours_text || null,
+          email: rec.email || null,
         });
         return info.changes;
       } else {
         const insert = db.prepare(`
-          INSERT INTO companies (name, website, normalized_domain, industry, location, size_category, source_list, first_seen, last_seen)
-          VALUES (@name, @website, @normalized_domain, @industry, @location, @size_category, @source_list, @first_seen, @last_seen);
+          INSERT INTO companies (name, website, normalized_domain, industry, location, size_category, source_list, first_seen, last_seen, phone, address, address_street, address_city, address_state, address_postal_code, rating, reviews_count, categories, yp_listing_url, hours_text, email)
+          VALUES (@name, @website, @normalized_domain, @industry, @location, @size_category, @source_list, @first_seen, @last_seen, @phone, @address, @address_street, @address_city, @address_state, @address_postal_code, @rating, @reviews_count, @categories, @yp_listing_url, @hours_text, @email);
         `);
         const info = insert.run({
           name: rec.name,
@@ -108,6 +161,18 @@ function upsertCompany(db, record) {
           source_list: JSON.stringify(incomingSources),
           first_seen: nowIso,
           last_seen: nowIso,
+          phone: rec.phone || null,
+          address: rec.address || null,
+          address_street: rec.address_street || null,
+          address_city: rec.address_city || null,
+          address_state: rec.address_state || null,
+          address_postal_code: rec.address_postal_code || null,
+          rating: (typeof rec.rating === 'number' ? rec.rating : null),
+          reviews_count: (Number.isFinite(rec.reviews_count) ? rec.reviews_count : null),
+          categories: rec.categories ? JSON.stringify(rec.categories) : null,
+          yp_listing_url: rec.yp_listing_url || null,
+          hours_text: rec.hours_text || null,
+          email: rec.email || null,
         });
         return info.changes;
       }
@@ -115,22 +180,88 @@ function upsertCompany(db, record) {
     return tx(record);
   }
 
-  // Fallback insert without domain
-  const stmt = db.prepare(`
-    INSERT INTO companies (name, website, normalized_domain, industry, location, size_category, source_list, first_seen, last_seen)
-    VALUES (@name, @website, NULL, @industry, @location, @size_category, @source_list, @first_seen, @last_seen);
-  `);
-  const info = stmt.run({
-    name: record.name,
-    website: record.website || null,
-    industry: record.industry || null,
-    location: record.location || null,
-    size_category: record.size_category || null,
-    source_list: JSON.stringify(incomingSources),
-    first_seen: nowIso,
-    last_seen: nowIso,
+  // Fallback upsert without domain: merge on (name, industry, location)
+  const tx = db.transaction((rec) => {
+    const existing = db.prepare(`
+      SELECT id, source_list FROM companies 
+      WHERE normalized_domain IS NULL AND name=? AND industry IS ? AND location IS ? 
+      LIMIT 1
+    `).get(rec.name, rec.industry || null, rec.location || null);
+    if (existing) {
+      let existingSources = [];
+      try { existingSources = JSON.parse(existing.source_list || '[]'); } catch(_) {}
+      const merged = Array.from(new Set([...(existingSources || []), ...incomingSources]));
+      const update = db.prepare(`
+        UPDATE companies
+        SET website=COALESCE(@website, website),
+            size_category=COALESCE(@size_category, size_category),
+            source_list=@source_list,
+            last_seen=@last_seen,
+            phone=COALESCE(@phone, phone),
+            address=COALESCE(@address, address),
+            address_street=COALESCE(@address_street, address_street),
+            address_city=COALESCE(@address_city, address_city),
+            address_state=COALESCE(@address_state, address_state),
+            address_postal_code=COALESCE(@address_postal_code, address_postal_code),
+            rating=COALESCE(@rating, rating),
+            reviews_count=COALESCE(@reviews_count, reviews_count),
+            categories=COALESCE(@categories, categories),
+            yp_listing_url=COALESCE(@yp_listing_url, yp_listing_url),
+            hours_text=COALESCE(@hours_text, hours_text),
+            email=COALESCE(@email, email)
+        WHERE id=@id;
+      `);
+      const infoU = update.run({
+        id: existing.id,
+        website: rec.website || null,
+        size_category: rec.size_category || null,
+        source_list: JSON.stringify(merged),
+        last_seen: nowIso,
+        phone: rec.phone || null,
+        address: rec.address || null,
+        address_street: rec.address_street || null,
+        address_city: rec.address_city || null,
+        address_state: rec.address_state || null,
+        address_postal_code: rec.address_postal_code || null,
+        rating: (typeof rec.rating === 'number' ? rec.rating : null),
+        reviews_count: (Number.isFinite(rec.reviews_count) ? rec.reviews_count : null),
+        categories: rec.categories ? JSON.stringify(rec.categories) : null,
+        yp_listing_url: rec.yp_listing_url || null,
+        hours_text: rec.hours_text || null,
+        email: rec.email || null,
+      });
+      return infoU.changes;
+    } else {
+      const insert = db.prepare(`
+        INSERT INTO companies (name, website, normalized_domain, industry, location, size_category, source_list, first_seen, last_seen, phone, address, address_street, address_city, address_state, address_postal_code, rating, reviews_count, categories, yp_listing_url, hours_text, email)
+        VALUES (@name, @website, NULL, @industry, @location, @size_category, @source_list, @first_seen, @last_seen, @phone, @address, @address_street, @address_city, @address_state, @address_postal_code, @rating, @reviews_count, @categories, @yp_listing_url, @hours_text, @email);
+      `);
+      const infoI = insert.run({
+        name: rec.name,
+        website: rec.website || null,
+        industry: rec.industry || null,
+        location: rec.location || null,
+        size_category: rec.size_category || null,
+        source_list: JSON.stringify(incomingSources),
+        first_seen: nowIso,
+        last_seen: nowIso,
+        phone: rec.phone || null,
+        address: rec.address || null,
+        address_street: rec.address_street || null,
+        address_city: rec.address_city || null,
+        address_state: rec.address_state || null,
+        address_postal_code: rec.address_postal_code || null,
+        rating: (typeof rec.rating === 'number' ? rec.rating : null),
+        reviews_count: (Number.isFinite(rec.reviews_count) ? rec.reviews_count : null),
+        categories: rec.categories ? JSON.stringify(rec.categories) : null,
+        yp_listing_url: rec.yp_listing_url || null,
+        hours_text: rec.hours_text || null,
+        email: rec.email || null,
+      });
+      return infoI.changes;
+    }
   });
-  return info.changes;
+  return tx(record);
 }
 
 function listCompanies(db) {
@@ -146,6 +277,18 @@ function listCompanies(db) {
     source_list: (() => { try { return JSON.parse(r.source_list || '[]'); } catch(_) { return []; } })(),
     first_seen: r.first_seen,
     last_seen: r.last_seen,
+    phone: r.phone,
+    address: r.address,
+    address_street: r.address_street,
+    address_city: r.address_city,
+    address_state: r.address_state,
+    address_postal_code: r.address_postal_code,
+    rating: r.rating,
+    reviews_count: r.reviews_count,
+    categories: (() => { try { return JSON.parse(r.categories || 'null'); } catch(_) { return null; } })(),
+    yp_listing_url: r.yp_listing_url,
+    hours_text: r.hours_text,
+    email: r.email,
   }));
 }
 
