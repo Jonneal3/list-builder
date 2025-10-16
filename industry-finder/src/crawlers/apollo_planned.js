@@ -29,7 +29,7 @@ async function plannedApolloScrape({
   async function scrapeAndDeliver(listUrl, label) {
     try {
       debug({ source: 'apollo', info: 'planned_nav', url: listUrl, label });
-      const rows = await scrapeApolloWithSession(page, null, null, { apolloListUrl: listUrl, uiPages, onDebug });
+      const rows = await scrapeApolloWithSession(page, null, null, { apolloListUrl: listUrl, uiPages, onDebug, label });
       for (const r of rows) {
         const k = keyOf(r);
         if (seen.has(k)) continue;
@@ -46,8 +46,9 @@ async function plannedApolloScrape({
     }
   }
 
-  // Step 0: Base scrape with only keywords
-  const baseUrl = buildCompaniesUrl({ keywords, page: 1 });
+  // Step 0: Base scrape scoped to United States so initial 125 are US-only
+  // If Apollo expects a country token, "United States" works in the UI
+  const baseUrl = buildCompaniesUrl({ keywords, page: 1, locations: ['United States'] });
   const baseCount = await scrapeAndDeliver(baseUrl, 'base');
   debug({ source: 'apollo', info: 'planned_base_done', rows: baseCount });
 

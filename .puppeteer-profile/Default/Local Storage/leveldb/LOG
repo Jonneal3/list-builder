@@ -1,0 +1,6 @@
+2025/10/16-00:23:16.386 16c58c4 Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/Local Storage/leveldb/MANIFEST-000001
+2025/10/16-00:23:16.392 16c58c4 Recovering log #10
+2025/10/16-00:23:16.394 16c58c4 Reusing old log /Users/jon/list-builder/.puppeteer-profile/Default/Local Storage/leveldb/000010.log 
+2025/10/16-00:24:16.405 16c58c7 Level-0 table #14: started
+2025/10/16-00:24:16.407 16c58c7 Level-0 table #14: 17249 bytes OK
+2025/10/16-00:24:16.410 16c58c7 Delete type=0 #10

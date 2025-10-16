@@ -405,7 +405,7 @@ async function crawlYellowPages(industry, city, pages = 1, opts = { concurrency:
         });
       } catch {}
       // Human-like jitter
-      try { await pageObj.waitForTimeout(300 + Math.floor(Math.random() * 500)); } catch {}
+      try { await new Promise(resolve => setTimeout(resolve, 300 + Math.floor(Math.random() * 500))); } catch {}
       try { await pageObj.waitForSelector('div.result, div.srp-listing, article.srp-listing, div.business-card, div.info', { timeout: 8000 }); } catch {}
       // Detect obvious CAPTCHA blocks
       try {

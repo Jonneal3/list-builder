@@ -204,7 +204,7 @@ async function main() {
               try {
                 console.log('Navigating to companies page after manual login...');
                 await apolloSession.page.goto('https://app.apollo.io/#/companies', { waitUntil: 'domcontentloaded', timeout: 10000 });
-                await apolloSession.page.waitForTimeout(2000);
+                await new Promise(resolve => setTimeout(resolve, 2000));
                 console.log('Successfully navigated to companies page');
               } catch (e) {
                 console.log('Error navigating to companies page:', e.message);
@@ -256,19 +256,28 @@ async function main() {
                   industry,
                   location: null,
                   source_list: ['apollo'],
-                  size_category: null,
+                  size_category: evt.employeeCount || null,
                   phone: evt.phone || null,
                   address: evt.address || null,
                   address_street: null,
-                  address_city: null,
-                  address_state: null,
+                  address_city: evt.address_city || null,
+                  address_state: evt.address_state || null,
                   address_postal_code: null,
                   rating: typeof evt.rating === 'number' ? evt.rating : null,
                   reviews_count: Number.isFinite(evt.reviews_count) ? evt.reviews_count : null,
                   categories: Array.isArray(evt.categories) ? evt.categories : (evt.categories ? [evt.categories] : null),
-                  yp_listing_url: null,
+                  yp_listing_url: evt.apollo_profile_url || null,
                   hours_text: evt.hours_text || null,
                   email: evt.email || null,
+                  description: evt.description || null,
+                  social_profiles: evt.socialProfiles ? JSON.stringify(evt.socialProfiles) : null,
+                  keywords: evt.keywords || null,
+                  employee_count: evt.employeeCount || null,
+                  revenue: evt.revenue || null,
+                  linkedin_url: evt.linkedin_url || (evt.socialProfiles && evt.socialProfiles.linkedin) || null,
+                  facebook_url: evt.facebook_url || (evt.socialProfiles && evt.socialProfiles.facebook) || null,
+                  twitter_url: evt.twitter_url || (evt.socialProfiles && evt.socialProfiles.twitter) || null,
+                  apollo_profile_url: evt.apollo_profile_url || evt._profileUrl || null,
                 });
               } catch {}
               emit(evt);
@@ -330,7 +339,7 @@ async function main() {
             industry,
             location: null, // Apollo doesn't use location filtering
             source_list: ['apollo'],
-            size_category: row.size_category || null,
+            size_category: row.employeeCount || row.size_category || null,
             phone: row.phone || null,
             address: row.address || null,
             address_street: row.address_street || null,
@@ -340,9 +349,11 @@ async function main() {
             rating: typeof row.rating === 'number' ? row.rating : null,
             reviews_count: Number.isFinite(row.reviews_count) ? row.reviews_count : null,
             categories: Array.isArray(row.categories) ? row.categories : (row.categories ? [row.categories] : null),
-            yp_listing_url: null,
+            yp_listing_url: row.apolloProfileUrl || row._profileUrl || null,
             hours_text: null,
             email: row.email || null,
+            description: row.description || null,
+            social_profiles: row.socialProfiles ? JSON.stringify(row.socialProfiles) : null,
           });
           emit({ type: 'row', name: row.name, website: row.website || null, phone: row.phone || null, address: row.address || null, rating: row.rating ?? null, reviews_count: row.reviews_count ?? null, categories: row.categories || null, industry, location: null, source: 'apollo', method: row.method || 'apollo-api', page: null, query: industry, fallback_used: Boolean(row.fallback_used) });
         } catch (e) {

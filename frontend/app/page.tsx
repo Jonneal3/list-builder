@@ -6,6 +6,7 @@ type Row = {
   name: string;
   website: string;
   city?: string;
+  state?: string;
   query?: string;
   source?: string;
   phone?: string | null;
@@ -17,6 +18,14 @@ type Row = {
   email?: string | null;
   yp_listing_url?: string | null;
   revenueScore?: number;
+  employees?: string | null;
+  industry?: string | null;
+  keywords?: string | null;
+  linkedin_url?: string | null;
+  facebook_url?: string | null;
+  twitter_url?: string | null;
+  apollo_profile_url?: string | null;
+  revenue?: string | null;
 };
 
 export default function Home() {
@@ -44,6 +53,7 @@ export default function Home() {
   const [rowCount, setRowCount] = useState<number>(0);
   const [source, setSource] = useState<'yellowpages' | 'googlemaps' | 'apollo'>('yellowpages');
   const [showBrowser, setShowBrowser] = useState<boolean>(false);
+  const listRef = useRef<HTMLDivElement | null>(null);
   const [waitingForApolloLogin, setWaitingForApolloLogin] = useState<boolean>(false);
   const [apolloEmail, setApolloEmail] = useState<string>("");
   const [apolloPassword, setApolloPassword] = useState<string>("");
@@ -57,12 +67,21 @@ export default function Home() {
     phone: 120,
     address: 260,
     city: 140,
+    state: 90,
+    employees: 90,
     rating: 90,
     reviews: 90,
     categories: 220,
     hours: 180,
     email: 180,
     yp: 160,
+    industry: 160,
+    keywords: 220,
+    linkedin: 200,
+    facebook: 200,
+    twitter: 200,
+    apollo: 160,
+    revenue: 100,
     source: 100,
     query: 140,
   });
@@ -89,6 +108,12 @@ export default function Home() {
       document.removeEventListener('mouseup', onUp);
     };
   }, [resizingRef.current]);
+  // Auto-scroll to bottom on new rows
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, [rows.length]);
   function startResize(key: string, e: React.MouseEvent) {
     const startW = colWidths[key] || 120;
     resizingRef.current = { key, startX: e.clientX, startW };
@@ -167,7 +192,8 @@ export default function Home() {
         pendingRowsRef.current.push({
           name: displayName,
           website: (origin || rawWebsite || ""),
-          city: (msg.city || msg.location || ""),
+          city: (msg.address_city || msg.city || msg.location || ""),
+          state: (msg.address_state || ""),
           query: (msg.query || ""),
           source: (msg.source || msg.method || ""),
           phone: (msg.phone ?? null),
@@ -178,6 +204,14 @@ export default function Home() {
           hours_text: (msg.hours_text ?? null),
           email: (msg.email ?? null),
           yp_listing_url: (msg.yp_listing_url ?? null),
+          employees: (msg.employee_count ?? msg.employeeCount ?? null),
+          industry: (msg.industry ?? null),
+          keywords: (typeof msg.keywords === 'string' ? msg.keywords : (Array.isArray(msg.keywords) ? msg.keywords.join(', ') : null)),
+          linkedin_url: (msg.linkedin_url ?? null),
+          facebook_url: (msg.facebook_url ?? null),
+          twitter_url: (msg.twitter_url ?? null),
+          apollo_profile_url: (msg.apollo_profile_url ?? null),
+          revenue: (msg.revenue ?? null),
         });
         // schedule a flush soon to minimize re-renders
         if (!flushTimerRef.current) {
@@ -738,7 +772,7 @@ export default function Home() {
       )}
 
       <section className="w-full mt-1 bg-white p-0">
-        <div className="max-h-[calc(100vh-64px)] overflow-auto">
+        <div className="max-h-[calc(100vh-64px)] overflow-auto" ref={listRef}>
           <div className="overflow-x-auto">
             <table className="min-w-max border-collapse text-[11px] leading-5">
               <colgroup>
@@ -748,12 +782,21 @@ export default function Home() {
                 <col style={{ width: colWidths.phone }} />
                 <col style={{ width: colWidths.address }} />
                 <col style={{ width: colWidths.city }} />
+                <col style={{ width: colWidths.state }} />
+                <col style={{ width: colWidths.employees }} />
                 <col style={{ width: colWidths.rating }} />
                 <col style={{ width: colWidths.reviews }} />
                 <col style={{ width: colWidths.categories }} />
                 <col style={{ width: colWidths.hours }} />
                 <col style={{ width: colWidths.email }} />
                 <col style={{ width: colWidths.yp }} />
+                <col style={{ width: colWidths.industry }} />
+                <col style={{ width: colWidths.keywords }} />
+                <col style={{ width: colWidths.linkedin }} />
+                <col style={{ width: colWidths.facebook }} />
+                <col style={{ width: colWidths.twitter }} />
+                <col style={{ width: colWidths.apollo }} />
+                <col style={{ width: colWidths.revenue }} />
                 <col style={{ width: colWidths.source }} />
                 <col style={{ width: colWidths.query }} />
               </colgroup>
@@ -766,12 +809,21 @@ export default function Home() {
                     { key: 'phone', label: 'Phone' },
                     { key: 'address', label: 'Address' },
                     { key: 'city', label: 'City' },
+                    { key: 'state', label: 'State' },
+                    { key: 'employees', label: 'Employees' },
                     { key: 'rating', label: 'Rating' },
                     { key: 'reviews', label: 'Reviews' },
                     { key: 'categories', label: 'Categories' },
                     { key: 'hours', label: 'Hours' },
                     { key: 'email', label: 'Email' },
                     { key: 'yp', label: 'YP Listing' },
+                    { key: 'industry', label: 'Industry' },
+                    { key: 'keywords', label: 'Keywords' },
+                    { key: 'linkedin', label: 'LinkedIn' },
+                    { key: 'facebook', label: 'Facebook' },
+                    { key: 'twitter', label: 'Twitter' },
+                    { key: 'apollo', label: 'Apollo' },
+                    { key: 'revenue', label: 'Revenue' },
                     { key: 'source', label: 'Source' },
                     { key: 'query', label: 'Query' },
                   ].map((c) => (
@@ -798,12 +850,21 @@ export default function Home() {
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.phone || ""}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.address || ""}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.city || ""}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top">{r.state || ""}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top">{r.employees || ""}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.rating == null ? '' : r.rating.toFixed(1)}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.reviews_count == null ? '' : r.reviews_count}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{Array.isArray(r.categories) ? r.categories.join(', ') : (r.categories || '')}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.hours_text || ""}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.email || ""}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.yp_listing_url ? (<a className="text-blue-700 hover:underline" href={r.yp_listing_url} target="_blank" rel="noreferrer">Open</a>) : ''}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top">{r.industry || ''}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.keywords || ''}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.linkedin_url ? (<a className="text-blue-700 hover:underline" href={r.linkedin_url} target="_blank" rel="noreferrer">LinkedIn</a>) : ''}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.facebook_url ? (<a className="text-blue-700 hover:underline" href={r.facebook_url} target="_blank" rel="noreferrer">Facebook</a>) : ''}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.twitter_url ? (<a className="text-blue-700 hover:underline" href={r.twitter_url} target="_blank" rel="noreferrer">Twitter</a>) : ''}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.apollo_profile_url ? (<a className="text-blue-700 hover:underline" href={r.apollo_profile_url} target="_blank" rel="noreferrer">Apollo</a>) : ''}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top">{r.revenue || ''}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.source || ""}</td>
                       <td className="p-2 border-b border-gray-200 align-top">{r.query || ""}</td>
                     </tr>

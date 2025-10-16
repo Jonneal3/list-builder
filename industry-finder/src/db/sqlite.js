@@ -45,7 +45,16 @@ function initDb() {
       categories TEXT,
       yp_listing_url TEXT,
       hours_text TEXT,
-      email TEXT
+      email TEXT,
+      description TEXT,
+      social_profiles TEXT,
+      keywords TEXT,
+      employee_count TEXT,
+      revenue TEXT,
+      linkedin_url TEXT,
+      facebook_url TEXT,
+      twitter_url TEXT,
+      apollo_profile_url TEXT
     );
   `);
   // Backfill columns for existing databases (best-effort)
@@ -64,6 +73,15 @@ function initDb() {
   addCol('yp_listing_url', 'TEXT');
   addCol('hours_text', 'TEXT');
   addCol('email', 'TEXT');
+  addCol('description', 'TEXT');
+  addCol('social_profiles', 'TEXT');
+  addCol('keywords', 'TEXT');
+  addCol('employee_count', 'TEXT');
+  addCol('revenue', 'TEXT');
+  addCol('linkedin_url', 'TEXT');
+  addCol('facebook_url', 'TEXT');
+  addCol('twitter_url', 'TEXT');
+  addCol('apollo_profile_url', 'TEXT');
   db.exec(`
     CREATE INDEX IF NOT EXISTS idx_companies_domain ON companies(normalized_domain);
   `);
@@ -122,7 +140,16 @@ function upsertCompany(db, record) {
               categories=COALESCE(@categories, categories),
               yp_listing_url=COALESCE(@yp_listing_url, yp_listing_url),
               hours_text=COALESCE(@hours_text, hours_text),
-              email=COALESCE(@email, email)
+              email=COALESCE(@email, email),
+              description=COALESCE(@description, description),
+              social_profiles=COALESCE(@social_profiles, social_profiles),
+              keywords=COALESCE(@keywords, keywords),
+              employee_count=COALESCE(@employee_count, employee_count),
+              revenue=COALESCE(@revenue, revenue),
+              linkedin_url=COALESCE(@linkedin_url, linkedin_url),
+              facebook_url=COALESCE(@facebook_url, facebook_url),
+              twitter_url=COALESCE(@twitter_url, twitter_url),
+              apollo_profile_url=COALESCE(@apollo_profile_url, apollo_profile_url)
           WHERE id=@id;
         `);
         const info = update.run({
@@ -144,12 +171,21 @@ function upsertCompany(db, record) {
           yp_listing_url: rec.yp_listing_url || null,
           hours_text: rec.hours_text || null,
           email: rec.email || null,
+          description: rec.description || null,
+          social_profiles: rec.social_profiles || null,
+          keywords: rec.keywords || null,
+          employee_count: rec.employee_count || null,
+          revenue: rec.revenue || null,
+          linkedin_url: rec.linkedin_url || null,
+          facebook_url: rec.facebook_url || null,
+          twitter_url: rec.twitter_url || null,
+          apollo_profile_url: rec.apollo_profile_url || null,
         });
         return info.changes;
       } else {
         const insert = db.prepare(`
-          INSERT INTO companies (name, website, normalized_domain, industry, location, size_category, source_list, first_seen, last_seen, phone, address, address_street, address_city, address_state, address_postal_code, rating, reviews_count, categories, yp_listing_url, hours_text, email)
-          VALUES (@name, @website, @normalized_domain, @industry, @location, @size_category, @source_list, @first_seen, @last_seen, @phone, @address, @address_street, @address_city, @address_state, @address_postal_code, @rating, @reviews_count, @categories, @yp_listing_url, @hours_text, @email);
+        INSERT INTO companies (name, website, normalized_domain, industry, location, size_category, source_list, first_seen, last_seen, phone, address, address_street, address_city, address_state, address_postal_code, rating, reviews_count, categories, yp_listing_url, hours_text, email, description, social_profiles, keywords, employee_count, revenue, linkedin_url, facebook_url, twitter_url, apollo_profile_url)
+        VALUES (@name, @website, @normalized_domain, @industry, @location, @size_category, @source_list, @first_seen, @last_seen, @phone, @address, @address_street, @address_city, @address_state, @address_postal_code, @rating, @reviews_count, @categories, @yp_listing_url, @hours_text, @email, @description, @social_profiles, @keywords, @employee_count, @revenue, @linkedin_url, @facebook_url, @twitter_url, @apollo_profile_url);
         `);
         const info = insert.run({
           name: rec.name,
@@ -173,6 +209,15 @@ function upsertCompany(db, record) {
           yp_listing_url: rec.yp_listing_url || null,
           hours_text: rec.hours_text || null,
           email: rec.email || null,
+          description: rec.description || null,
+          social_profiles: rec.social_profiles || null,
+          keywords: rec.keywords || null,
+          employee_count: rec.employee_count || null,
+          revenue: rec.revenue || null,
+          linkedin_url: rec.linkedin_url || null,
+          facebook_url: rec.facebook_url || null,
+          twitter_url: rec.twitter_url || null,
+          apollo_profile_url: rec.apollo_profile_url || null,
         });
         return info.changes;
       }
@@ -208,7 +253,9 @@ function upsertCompany(db, record) {
             categories=COALESCE(@categories, categories),
             yp_listing_url=COALESCE(@yp_listing_url, yp_listing_url),
             hours_text=COALESCE(@hours_text, hours_text),
-            email=COALESCE(@email, email)
+            email=COALESCE(@email, email),
+            description=COALESCE(@description, description),
+            social_profiles=COALESCE(@social_profiles, social_profiles)
         WHERE id=@id;
       `);
       const infoU = update.run({
@@ -229,12 +276,14 @@ function upsertCompany(db, record) {
         yp_listing_url: rec.yp_listing_url || null,
         hours_text: rec.hours_text || null,
         email: rec.email || null,
+        description: rec.description || null,
+        social_profiles: rec.social_profiles || null,
       });
       return infoU.changes;
     } else {
       const insert = db.prepare(`
-        INSERT INTO companies (name, website, normalized_domain, industry, location, size_category, source_list, first_seen, last_seen, phone, address, address_street, address_city, address_state, address_postal_code, rating, reviews_count, categories, yp_listing_url, hours_text, email)
-        VALUES (@name, @website, NULL, @industry, @location, @size_category, @source_list, @first_seen, @last_seen, @phone, @address, @address_street, @address_city, @address_state, @address_postal_code, @rating, @reviews_count, @categories, @yp_listing_url, @hours_text, @email);
+        INSERT INTO companies (name, website, normalized_domain, industry, location, size_category, source_list, first_seen, last_seen, phone, address, address_street, address_city, address_state, address_postal_code, rating, reviews_count, categories, yp_listing_url, hours_text, email, description, social_profiles, keywords, employee_count, revenue, linkedin_url, facebook_url, twitter_url, apollo_profile_url)
+        VALUES (@name, @website, NULL, @industry, @location, @size_category, @source_list, @first_seen, @last_seen, @phone, @address, @address_street, @address_city, @address_state, @address_postal_code, @rating, @reviews_count, @categories, @yp_listing_url, @hours_text, @email, @description, @social_profiles, @keywords, @employee_count, @revenue, @linkedin_url, @facebook_url, @twitter_url, @apollo_profile_url);
       `);
       const infoI = insert.run({
         name: rec.name,
@@ -257,6 +306,15 @@ function upsertCompany(db, record) {
         yp_listing_url: rec.yp_listing_url || null,
         hours_text: rec.hours_text || null,
         email: rec.email || null,
+        description: rec.description || null,
+        social_profiles: rec.social_profiles || null,
+        keywords: rec.keywords || null,
+        employee_count: rec.employee_count || null,
+        revenue: rec.revenue || null,
+        linkedin_url: rec.linkedin_url || null,
+        facebook_url: rec.facebook_url || null,
+        twitter_url: rec.twitter_url || null,
+        apollo_profile_url: rec.apollo_profile_url || null,
       });
       return infoI.changes;
     }
@@ -289,6 +347,15 @@ function listCompanies(db) {
     yp_listing_url: r.yp_listing_url,
     hours_text: r.hours_text,
     email: r.email,
+    description: r.description,
+    social_profiles: (() => { try { return JSON.parse(r.social_profiles || 'null'); } catch(_) { return null; } })(),
+    keywords: r.keywords,
+    employee_count: r.employee_count,
+    revenue: r.revenue,
+    linkedin_url: r.linkedin_url,
+    facebook_url: r.facebook_url,
+    twitter_url: r.twitter_url,
+    apollo_profile_url: r.apollo_profile_url,
   }));
 }
 
