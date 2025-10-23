@@ -7,6 +7,7 @@ type Row = {
   website: string;
   city?: string;
   state?: string;
+  address_postal_code?: string | null;
   query?: string;
   source?: string;
   phone?: string | null;
@@ -44,13 +45,15 @@ export default function Home() {
   const pendingRowsRef = useRef<Row[]>([]);
   const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const FLUSH_INTERVAL_MS = 150;
-  const MAX_ROWS = 1000;
+  const MAX_ROWS = 1000000;
   const [logs, setLogs] = useState<Array<{ ts: number; level: string; text: string }>>([]);
   const [showLogs, setShowLogs] = useState<boolean>(false);
   const [logsExpanded, setLogsExpanded] = useState<boolean>(false);
   const pagesSeenRef = useRef<Set<string>>(new Set());
   const [pageCount, setPageCount] = useState<number>(0);
   const [rowCount, setRowCount] = useState<number>(0);
+  const [apolloTotal, setApolloTotal] = useState<number | null>(null);
+  const [apolloGlobalTotal, setApolloGlobalTotal] = useState<number | null>(null);
   const [source, setSource] = useState<'yellowpages' | 'googlemaps' | 'apollo'>('yellowpages');
   const [showBrowser, setShowBrowser] = useState<boolean>(false);
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -58,6 +61,7 @@ export default function Home() {
   const [apolloEmail, setApolloEmail] = useState<string>("");
   const [apolloPassword, setApolloPassword] = useState<string>("");
   // Cookie input removed: we now prioritize login-based Apollo auth
+  const [apolloIndustryTagIdsStr, setApolloIndustryTagIdsStr] = useState<string>("");
 
   // Column resizing state (px widths)
   const [colWidths, setColWidths] = useState<Record<string, number>>({
@@ -68,6 +72,7 @@ export default function Home() {
     address: 260,
     city: 140,
     state: 90,
+    postal: 110,
     employees: 90,
     rating: 90,
     reviews: 90,
@@ -77,6 +82,7 @@ export default function Home() {
     yp: 160,
     industry: 160,
     keywords: 220,
+    query: 220,
     linkedin: 200,
     facebook: 200,
     twitter: 200,
@@ -160,6 +166,150 @@ export default function Home() {
 
   // Removed planning and angle selection
 
+  function safeHostFromUrl(u: string | undefined | null): string {
+    if (!u) return "";
+    try { const x = new URL(u); return x.host.replace(/^www\./, "").toLowerCase(); } catch {
+      try { const y = new URL(`https://${u}`); return y.host.replace(/^www\./, "").toLowerCase(); } catch { return String(u || '').toLowerCase(); }
+    }
+  }
+
+  function deriveKeyFromMsg(msg: any, fallbackName: string): string {
+    // Prefer Apollo organization id when available
+    const extractApolloOrgId = (u: string | undefined | null): string => {
+      if (!u) return '';
+      try {
+        // Accept absolute or hash URLs, extract the token after /organizations/
+        const abs = u.startsWith('http') ? u : `https://app.apollo.io/${u.replace(/^#\/?/, '')}`;
+        const url = new URL(abs);
+        const idx = url.pathname.indexOf('/organizations/');
+        if (idx !== -1) {
+          const rest = url.pathname.slice(idx + '/organizations/'.length);
+          const id = rest.split(/[/?#]/)[0];
+          return id || '';
+        }
+        // Some variants place it after hash
+        const hash = url.hash || '';
+        const m = hash.match(/organizations\/([^/?#]+)/);
+        return m ? m[1] : '';
+      } catch {
+        return '';
+      }
+    };
+    const orgId = extractApolloOrgId(String(msg.apollo_profile_url || ''));
+    if (orgId) return `apollo:${orgId}`;
+    const webHost = safeHostFromUrl(String(msg.website || ''));
+    const profileHost = safeHostFromUrl(String(msg.apollo_profile_url || msg.yp_listing_url || ''));
+    const host = webHost || profileHost;
+    const nameLc = String((msg.name || fallbackName || '')).toLowerCase();
+    return `${host}|${nameLc}`;
+  }
+
+  function extractApolloOrgId(u: string | undefined | null): string {
+    if (!u) return '';
+    try {
+      const abs = u.startsWith('http') ? u : `https://app.apollo.io/${u.replace(/^#\/?/, '')}`;
+      const url = new URL(abs);
+      const idx = url.pathname.indexOf('/organizations/');
+      if (idx !== -1) {
+        const rest = url.pathname.slice(idx + '/organizations/'.length);
+        const id = rest.split(/[/?#]/)[0];
+        return id || '';
+      }
+      const hash = url.hash || '';
+      const m = hash.match(/organizations\/([^/?#]+)/);
+      return m ? m[1] : '';
+    } catch { return ''; }
+  }
+
+  function normalizeApolloUrl(u: string | undefined | null): string | null {
+    if (!u) return null;
+    const s = String(u);
+    if (!s) return null;
+    return s.startsWith('http') ? s : `https://app.apollo.io/#/${s.replace(/^#?\/?/, '')}`;
+  }
+
+  function findExistingRowIndex(haystack: Row[], msg: any, fallbackName: string): number {
+    const orgId = extractApolloOrgId(String(msg.apollo_profile_url || ''));
+    if (orgId) {
+      const k = `apollo:${orgId}`;
+      for (let i = 0; i < haystack.length; i++) {
+        const idA = extractApolloOrgId(haystack[i].apollo_profile_url || '');
+        if (idA && `apollo:${idA}` === k) return i;
+      }
+    }
+    // Fallback by website host
+    const { host: webHost } = normalizeWebsite(String(msg.website || ''));
+    if (webHost) {
+      for (let i = 0; i < haystack.length; i++) {
+        if (safeHostFromUrl(haystack[i].website) === webHost) return i;
+      }
+    }
+    // Fallback by name + host of profile link if site missing
+    const nameLc = String((msg.name || fallbackName || '')).toLowerCase();
+    const profileHost = safeHostFromUrl(String(msg.apollo_profile_url || ''));
+    for (let i = 0; i < haystack.length; i++) {
+      const r = haystack[i];
+      const rName = String(r.name || '').toLowerCase();
+      const rHost = safeHostFromUrl(r.website) || safeHostFromUrl(r.apollo_profile_url || '');
+      if (rName && rName === nameLc && rHost && rHost === (webHost || profileHost)) return i;
+    }
+    return -1;
+  }
+
+  function rowsHaveSameKey(a: Row, b: { name: string; website?: string | null; apollo_profile_url?: string | null; yp_listing_url?: string | null; }): boolean {
+    const extractApolloOrgId = (u: string | undefined | null): string => {
+      if (!u) return '';
+      try {
+        const abs = u.startsWith('http') ? u : `https://app.apollo.io/${u.replace(/^#\/?/, '')}`;
+        const url = new URL(abs);
+        const idx = url.pathname.indexOf('/organizations/');
+        if (idx !== -1) {
+          const rest = url.pathname.slice(idx + '/organizations/'.length);
+          const id = rest.split(/[/?#]/)[0];
+          return id || '';
+        }
+        const hash = url.hash || '';
+        const m = hash.match(/organizations\/([^/?#]+)/);
+        return m ? m[1] : '';
+      } catch { return ''; }
+    };
+    const aId = extractApolloOrgId(a.apollo_profile_url || '');
+    const bId = extractApolloOrgId(b.apollo_profile_url || '');
+    if (aId && bId) return aId === bId;
+    const hostA = safeHostFromUrl(a.website);
+    const hostB = safeHostFromUrl(b.website || b.apollo_profile_url || b.yp_listing_url || '');
+    return `${hostA}|${String(a.name || '').toLowerCase()}` === `${hostB}|${String(b.name || '').toLowerCase()}`;
+  }
+
+  function mergePreferExisting(oldR: Row, newR: Partial<Row>): Row {
+    const take = (a: any, b: any) => (a == null || a === '' ? b : a);
+    return {
+      name: oldR.name || String(newR.name || ''),
+      website: take(oldR.website, newR.website || ''),
+      city: take(oldR.city, newR.city || ''),
+      state: take(oldR.state, newR.state || ''),
+      query: take(oldR.query, newR.query || ''),
+      source: take(oldR.source, newR.source || ''),
+      phone: take(oldR.phone, newR.phone ?? null),
+      address: take(oldR.address, newR.address ?? null),
+      rating: (oldR.rating == null ? (newR.rating as any) ?? null : oldR.rating),
+      reviews_count: (oldR.reviews_count == null ? (newR.reviews_count as any) ?? null : oldR.reviews_count),
+      categories: take(oldR.categories, newR.categories ?? null),
+      hours_text: take(oldR.hours_text, newR.hours_text ?? null),
+      email: take(oldR.email, newR.email ?? null),
+      yp_listing_url: take(oldR.yp_listing_url, newR.yp_listing_url ?? null),
+      revenueScore: oldR.revenueScore,
+      employees: take(oldR.employees, newR.employees ?? null),
+      industry: take(oldR.industry, newR.industry ?? null),
+      keywords: take(oldR.keywords, newR.keywords ?? null),
+      linkedin_url: take(oldR.linkedin_url, newR.linkedin_url ?? null),
+      facebook_url: take(oldR.facebook_url, newR.facebook_url ?? null),
+      twitter_url: take(oldR.twitter_url, newR.twitter_url ?? null),
+      apollo_profile_url: take(oldR.apollo_profile_url, newR.apollo_profile_url ?? null),
+      revenue: take(oldR.revenue, newR.revenue ?? null),
+    };
+  }
+
   function processMsg(msg: any, q: string) {
     if (msg && typeof msg === "object") {
       if (msg.type === "status" && msg.message === "city_start") {
@@ -185,8 +335,45 @@ export default function Home() {
         if (!displayName || looksLikeUrlish) {
           displayName = deriveCompanyNameFromHost(host);
         }
-        const key = `${displayName.toLowerCase()}|${host}`;
-        if (seenKeysRef.current.has(key)) return;
+        const patch: Partial<Row> = {
+            name: displayName,
+            website: (origin || rawWebsite || ""),
+            city: (msg.address_city || msg.city || msg.location || ""),
+            state: (msg.address_state || ""),
+            address_postal_code: (msg.address_postal_code ?? null),
+            query: (msg.query || ""),
+            source: (msg.source || msg.method || ""),
+            phone: (msg.phone ?? null),
+            address: (msg.address ?? null),
+            rating: (typeof msg.rating === 'number' ? msg.rating : (msg.rating == null ? null : Number(msg.rating))) as any,
+            reviews_count: (Number.isFinite(msg.reviews_count) ? msg.reviews_count : null) as any,
+            categories: (Array.isArray(msg.categories) ? msg.categories : (msg.categories ? String(msg.categories) : null)) as any,
+            hours_text: (msg.hours_text ?? null),
+            email: (msg.email ?? null),
+            yp_listing_url: (msg.yp_listing_url ?? null),
+            employees: (msg.employee_count ?? msg.employeeCount ?? null),
+            industry: (msg.industry ?? null),
+            keywords: (typeof msg.keywords === 'string' ? msg.keywords : (Array.isArray(msg.keywords) ? msg.keywords.join(', ') : null)),
+            linkedin_url: (msg.linkedin_url ?? (msg.socialProfiles && msg.socialProfiles.linkedin) ?? null),
+            facebook_url: (msg.facebook_url ?? (msg.socialProfiles && msg.socialProfiles.facebook) ?? null),
+            twitter_url: (msg.twitter_url ?? (msg.socialProfiles && msg.socialProfiles.twitter) ?? null),
+            apollo_profile_url: normalizeApolloUrl(msg.apollo_profile_url),
+            revenue: (msg.revenue ?? null),
+        };
+        // Drop noise: require at least website or apollo profile URL
+        const hasUrl = Boolean(patch.website) || Boolean(patch.apollo_profile_url);
+        if (!hasUrl) return;
+        // Try to find an existing row to merge into
+        const existingIdx = findExistingRowIndex(rows, { ...msg, apollo_profile_url: patch.apollo_profile_url }, displayName);
+        if (existingIdx >= 0) {
+          setRows((prev) => prev.map((r, i) => (i === existingIdx ? mergePreferExisting(r, patch) : r)));
+          return;
+        }
+        // Track multiple keys to avoid duplicates from alias messages
+        const apolloId = extractApolloOrgId(String(patch.apollo_profile_url || ''));
+        if (apolloId) seenKeysRef.current.add(`apollo:${apolloId}`);
+        if (host) seenKeysRef.current.add(`host:${host}`);
+        const key = deriveKeyFromMsg(msg, displayName);
         seenKeysRef.current.add(key);
         // enqueue row for batched rendering
         pendingRowsRef.current.push({
@@ -210,7 +397,7 @@ export default function Home() {
           linkedin_url: (msg.linkedin_url ?? null),
           facebook_url: (msg.facebook_url ?? null),
           twitter_url: (msg.twitter_url ?? null),
-          apollo_profile_url: (msg.apollo_profile_url ?? null),
+          apollo_profile_url: normalizeApolloUrl(msg.apollo_profile_url),
           revenue: (msg.revenue ?? null),
         });
         // schedule a flush soon to minimize re-renders
@@ -220,11 +407,24 @@ export default function Home() {
             const queued = pendingRowsRef.current.splice(0);
             if (queued.length) {
               setRows((prev) => {
-                const next = prev.concat(queued);
+                // Deduplicate within queued and against prev
+                const merged = [...prev];
+                for (const q of queued) {
+                  const idx = findExistingRowIndex(merged, q, q.name);
+                  if (idx >= 0) {
+                    merged[idx] = mergePreferExisting(merged[idx], q);
+                  } else {
+                    // final guard: require URL
+                    if (q.website || q.apollo_profile_url) merged.push(q);
+                  }
+                }
+                const next = merged;
                 if (next.length > MAX_ROWS) next.length = MAX_ROWS;
                 return next;
               });
               setRowCount((c) => c + queued.length);
+              // force-scroll to bottom after flush
+              try { if (listRef.current) { listRef.current.scrollTop = listRef.current.scrollHeight; } } catch {}
             }
           }, FLUSH_INTERVAL_MS);
         }
@@ -255,6 +455,21 @@ export default function Home() {
             const label = String(msg.label || '');
             const url = String(msg.url || '');
             pushLog('debug', `Apollo nav ${label ? `[${label}] `: ''}${url}`);
+          } else if (info === 'planned_base_done') {
+            // Capture the global total from the initial US-wide pass
+            const t = (typeof msg.total === 'number') ? msg.total : undefined;
+            if (t != null) setApolloGlobalTotal(t);
+            const r = (typeof msg.rows === 'number') ? msg.rows : undefined;
+            pushLog('info', `Apollo base done${t != null ? ` ~${t}` : ''}${r != null ? ` (${r} rows)` : ''}`);
+          } else if (info === 'planned_base_total' || info === 'us_goal_total') {
+            const t = (typeof msg.total === 'number') ? msg.total : (typeof msg.totalCount === 'number' ? msg.totalCount : undefined);
+            if (t != null) setApolloGlobalTotal(prev => (prev == null ? t : prev));
+          } else if (info === 'total_count_simple') {
+            const t = (typeof msg.totalCount === 'number') ? msg.totalCount : undefined;
+            if (t != null) {
+              setApolloTotal(t); // segment total
+              pushLog('info', `Apollo segment total ~${t}`);
+            }
           } else if (info === 'planned_error') {
             pushLog('error', `Apollo error: ${String(msg.error || '')}`);
           } else if (info === 'filtered_nav_start' || info === 'filtered_nav_done') {
@@ -269,6 +484,9 @@ export default function Home() {
             const p = Number(msg.page || 0);
             const c = Number(msg.count || 0);
             pushLog('debug', `Apollo page ${p} items ${c}`);
+          } else if (info === 'starting_page_evaluation') {
+            const p = Number(msg.page || 0);
+            if (p) setPageCount((prev) => (p > prev ? p : prev));
           } else if (info === 'simple_page_added') {
             const p = Number(msg.page || 0);
             const tot = Number(msg.total || 0);
@@ -349,7 +567,7 @@ export default function Home() {
 
   function runStream(q: string) {
     if (!q) {
-      setStatus("Please enter an industry");
+      setStatus("Please enter industry/keywords");
       return;
     }
     setIsLoading(true);
@@ -363,6 +581,7 @@ export default function Home() {
     pagesSeenRef.current = new Set();
     setPageCount(0);
     setRowCount(0);
+    setApolloTotal(null);
     try {
       setStatus("Connecting…");
       if (esRef.current) {
@@ -419,6 +638,18 @@ export default function Home() {
       // Append headless last to ensure it wins
       if (source === 'apollo') {
         params.set('headless', showBrowser ? 'false' : 'true');
+        // Optional industry tag IDs (accept JSON array or comma-separated)
+        const raw = apolloIndustryTagIdsStr.trim();
+        if (raw) {
+          let ids: string[] = [];
+          try {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) ids = parsed.map((x) => String(x).trim()).filter(Boolean);
+          } catch {
+            ids = raw.split(',').map((s) => s.trim()).filter(Boolean);
+          }
+          if (ids.length) params.set('apolloIndustryTagIds', JSON.stringify(ids));
+        }
       }
       // Route to appropriate endpoint based on source
       const endpoint = source === 'apollo' ? '/api/orchestrator/stream/apollo' : 
@@ -642,8 +873,8 @@ export default function Home() {
             </div>
             <div className="flex-1 flex items-center gap-2">
               <input
-                className="border rounded-full px-3 h-8 text-xs w-full max-w-[520px] bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-                placeholder="Industry (e.g., nail salons)"
+                className="border rounded-full px-3 h-8 text-xs w-full max-w-[1200px] bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                placeholder="Company keywords (comma-separated, e.g., painting services, painting company)"
                 value={industry}
                 onChange={(e) => setIndustry(e.target.value)}
               />
@@ -653,6 +884,12 @@ export default function Home() {
                     <input type="checkbox" checked={showBrowser} onChange={(e) => setShowBrowser(e.target.checked)} />
                     Show browser
                   </label>
+                  <input
+                    className="border rounded-full px-3 h-8 text-xs w-28 bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                    placeholder="Industry tag IDs (comma-separated)"
+                    value={apolloIndustryTagIdsStr}
+                    onChange={(e) => setApolloIndustryTagIdsStr(e.target.value)}
+                  />
                   <input
                     className="border rounded-full px-3 h-8 text-xs w-44 bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
                     placeholder="Apollo email (optional)"
@@ -695,32 +932,43 @@ export default function Home() {
             {currentCity && (
               <span className="hidden md:inline text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">City: <span className="font-medium">{currentCity}</span></span>
             )}
-            <span className="text-[11px] text-gray-700 bg-gray-100 rounded-full px-2 py-0.5">Rows: <span className="font-medium">{rowCount}</span></span>
-            <span className="text-[11px] text-gray-700 bg-gray-100 rounded-full px-2 py-0.5">Pages: <span className="font-medium">{pageCount}</span></span>
+            <span className="text-[11px] text-gray-700 bg-gray-100 rounded-full px-2 py-0.5">Counter: <span className="font-medium">{rows.length} / {apolloGlobalTotal == null ? '—' : apolloGlobalTotal}</span></span>
             <button
-              className="h-8 px-3 text-[11px] rounded-full border bg-white hover:bg-gray-50 disabled:opacity-60"
+              aria-label={isPaused ? "Resume" : "Pause"}
+              title={isPaused ? "Resume" : "Pause"}
+              className="h-8 w-8 rounded-full border bg-white hover:bg-gray-50 disabled:opacity-60 flex items-center justify-center shadow-sm"
               disabled={!isLoading}
               onClick={() => (isPaused ? resumeStream() : pauseStream())}
             >
-              {isPaused ? "Resume" : "Pause"}
+              {isPaused ? (
+                // Play icon
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 text-gray-700">
+                  <path d="M5.25 5.653c0-1.427 1.542-2.313 2.78-1.593l10.06 5.847c1.254.728 1.254 2.458 0 3.186L8.03 18.94c-1.238.72-2.78-.166-2.78-1.593V5.653z" />
+                </svg>
+              ) : (
+                // Pause icon
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 text-gray-700">
+                  <path d="M6.75 5.25a.75.75 0 01.75-.75h2.25a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zM13.5 5.25a.75.75 0 01.75-.75h2.25a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H14.25a.75.75 0 01-.75-.75V5.25z"/>
+                </svg>
+              )}
             </button>
             <button
-              className="h-8 px-3 text-[11px] rounded-full text-white bg-gradient-to-br from-rose-500 to-rose-600 shadow hover:from-rose-600 hover:to-rose-700 disabled:opacity-60"
+              aria-label="Stop"
+              title="Stop"
+              className="h-8 w-8 rounded-full text-white bg-gradient-to-br from-rose-500 to-rose-600 shadow hover:from-rose-600 hover:to-rose-700 disabled:opacity-60 flex items-center justify-center"
               disabled={!isLoading}
               onClick={stopStream}
             >
-              Stop
+              {/* Stop icon */}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                <path d="M6.75 5.25A1.5 1.5 0 018.25 3.75h7.5a1.5 1.5 0 011.5 1.5v13.5a1.5 1.5 0 01-1.5 1.5h-7.5a1.5 1.5 0 01-1.5-1.5V5.25z" />
+              </svg>
             </button>
             <button className="text-[11px] text-blue-700 underline" onClick={() => setShowLogs((v) => !v)}>
               {showLogs ? "Hide details" : "Show details"}
             </button>
             <div className="ml-auto flex items-center gap-2">
-              <button
-                className="h-8 px-3 text-[11px] rounded-full border bg-white hover:bg-gray-50 text-blue-700"
-                onClick={exportVisibleCsv}
-              >
-                Export
-              </button>
+              
               <button
                 className="h-8 px-3 text-[11px] rounded-full border bg-white hover:bg-gray-50 text-blue-700"
                 onClick={clearRows}
@@ -783,6 +1031,7 @@ export default function Home() {
                 <col style={{ width: colWidths.address }} />
                 <col style={{ width: colWidths.city }} />
                 <col style={{ width: colWidths.state }} />
+              <col style={{ width: colWidths.postal }} />
                 <col style={{ width: colWidths.employees }} />
                 <col style={{ width: colWidths.rating }} />
                 <col style={{ width: colWidths.reviews }} />
@@ -810,6 +1059,7 @@ export default function Home() {
                     { key: 'address', label: 'Address' },
                     { key: 'city', label: 'City' },
                     { key: 'state', label: 'State' },
+                    { key: 'postal', label: 'Postal' },
                     { key: 'employees', label: 'Employees' },
                     { key: 'rating', label: 'Rating' },
                     { key: 'reviews', label: 'Reviews' },
@@ -818,14 +1068,14 @@ export default function Home() {
                     { key: 'email', label: 'Email' },
                     { key: 'yp', label: 'YP Listing' },
                     { key: 'industry', label: 'Industry' },
-                    { key: 'keywords', label: 'Keywords' },
+                    { key: 'keywords', label: 'Company Keywords' },
                     { key: 'linkedin', label: 'LinkedIn' },
                     { key: 'facebook', label: 'Facebook' },
                     { key: 'twitter', label: 'Twitter' },
                     { key: 'apollo', label: 'Apollo' },
                     { key: 'revenue', label: 'Revenue' },
                     { key: 'source', label: 'Source' },
-                    { key: 'query', label: 'Query' },
+                    { key: 'query', label: 'Industry Keywords' },
                   ].map((c) => (
                     <th key={c.key} className={`sticky top-0 bg-white z-10 p-2 border-b-2 border-gray-200 text-[10px] uppercase tracking-wider text-slate-600 ${c.align || 'text-left'} relative select-none`}>
                       <div className="pr-2 whitespace-nowrap">{c.label}</div>
@@ -851,6 +1101,7 @@ export default function Home() {
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.address || ""}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.city || ""}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.state || ""}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top">{r.address_postal_code || ""}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.employees || ""}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.rating == null ? '' : r.rating.toFixed(1)}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.reviews_count == null ? '' : r.reviews_count}</td>
@@ -863,7 +1114,15 @@ export default function Home() {
                       <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.linkedin_url ? (<a className="text-blue-700 hover:underline" href={r.linkedin_url} target="_blank" rel="noreferrer">LinkedIn</a>) : ''}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.facebook_url ? (<a className="text-blue-700 hover:underline" href={r.facebook_url} target="_blank" rel="noreferrer">Facebook</a>) : ''}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.twitter_url ? (<a className="text-blue-700 hover:underline" href={r.twitter_url} target="_blank" rel="noreferrer">Twitter</a>) : ''}</td>
-                      <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.apollo_profile_url ? (<a className="text-blue-700 hover:underline" href={r.apollo_profile_url} target="_blank" rel="noreferrer">Apollo</a>) : ''}</td>
+                      <td className="p-2 border-b border-r border-gray-200 align-top break-words">{r.apollo_profile_url ? (
+                        <a
+                          className="text-blue-700 hover:underline"
+                          href={r.apollo_profile_url.startsWith('http')
+                            ? r.apollo_profile_url
+                            : `https://app.apollo.io/#/${r.apollo_profile_url.replace(/^#?\/?/, '')}`}
+                          target="_blank" rel="noreferrer"
+                        >Apollo</a>
+                      ) : ''}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.revenue || ''}</td>
                       <td className="p-2 border-b border-r border-gray-200 align-top">{r.source || ""}</td>
                       <td className="p-2 border-b border-gray-200 align-top">{r.query || ""}</td>
@@ -887,14 +1146,19 @@ function ExportsMenu() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [files, setFiles] = useState<Array<{ name: string; size: number; mtimeMs: number; href: string; ext: string }>>([]);
+  const [jobs, setJobs] = useState<Array<{ id: string; status: string; updatedAt: string; createdAt: string; source?: string; industry?: string; rowsAdded?: number; pagesFetched?: number; apolloTotal?: number | null }>>([]);
+  const [tab, setTab] = useState<'exports' | 'jobs'>("exports");
+  const [snapLoading, setSnapLoading] = useState(false);
   async function refresh() {
     try {
       setLoading(true);
       const res = await fetch('/api/exports/list', { cache: 'no-store' });
       const json = await res.json();
       setFiles(Array.isArray(json.files) ? json.files : []);
+      setJobs(Array.isArray(json.jobs) ? json.jobs : []);
     } catch {
       setFiles([]);
+      setJobs([]);
     } finally {
       setLoading(false);
     }
@@ -906,26 +1170,48 @@ function ExportsMenu() {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 text-gray-700"><path fillRule="evenodd" d="M12 3.75a.75.75 0 01.75.75v8.69l2.47-2.47a.75.75 0 011.06 1.06l-3.75 3.75a.75.75 0 01-1.06 0l-3.75-3.75a.75.75 0 111.06-1.06l2.47 2.47V4.5A.75.75 0 0112 3.75zm-6 12a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H6.75a.75.75 0 01-.75-.75z" clipRule="evenodd"/></svg>
       </button>
       {open && (
-        <div className="absolute right-0 mt-2 w-80 bg-white border rounded-md shadow-lg z-20">
+        <div className="absolute right-0 mt-2 w-96 bg-white border rounded-md shadow-lg z-20">
           <div className="flex items-center justify-between p-2 border-b">
-            <span className="text-sm font-medium">Recent exports</span>
-            <button className="text-xs text-blue-600" onClick={refresh} disabled={loading}>{loading ? '...' : 'Refresh'}</button>
+            <div className="flex items-center gap-2">
+              <button className={`text-xs px-2 py-1 rounded ${tab==='exports' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'text-gray-700'}`} onClick={() => setTab('exports')}>Exports</button>
+              <button className={`text-xs px-2 py-1 rounded ${tab==='jobs' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'text-gray-700'}`} onClick={() => setTab('jobs')}>Jobs</button>
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="text-xs text-blue-600" onClick={refresh} disabled={loading}>{loading ? '...' : 'Refresh'}</button>
+              <button className="text-xs text-white bg-blue-600 px-2 py-1 rounded disabled:opacity-60" onClick={async()=>{ try { setSnapLoading(true); const res = await fetch('/api/exports/snapshot', { method: 'POST' }); const json = await res.json(); await refresh(); } finally { setSnapLoading(false); } }} disabled={snapLoading}>{snapLoading ? 'Exporting…' : 'Export snapshot'}</button>
+            </div>
           </div>
-          <div className="max-h-64 overflow-auto">
-            <ul className="divide-y">
-              {files.map((f, i) => (
-                <li key={i} className="p-2 text-sm flex items-center justify-between gap-2">
-                  <div className="min-w-0">
-                    <div className="truncate">{f.name}</div>
-                    <div className="text-[10px] text-gray-500">{Math.round(f.size/1024)} KB • {new Date(f.mtimeMs).toLocaleString()}</div>
-                  </div>
-                  <a className="text-xs text-blue-700 whitespace-nowrap hover:underline" href={f.href}>Download</a>
-                </li>
-              ))}
-              {files.length === 0 && (
-                <li className="p-2 text-xs text-gray-500">No exports yet.</li>
-              )}
-            </ul>
+          <div className="max-h-72 overflow-auto">
+            {tab === 'exports' ? (
+              <ul className="divide-y">
+                {files.map((f, i) => (
+                  <li key={i} className="p-2 text-sm flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="truncate">{f.name}</div>
+                      <div className="text-[10px] text-gray-500">{Math.round(f.size/1024)} KB • {new Date(f.mtimeMs).toLocaleString()}{typeof (f as any).rows === 'number' ? ` • rows ${(f as any).rows}` : ''}</div>
+                    </div>
+                    <a className="text-xs text-blue-700 whitespace-nowrap hover:underline" href={f.href}>Download</a>
+                  </li>
+                ))}
+                {files.length === 0 && (
+                  <li className="p-2 text-xs text-gray-500">No exports yet.</li>
+                )}
+              </ul>
+            ) : (
+              <ul className="divide-y">
+                {jobs.map((j, i) => (
+                  <li key={j.id || i} className="py-1 px-2 text-[11px] flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="truncate"><span className="uppercase text-[10px] text-gray-500 mr-1">{j.source || 'job'}</span>{j.industry || ''}</div>
+                      <div className="text-[10px] text-gray-500">{j.status} • rows {j.rowsAdded ?? 0}{j.apolloTotal != null ? ` / ~${j.apolloTotal}` : ''} • {new Date(j.updatedAt).toLocaleTimeString()}</div>
+                    </div>
+                  </li>
+                ))}
+                {jobs.length === 0 && (
+                  <li className="p-2 text-xs text-gray-500">No jobs yet.</li>
+                )}
+              </ul>
+            )}
           </div>
         </div>
       )}

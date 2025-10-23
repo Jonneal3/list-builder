@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
   const apolloPerPage = Math.max(1, Number(searchParams.get("apolloPerPage") || "25"));
   const apolloMaxPagesPerBucket = Math.max(1, Number(searchParams.get("apolloMaxPagesPerBucket") || "5"));
   const apolloBucketsParam = (searchParams.get("apolloBuckets") || "").trim();
+  const apolloIndustryTagIdsParam = (searchParams.get("apolloIndustryTagIds") || "").trim();
   const apolloCookieHeader = (searchParams.get("apolloCookieHeader") || "").trim();
   const apolloLogin = String(searchParams.get("apolloLogin") || "false").toLowerCase() === "true";
   const apolloManualLogin = String(searchParams.get("apolloManualLogin") || "false").toLowerCase() === "true";
@@ -40,6 +41,10 @@ export async function GET(req: NextRequest) {
   const apolloBuckets = (() => {
     if (!apolloBucketsParam) return undefined;
     try { const p = JSON.parse(apolloBucketsParam); return Array.isArray(p) ? apolloBucketsParam : undefined; } catch { return undefined; }
+  })();
+  const apolloIndustryTagIds = (() => {
+    if (!apolloIndustryTagIdsParam) return undefined;
+    try { const p = JSON.parse(apolloIndustryTagIdsParam); return Array.isArray(p) ? apolloIndustryTagIdsParam : undefined; } catch { return undefined; }
   })();
 
   if (!industry) {
@@ -68,6 +73,7 @@ export async function GET(req: NextRequest) {
         `--apolloPerPage=${String(apolloPerPage)}`,
         `--apolloMaxPagesPerBucket=${String(apolloMaxPagesPerBucket)}`,
         ...(apolloBuckets ? [`--apolloBuckets=${apolloBuckets}`] : []),
+        ...(apolloIndustryTagIds ? [`--apolloIndustryTagIds=${apolloIndustryTagIds}`] : []),
         ...(apolloCookieHeader ? [`--apolloCookieHeader=${apolloCookieHeader}`] : []),
         ...(apolloLogin ? [`--apolloLogin=true`] : []),
         ...(apolloManualLogin ? [`--apolloManualLogin=true`] : []),
@@ -93,6 +99,9 @@ export async function GET(req: NextRequest) {
       const child = spawn("node", args, { cwd: repoRoot, env: { ...process.env,
         PUPPETEER_EXECUTABLE_PATH: process.env.PUPPETEER_EXECUTABLE_PATH || '',
         IF_DB_PATH: process.env.IF_DB_PATH || "/tmp/industry-finder.sqlite",
+        ENABLE_UNFLARE: process.env.ENABLE_UNFLARE || 'false',
+        UNFLARE_URL: process.env.UNFLARE_URL || '',
+        UNFLARE_API_KEY: process.env.UNFLARE_API_KEY || '',
       } });
       childRef = child;
 
@@ -109,6 +118,13 @@ export async function GET(req: NextRequest) {
             // Ensure categories field is parsed as array if it's a JSON string
             if (obj && typeof obj.categories === 'string') {
               try { obj.categories = JSON.parse(obj.categories); } catch {}
+            }
+            // Also parse socialProfiles if sent as JSON string from scraper
+            if (obj && typeof obj.socialProfiles === 'string') {
+              try { obj.socialProfiles = JSON.parse(obj.socialProfiles); } catch {}
+            }
+            if (obj && typeof obj.social_profiles === 'string') {
+              try { obj.social_profiles = JSON.parse(obj.social_profiles); } catch {}
             }
             enqueue(sse(obj));
           } catch {

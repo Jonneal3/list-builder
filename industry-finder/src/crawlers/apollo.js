@@ -241,16 +241,60 @@ async function createApolloSession(opts = { apolloLogin: false, apolloEmail: nul
   async function waitForCloudflare(page, timeoutMs) {
     const deadline = Date.now() + Math.max(30000, Number(timeoutMs || 120000));
     let announced = false;
+    let lastClickTs = 0;
+    const tryClickChallenge = async () => {
+      let clicked = false;
+      try {
+        const frames = page.frames();
+        for (const fr of frames) {
+          const url = String(fr.url() || '');
+          if (/challenge|cloudflare|turnstile/i.test(url)) {
+            const selCandidates = [
+              'input[type="checkbox"]',
+              'div[role="button"]',
+              'button',
+              '.cf-turnstile .ctp-checkbox',
+              '[data-cf] [role="button"]'
+            ];
+            for (const sel of selCandidates) {
+              const el = await fr.$(sel);
+              if (el) {
+                try { await el.click({ delay: 10 }); clicked = true; break; } catch {}
+              }
+            }
+            if (clicked) break;
+          }
+        }
+        if (!clicked) {
+          const iframeHandle = await page.$('iframe[src*="challenge"], iframe[src*="cloudflare"], iframe[src*="turnstile"]');
+          if (iframeHandle) {
+            const box = await iframeHandle.boundingBox();
+            if (box) {
+              await page.mouse.move(box.x + box.width / 2, box.y + Math.max(8, box.height / 2));
+              await page.mouse.down();
+              await page.mouse.up();
+              clicked = true;
+            }
+          }
+        }
+      } catch {}
+      if (clicked) { emitStatus({ type: 'status', source: 'apollo', message: 'cf_challenge_click' }); lastClickTs = Date.now(); }
+      return clicked;
+    };
     while (Date.now() < deadline) {
       try {
-        const hasChallenge = await page.evaluate(() => {
+        // Detect challenge and try to interact if present
+        const result = await page.evaluate(() => {
           const txt = (document.body && document.body.innerText) || '';
-          const iframe = !!document.querySelector('iframe[src*="challenge"], iframe[src*="cloudflare"]');
-          const btn = !!Array.from(document.querySelectorAll('button, input')).find(e => /verify|human|continue/i.test(e.textContent || e.value || ''));
-          return iframe || /verify you are human|checking your browser/i.test(txt) || btn;
+          const iframe = document.querySelector('iframe[src*="challenge"], iframe[src*="cloudflare"], iframe[src*="turnstile"]');
+          const btn = Array.from(document.querySelectorAll('button, input, div[role="button"]')).find(e => /verify|human|continue|check|i am human/i.test((e.textContent || e.getAttribute('aria-label') || e.getAttribute('value') || '').trim()));
+          const has = Boolean(iframe || /verify you are human|checking your browser|just a moment/i.test(txt) || btn);
+          return { has, hasIframe: Boolean(iframe), hasBtn: Boolean(btn) };
         });
-        if (hasChallenge) {
+        if (result && result.has) {
           if (!announced) { emitStatus({ type: 'status', source: 'apollo', message: 'cf_challenge_detected' }); announced = true; }
+          // Retry click every ~1.5s while challenge persists
+          if (Date.now() - lastClickTs > 1500) { await tryClickChallenge(); }
           await new Promise(resolve => setTimeout(resolve, 1000));
           continue;
         }
@@ -267,25 +311,22 @@ async function createApolloSession(opts = { apolloLogin: false, apolloEmail: nul
   let cookieHeader = String(opts.cookieHeader || '');
 
   // Optional: try Unflare service to solve Cloudflare and return cookies/headers
-  // DISABLED: Unflare is timing out, using direct browser approach instead
-  if (false && !cookieHeader && process.env.UNFLARE_URL) {
+  // Enable with ENABLE_UNFLARE=true and provide UNFLARE_URL
+  if (!cookieHeader && process.env.UNFLARE_URL && String(process.env.ENABLE_UNFLARE || 'false').toLowerCase() === 'true') {
     try {
-      const unflareUrl = String(process.env.UNFLARE_URL).replace(/\/$/, '') + '/scrape';
-      const payload = { 
-        url: 'https://app.apollo.io/#/companies', 
-        timeout: 60000,
-        method: 'GET'
-      };
-      const fetchImpl = (typeof fetch === 'function') ? fetch : require('node-fetch');
-      const res = await fetchImpl(unflareUrl, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          ...(process.env.UNFLARE_API_KEY ? { authorization: `Bearer ${String(process.env.UNFLARE_API_KEY)}` } : {}),
-        },
-        body: JSON.stringify(payload),
+      const { requestUnflare } = require('../utils/unflare');
+      const json = await requestUnflare({
+        url: 'https://app.apollo.io/#/companies',
+        timeout: Math.max(30000, navTimeout),
+        proxy: opts && opts.puppeteerProxy ? {
+          host: String(opts.puppeteerProxy),
+          port: Number((opts.puppeteerProxy || '').split(':')[1] || 0) || undefined,
+          username: opts.puppeteerProxyUser,
+          password: opts.puppeteerProxyPass,
+        } : undefined,
+        apiUrl: process.env.UNFLARE_URL,
+        apiKey: process.env.UNFLARE_API_KEY,
       });
-      const json = await res.json().catch(() => ({}));
       
       // Check for error response
       if (json.code === 'error') {
@@ -437,6 +478,75 @@ async function simpleReadTotal(page) {
   }
 }
 
+// Read the total count and wait until it stabilizes (does not change between reads)
+async function waitForStableTotalCount(page, timeoutMs) {
+  const deadline = Date.now() + Math.max(5000, Math.min(30000, Number(timeoutMs || 8000)));
+  let last = 0;
+  let stableReads = 0;
+  while (Date.now() < deadline) {
+    const curr = await simpleReadTotal(page);
+    if (curr && curr === last) {
+      stableReads += 1;
+      if (stableReads >= 2) return curr; // same value twice in a row
+    } else {
+      stableReads = 0;
+    }
+    last = curr || last;
+    try { await new Promise(r => setTimeout(r, 500)); } catch {}
+  }
+  return last || 0;
+}
+
+async function simpleReadTotal(page) {
+  try {
+    const text = await page.evaluate(() => {
+      // 1) Prefer the header "Total" chip counter (e.g., 2.3K)
+      // Locate any element that includes the word "Total" and has a nearby [data-count-size] number
+      const containers = Array.from(document.querySelectorAll('label, div, span'));
+      for (const el of containers) {
+        const txt = (el.textContent || '').trim();
+        if (/\bTotal\b/i.test(txt)) {
+          const countEl = el.querySelector('[data-count-size]');
+          const val = countEl && (countEl.textContent || '').trim();
+          if (val && /\d/.test(val)) return `of ${val}`; // normalize to "of X" form for downstream parsing
+        }
+      }
+
+      // 2) Footer counter like: "1 - 25 of 2,237"
+      const footer = document.querySelector('[data-interaction-boundary="Table Pagination"] [class*="zp_tMpqI"]');
+      if (footer && footer.textContent) return footer.textContent.trim();
+
+      // 3) Generic fallback: any element containing " of " and a number
+      const all = Array.from(document.querySelectorAll('div, span'));
+      for (const el of all) {
+        const t = (el.textContent || '').trim();
+        if (/\bof\b/.test(t) && /\d/.test(t)) return t;
+      }
+
+      // 4) Last resort: any standalone chip-looking number with optional K/M
+      const chips = Array.from(document.querySelectorAll('[data-count-size], span'));
+      for (const s of chips) {
+        const t = (s.textContent || '').trim();
+        if (/^\d{1,3}(?:[.,]\d+)?[KM]?$/.test(t)) return `of ${t}`;
+      }
+      return '';
+    });
+    if (!text) return 0;
+    // Extract trailing count: handles "1 - 25 of 2,237", "of 2.3K", or plain numbers
+    const m1 = text.match(/\bof\s+([0-9][0-9,\.]*\s*[KM]?)/i);
+    let raw = m1 ? m1[1] : text;
+    raw = String(raw).replace(/,/g, '').trim();
+    let mult = 1;
+    if (/K$/i.test(raw)) { mult = 1000; raw = raw.replace(/K$/i, ''); }
+    if (/M$/i.test(raw)) { mult = 1_000_000; raw = raw.replace(/M$/i, ''); }
+    const num = parseFloat(raw);
+    if (!Number.isFinite(num)) return 0;
+    return Math.max(0, Math.round(num * mult));
+  } catch {
+    return 0;
+  }
+}
+
 async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeoutMs: 20000, uiPages: 5, apolloListUrl: null, onDebug: null }) {
   const debug = (e) => { try { if (opts && typeof opts.onDebug === 'function') opts.onDebug(e); } catch {} };
   const navTimeout = Math.max(8000, Math.min(60000, Number(opts.pageTimeoutMs || 20000)));
@@ -447,6 +557,8 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
   // Enhanced navigation with better error handling
   try {
   await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: navTimeout });
+    // Handle Cloudflare challenge immediately after first navigation
+    try { await waitForCloudflare(page, navTimeout); } catch {}
     // Wait for the page to stabilize
     await new Promise(resolve => setTimeout(resolve, 2000));
     // Try to wait for any loading indicators to disappear
@@ -469,6 +581,17 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
   
   debug({ info: 'filtered_nav_done', url: baseUrl });
 
+  // If this is the first US-wide pass (exact user-provided list URL), read and emit global total once and do not mutate filters
+  try {
+    const urlNow = page.url();
+    if (opts && opts.apolloListUrl && typeof opts.onDebug === 'function') {
+      const totalCount = await waitForStableTotalCount(page, navTimeout);
+      debug({ info: 'planned_base_total', total: totalCount });
+      try { opts.onDebug({ info: 'us_goal_total', total: totalCount }); } catch {}
+    }
+  } catch {}
+
+
   // Add debugging for page state
   try {
     const pageTitle = await page.title();
@@ -478,52 +601,62 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
     debug({ info: 'page_state_error', error: e.message });
   }
 
-  const totalCount = await simpleReadTotal(page);
+  const totalCount = await waitForStableTotalCount(page, navTimeout);
   debug({ info: 'total_count_simple', totalCount });
-
-  const itemsPerPage = 25;
-  // Scrape ALL pages like the reference script (no 5-page cap)
-  const totalPages = totalCount ? Math.ceil(totalCount / itemsPerPage) : Math.max(1, Number(opts.uiPages || 5));
 
   const rows = [];
   const unique = new Set();
 
-  for (let i = 1; i <= totalPages; i += 1) {
-    const pageUrl = baseUrl.includes('page=') ? baseUrl.replace(/([?&])page=\d+/, `$1page=${i}`) : `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}page=${i}`;
-    debug({ info: 'simple_page_nav', page: i, url: pageUrl });
-    
+  // In-page pagination using Next button to avoid SPA ignoring URL params
+  const getFooterText = async () => {
     try {
-    await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: navTimeout });
-      // Wait for content to load
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Try multiple selectors to find the data
-      let hadTbody = false;
-      try { 
-        await page.waitForSelector('tbody', { timeout: 8000 }); 
-        hadTbody = true; 
-      } catch {}
-      
-      if (!hadTbody) {
-        try { 
-          await page.waitForSelector('a[href*="#/organizations/"]', { timeout: 8000 }); 
-        } catch {}
+      return await page.evaluate(() => {
+        const el = document.querySelector('[class*="zp_l0qux"] [class*="zp_tMpqI"]');
+        return el ? (el.textContent || '').trim() : '';
+      });
+    } catch { return ''; }
+  };
+  const gotoNextPage = async () => {
+    const before = await getFooterText();
+    const clicked = await page.evaluate(() => {
+      const btn = document.querySelector('[data-interaction-boundary="Table Pagination"] button[aria-label="Next"]');
+      const htmlBtn = btn;
+      if (htmlBtn && !(htmlBtn).hasAttribute('disabled')) {
+        (htmlBtn).dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        return true;
       }
-      
-      // Additional wait for dynamic content
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-    } catch (error) {
-      debug({ info: 'page_navigation_error', page: i, error: error.message });
-      continue; // Skip this page and continue with the next
-    }
+      return false;
+    });
+    if (!clicked) return false;
+    try {
+      await page.waitForFunction((prev) => {
+        const el = document.querySelector('[class*="zp_l0qux"] [class*="zp_tMpqI"]');
+        const t = el ? (el.textContent || '').trim() : '';
+        return t && t !== prev;
+      }, { timeout: 15000 }, before);
+    } catch {}
+    await new Promise(r => setTimeout(r, 1000));
+    return true;
+  };
 
+  let i = 1;
+  let safetyPages = 200;
+  const maxPages = Math.max(1, Number((opts && opts.uiPages) || 5));
+  while (safetyPages-- > 0) {
     debug({ info: 'starting_page_evaluation', page: i, label: opts && opts.label ? opts.label : undefined });
     
     let pageItems = [];
     try {
       pageItems = await page.evaluate(() => {
       const out = [];
+      const seen = new Set();
+      const pushUnique = (rec) => {
+        const key = String((rec && (rec.profileUrl || rec.companyUrl || rec.companyName)) || '').toLowerCase();
+        if (!key) return;
+        if (seen.has(key)) return;
+        seen.add(key);
+        out.push(rec);
+      };
       
       console.log('Starting Apollo data extraction...');
       console.log('Page title:', document.title);
@@ -569,6 +702,23 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
       console.log('=== END PAGE STRUCTURE DEBUG ===');
       
       // Enhanced data extraction using Apollo's actual company list structure (role-based)
+      const isBadName = (name) => {
+        const n = String(name || '').trim();
+        if (!n) return true;
+        const bannedExact = new Set([
+          'Twitter','LinkedIn','Linkedin','Facebook','Company','Company Locations:','# Employees','Company Keywords Contain ANY Of:','Technologies','Funding','Owner','Stage','Market Segments','AI Filters','Website Visitors','Buying Intent','SIC and NAICS','SIC and NAICS','Scores'
+        ]);
+        if (bannedExact.has(n)) return true;
+        // Skip obvious controls/labels
+        if (/^\d+\s*-\s*\d+\s*of\s*\d/i.test(n)) return true; // pager text
+        if (/^Save$/i.test(n)) return true;
+        if (/^N\/A$/i.test(n)) return true;
+        if (n.length < 2) return true;
+        return false;
+      };
+
+      const isSocial = (href) => /twitter\.com|facebook\.com|linkedin\.com\/in/i.test(href || '');
+
       const extractFromRow = (row) => {
         // Get all cells in this row
         const cells = row.querySelectorAll('[role="cell"]');
@@ -586,41 +736,47 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
         let profileUrl = '';
         let socialProfiles = {};
         
-        // Look for company name pattern (capitalized words) in cells
-        for (const cell of cells) {
-          const text = cell.textContent?.trim() || '';
-          if (text && /^[A-Z][a-z]+ [A-Z][a-z]+/.test(text) && text.length < 100 && 
-              !text.includes('Save') && !text.includes('employees')) {
-            companyName = text;
-            break;
+        // Prefer the anchor text from the profile link (matches table name cell)
+        const nameAnchor = row.querySelector('a[href*="#/organizations/"] span, a[href*="#/accounts/"] span');
+        if (nameAnchor && nameAnchor.textContent) {
+          companyName = nameAnchor.textContent.trim();
+        }
+        // Fallback: heuristic search
+        if (!companyName) {
+          for (const cell of cells) {
+            const text = cell.textContent?.trim() || '';
+            if (text && /^[A-Z][\w\s&.,\-()]+$/.test(text) && text.length < 120 &&
+                !/Save|employees|N\/A/i.test(text)) {
+              companyName = text;
+              break;
+            }
           }
         }
         
         // Extract all links from the row
         const links = row.querySelectorAll('a[href]');
+        // Prefer explicit website link button if present
+        const websiteBtn = row.querySelector('a[aria-label="website link"][href^="http"]');
+        if (websiteBtn && websiteBtn.getAttribute('href')) {
+          companyUrl = websiteBtn.getAttribute('href');
+        }
         for (const link of links) {
-          const href = link.getAttribute('href') || '';
-          
-          // Apollo profile URL
-          if (href.includes('#/organizations/')) {
-            profileUrl = href;
+          const href = (link && link.href) ? link.href : (link.getAttribute('href') || '');
+          const h = String(href || '').trim();
+          // Apollo profile URL (support both organizations and accounts)
+          if (/#\/(organizations|accounts)\//.test(h)) {
+            profileUrl = h;
+            continue;
           }
-          // Company website
-          else if (href.startsWith('http') && !href.includes('apollo.io') && !href.includes('linkedin.com') && !href.includes('facebook.com') && !href.includes('twitter.com')) {
-            companyUrl = href;
+          // Company website (fallback if website button not found)
+          if (!companyUrl && /^https?:\/\//i.test(h) && !/apollo\.io|linkedin\.com|facebook\.com|twitter\.com/i.test(h)) {
+            companyUrl = h;
+            continue;
           }
-          // LinkedIn
-          else if (href.includes('linkedin.com/company/')) {
-            socialProfiles.linkedin = href;
-          }
-          // Facebook
-          else if (href.includes('facebook.com/')) {
-            socialProfiles.facebook = href;
-          }
-          // Twitter
-          else if (href.includes('twitter.com/')) {
-            socialProfiles.twitter = href;
-          }
+          // Socials
+          if (/linkedin\.com\/company\//i.test(h)) socialProfiles.linkedin = h;
+          else if (/facebook\.com\//i.test(h)) socialProfiles.facebook = h;
+          else if (/twitter\.com\//i.test(h)) socialProfiles.twitter = h;
         }
         
         // Extract location (usually contains city, state pattern)
@@ -673,8 +829,8 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
           if (/^\d+(?:\.\d+)?[MK]$/i.test(t)) { revenue = t; break; }
         }
 
-        if (companyName || companyUrl || profileUrl) {
-          out.push({ 
+        if (!isBadName(companyName) && (companyName || companyUrl || profileUrl)) {
+          pushUnique({ 
             companyName, 
             companyUrl, 
             location, 
@@ -717,73 +873,33 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
         }
       }
       
-      // Strategy 2: Look for organization profile anchors
-      const anchors = Array.from(document.querySelectorAll('a[href*="#/organizations/"], a[href*="apollo.io"]'));
-      console.log('Found Apollo anchors:', anchors.length);
-      for (const a of anchors) {
-        const tr = a.closest('tr');
-        if (tr) { 
-          extractFromRow(tr); 
-          continue; 
-        }
-        const companyName = String(a.textContent || '').trim();
-        const profileUrl = String(a.href || '');
-        // Attempt to find an external website link nearby
-        let companyUrl = '';
-        const rowLinks = Array.from(a.parentElement?.querySelectorAll('a[href]') || []);
-        for (const ln of rowLinks) {
-          const href = String(ln.getAttribute('href') || '').trim();
-          if (/^https?:\/\//i.test(href) && !/apollo\.io|linkedin\.com\/in/i.test(href)) { companyUrl = href; break; }
-        }
-        if (companyName) {
-          out.push({ companyName, companyUrl, location: '', employeeCount: '', phone: '', industry: '', profileUrl });
-        }
-      }
-      
-      // Strategy 3: Look for any company-related elements
-      const companyElements = Array.from(document.querySelectorAll('[data-testid*="company"], [class*="company"], [class*="organization"], [class*="zp_"]'));
-      console.log('Found company elements:', companyElements.length);
-      for (const el of companyElements) {
-        const text = el.textContent || '';
-        if (text.length > 3 && text.length < 100) {
-          const links = Array.from(el.querySelectorAll('a[href]'));
-          let profileUrl = '';
-          let companyUrl = '';
-          for (const link of links) {
-            const href = link.href;
-            if (href.includes('#/organizations/')) {
-              profileUrl = href;
-            } else if (/^https?:\/\//i.test(href) && !/apollo\.io|linkedin\.com\/in/i.test(href)) {
-              companyUrl = href;
-            }
-          }
-          if (profileUrl || companyUrl) {
-            out.push({ 
-              companyName: text.trim(), 
-              companyUrl, 
-              location: '', 
-              employeeCount: '', 
-              phone: '', 
-              industry: '', 
-              profileUrl 
-            });
-          }
-        }
-      }
-      
-      // Strategy 4: Look for any text that might be company names
+      // Strategy 3: Anchor fallback only if we failed to extract rows
       if (out.length === 0) {
-        console.log('No data found with previous strategies, trying text extraction...');
-        const allText = document.body.innerText || '';
-        const lines = allText.split('\n').map(line => line.trim()).filter(line => line.length > 2 && line.length < 100);
-        const companyPattern = /company|organization|business|corp|inc|llc|ltd|group|solutions|services|systems|technologies|tech|software|digital|marketing|consulting|advertising|media|communications|financial|healthcare|medical|legal|real estate|construction|manufacturing|retail|restaurant|food|hospitality|travel|transportation|logistics|energy|utilities|government|education|nonprofit|charity|foundation|association|federation|society|club|union|guild|alliance|partnership|enterprise|ventures|holdings|investments|capital|equity|fund|trust|estate|properties|development|management|advisors|consultants|specialists|experts|professionals|associates|partners|group|team|staff|crew|squad|unit|division|department|section|branch|office|headquarters|hq|main|central|regional|local|national|international|global|worldwide|universal|general|standard|premium|elite|executive|senior|junior|assistant|coordinator|director|manager|supervisor|lead|head|chief|president|ceo|coo|cfo|cto|cmo|cpo|vp|svp|evp|founder|co-founder|owner|proprietor|operator|administrator|coordinator|facilitator|mediator|negotiator|representative|agent|broker|dealer|distributor|supplier|vendor|contractor|subcontractor|freelancer|consultant|advisor|specialist|expert|professional|associate|partner|colleague|teammate|staff member|employee|worker|laborer|technician|engineer|developer|designer|architect|analyst|researcher|scientist|doctor|nurse|teacher|instructor|trainer|coach|mentor|tutor|guide|leader|manager|supervisor|director|executive|officer|official|representative|delegate|ambassador|spokesperson|advocate|champion|supporter|ally|friend/i;
-        
-        for (const line of lines) {
-          if (companyPattern.test(line) && !out.some(o => o.companyName === line)) {
-            out.push({ companyName: line, companyUrl: '', location: '', employeeCount: '', phone: '', industry: '', profileUrl: '' });
+        const anchors = Array.from(document.querySelectorAll('a[href*="#/organizations/"], a[href*="apollo.io"]'));
+        console.log('Fallback anchors:', anchors.length);
+        for (const a of anchors) {
+          const tr = a.closest('tr');
+          if (tr) { 
+            extractFromRow(tr); 
+            continue; 
+          }
+          const companyName = String(a.textContent || '').trim();
+          const profileUrl = String(a.href || '');
+          if (isBadName(companyName)) continue;
+          // Attempt to find an external website link nearby
+          let companyUrl = '';
+          const rowLinks = Array.from(a.parentElement?.querySelectorAll('a[href]') || []);
+          for (const ln of rowLinks) {
+            const href = String((ln && ln.href) ? ln.href : (ln.getAttribute('href') || '')).trim();
+            if (/^https?:\/\//i.test(href) && !/apollo\.io/i.test(href) && !isSocial(href)) { companyUrl = href; break; }
+          }
+          if (!isBadName(companyName) && (profileUrl || companyUrl)) {
+            pushUnique({ companyName, companyUrl, location: '', employeeCount: '', phone: '', industry: '', profileUrl });
           }
         }
       }
+      
+      // Strategy 3 and 4 disabled to reduce noise
       
       console.log('Extracted items:', out.length);
       console.log('Sample items:', out.slice(0, 3));
@@ -797,9 +913,14 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
     debug({ info: 'simple_page_items', page: i, count: pageItems.length, label: opts && opts.label ? opts.label : undefined });
 
     for (const it of pageItems) {
-      const key = `${(it.companyName || '').toLowerCase()}-${(it.companyUrl || '').toLowerCase()}-${(it.profileUrl || '').toLowerCase()}`;
+      const normProfile = String(it.profileUrl || '').toLowerCase();
+      const normWebsite = String(it.companyUrl || '').toLowerCase();
+      const normName = String(it.companyName || '').toLowerCase();
+      const key = normProfile ? `profile:${normProfile}` : (normWebsite ? `site:${normWebsite}` : `name:${normName}`);
       if (unique.has(key)) continue;
       unique.add(key);
+      // Guard: require at least a website or profile URL
+      if (!it.companyUrl && !it.profileUrl) continue;
       rows.push({
         name: it.companyName || null,
         website: it.companyUrl || null,
@@ -824,6 +945,14 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
       debug({ info: 'row', name: it.companyName || '', website: it.companyUrl || '', apollo_profile_url: it.profileUrl || '' });
     }
     debug({ info: 'simple_page_added', page: i, total: rows.length });
+
+    // Stop if we think we've fetched all pages
+    if (totalCount && rows.length >= totalCount) break;
+    // Enforce UI pages cap (Apollo reliably exposes ~5 pages in UI)
+    if (i >= maxPages) break;
+    const moved = await gotoNextPage();
+    if (!moved) break;
+    i += 1;
   }
 
   // Enhanced email enrichment: visit profile URLs in batches and extract comprehensive data

@@ -75,6 +75,7 @@ async function main() {
   const apolloPerPage = Math.max(1, Number(argv.apolloPerPage || 25));
   const apolloMaxPagesPerBucket = Math.max(1, Number(argv.apolloMaxPagesPerBucket || 5));
   const apolloCookieHeader = argv.apolloCookieHeader ? String(argv.apolloCookieHeader) : (process.env.APOLLO_COOKIE_HEADER || null);
+  const apolloIndustryTagIds = (() => { try { return argv.apolloIndustryTagIds ? JSON.parse(String(argv.apolloIndustryTagIds)) : null; } catch { return null; } })();
   const apolloCookiesJson = argv.apolloCookiesJson ? String(argv.apolloCookiesJson) : (process.env.APOLLO_COOKIES_JSON || null);
   const apolloLogin = String(argv.apolloLogin || 'false').toLowerCase() === 'true';
   const apolloManualLogin = String(argv.apolloManualLogin || 'false').toLowerCase() === 'true';
@@ -129,12 +130,105 @@ async function main() {
   }
   const db = initDb();
 
+  // Lightweight job tracking persisted to exports/jobs.json
+  const jobsFile = path.join(outDir, 'jobs.json');
+  fs.mkdirSync(outDir, { recursive: true });
+  const jobId = (() => {
+    const ts = new Date().toISOString().replace(/[:.]/g, '-');
+    const rnd = Math.random().toString(36).slice(2, 8);
+    return `${ts}-${rnd}`;
+  })();
+  function readJobsSafe() {
+    try {
+      const txt = fs.readFileSync(jobsFile, 'utf8');
+      const arr = JSON.parse(txt);
+      return Array.isArray(arr) ? arr : [];
+    } catch { return []; }
+  }
+  function writeJobsSafe(arr) {
+    try { fs.writeFileSync(jobsFile, JSON.stringify(arr, null, 2)); } catch {}
+  }
+  function upsertJob(patch) {
+    const arr = readJobsSafe();
+    const idx = arr.findIndex(j => j && j.id === jobId);
+    const now = new Date().toISOString();
+    if (idx === -1) {
+      arr.unshift({ id: jobId, createdAt: now, updatedAt: now, status: 'running', source: (onlyApollo ? 'apollo' : (enableGmaps ? 'googlemaps' : 'yellowpages')), industry, params: { uiPages, apolloLimit, apolloPerPage, apolloMaxPagesPerBucket }, rowsAdded: 0, pagesFetched: 0, currentCity: null, currentState: null, currentPage: null, ...patch });
+    } else {
+      arr[idx] = { ...arr[idx], ...patch, updatedAt: now };
+    }
+    writeJobsSafe(arr);
+  }
+  upsertJob({ status: 'running' });
+  emit({ type: 'status', message: 'job_start', job_id: jobId });
+
+  // One CSV per job, append rows continuously so pause/stop still yields a file
+  const jobCsvPath = (() => {
+    const day = new Date().toISOString().slice(0, 10);
+    const slugIndustry = String(industry).replace(/\s+/g, '-').toLowerCase();
+    return path.join(outDir, `${day}_${slugIndustry}_job-${jobId}.csv`);
+  })();
+  upsertJob({ csvPath: jobCsvPath });
+  const csvSeenKeys = new Set();
+  function toCsvCell(value) {
+    if (value == null) return '';
+    const s = String(value);
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+  function ensureCsvHeader() {
+    try {
+      if (!fs.existsSync(jobCsvPath)) {
+        fs.mkdirSync(path.dirname(jobCsvPath), { recursive: true });
+        const header = [
+          'Name','Website','Phone','Address','City','State','PostalCode','Rating','Reviews','Categories','Email','Source','Query','Apollo','Revenue','Employees','Keywords','LinkedIn','Facebook','Twitter','Hours','Description','SocialProfiles'
+        ].join(',') + '\n';
+        fs.writeFileSync(jobCsvPath, header);
+      }
+    } catch {}
+  }
+  function appendCsvRow(msg) {
+    try {
+      ensureCsvHeader();
+      const key = `${String(msg.apollo_profile_url||msg._profileUrl||'').toLowerCase()}|${String(msg.website||'').toLowerCase()}|${String(msg.name||'').toLowerCase()}`;
+      if (csvSeenKeys.has(key)) return;
+      csvSeenKeys.add(key);
+      const line = [
+        toCsvCell(msg.name||''),
+        toCsvCell(msg.website||''),
+        toCsvCell(msg.phone||''),
+        toCsvCell(msg.address||''),
+        toCsvCell(msg.address_city||msg.city||''),
+        toCsvCell(msg.address_state||''),
+        toCsvCell(msg.address_postal_code||''),
+        toCsvCell(msg.rating==null?'':msg.rating),
+        toCsvCell(msg.reviews_count==null?'':msg.reviews_count),
+        toCsvCell(Array.isArray(msg.categories)?msg.categories.join('; '):(msg.categories||'')),
+        toCsvCell(msg.email||''),
+        toCsvCell(msg.source||msg.method||''),
+        toCsvCell(msg.query||industry||''),
+        toCsvCell(msg.apollo_profile_url||msg._profileUrl||''),
+        toCsvCell(msg.revenue||''),
+        toCsvCell(msg.employee_count||msg.employees||''),
+        toCsvCell(msg.keywords||''),
+        toCsvCell(msg.linkedin_url||''),
+        toCsvCell(msg.facebook_url||''),
+        toCsvCell(msg.twitter_url||''),
+        toCsvCell(msg.hours_text||''),
+        toCsvCell(msg.description||''),
+        toCsvCell(msg.socialProfiles ? JSON.stringify(msg.socialProfiles) : (msg.social_profiles||'')),
+      ].join(',') + '\n';
+      fs.appendFileSync(jobCsvPath, line);
+    } catch {}
+  }
+
   // Check database state before starting
   const initialRows = listCompanies(db);
   console.log(`Database has ${initialRows.length} rows before starting`);
   if (initialRows.length > 0) {
     console.log('⚠️  Database already has data - this might be from previous runs');
   }
+  // Stream initial DB count to UI
+  emit({ type: 'status', message: 'db_count', total: initialRows.length });
 
   const cityList = (() => {
     if (citiesFile && fs.existsSync(citiesFile)) {
@@ -237,13 +331,49 @@ async function main() {
           emit({ type: 'debug', source: 'apollo', message: 'scrape_planned_start', industry });
           const keywords = String(industry || '').split(',').map(s => s.trim()).filter(Boolean);
           const seenKeys = new Set();
-          const keyOf = (r) => `${String(r.name || '').toLowerCase()}|${String(r.website || '').toLowerCase()}`;
+          const extractApolloOrgId = (u) => {
+            try {
+              if (!u) return '';
+              const abs = String(u).startsWith('http') ? String(u) : `https://app.apollo.io/${String(u).replace(/^#\/?/, '')}`;
+              const url = new URL(abs);
+              const idx = url.pathname.indexOf('/organizations/');
+              if (idx !== -1) {
+                const rest = url.pathname.slice(idx + '/organizations/'.length);
+                const id = rest.split(/[\/?#]/)[0];
+                return id || '';
+              }
+              const hash = url.hash || '';
+              const m = hash.match(/organizations\/([^\/?#]+)/);
+              return m ? m[1] : '';
+            } catch { return ''; }
+          };
+          const normalizeHost = (url) => { try { const u = new URL(url); return (u.hostname||'').replace(/^www\./,'').toLowerCase(); } catch { return ''; } };
+          const keyOf = (r) => {
+            const orgId = extractApolloOrgId(r.apollo_profile_url || r._profileUrl || '');
+            if (orgId) return `apollo:${orgId}`;
+            const host = normalizeHost(r.website || '');
+            if (host) return `host:${host}`;
+            return `name:${String(r.name||'').toLowerCase()}`;
+          };
+          let apolloRowsAdded = 0;
           aRows = await plannedApolloScrape({
             page: apolloSession.page,
             keywords,
             apolloListUrl: apolloListUrl || null,
             uiPages,
-            onDebug: (e) => emit({ type: 'debug', source: 'apollo', ...e }),
+            maxPagesPerBucket: apolloMaxPagesPerBucket,
+            industryTagIds: Array.isArray(apolloIndustryTagIds) ? apolloIndustryTagIds : undefined,
+            onDebug: (e) => {
+              try {
+                if (e && e.info === 'total_count_simple' && typeof e.totalCount === 'number') {
+                  upsertJob({ apolloTotal: e.totalCount });
+                }
+                if (e && e.info && String(e.info).includes('page') && typeof e.page === 'number') {
+                  upsertJob({ currentPage: e.page });
+                }
+              } catch {}
+              emit({ type: 'debug', source: 'apollo', ...e });
+            },
             emit: (evt) => {
               if (!evt || evt.type !== 'row') return;
               const k = keyOf(evt);
@@ -280,9 +410,16 @@ async function main() {
                   apollo_profile_url: evt.apollo_profile_url || evt._profileUrl || null,
                 });
               } catch {}
-              emit(evt);
+              const q = `${industry}${evt.address_state ? ' - ' + String(evt.address_state) : ''}`;
+            emit({ ...evt, query: q });
+            appendCsvRow({ ...evt, query: q, source: 'apollo' });
+              apolloRowsAdded += 1;
             },
           });
+          if (apolloRowsAdded) {
+            const curr = readJobsSafe().find(j => j.id === jobId)?.rowsAdded || 0;
+            upsertJob({ rowsAdded: curr + apolloRowsAdded });
+          }
           emit({ type: 'debug', source: 'apollo', message: 'scrape_planned_done', rows: Array.isArray(aRows) ? aRows.length : 0 });
           console.log(`Apollo planned scraping completed: ${aRows.length} companies found`);
           if (aRows && aRows.length > 0) {
@@ -355,7 +492,11 @@ async function main() {
             description: row.description || null,
             social_profiles: row.socialProfiles ? JSON.stringify(row.socialProfiles) : null,
           });
-          emit({ type: 'row', name: row.name, website: row.website || null, phone: row.phone || null, address: row.address || null, rating: row.rating ?? null, reviews_count: row.reviews_count ?? null, categories: row.categories || null, industry, location: null, source: 'apollo', method: row.method || 'apollo-api', page: null, query: industry, fallback_used: Boolean(row.fallback_used) });
+          {
+            const q = `${industry}${row.address_state ? ' - ' + String(row.address_state) : ''}`;
+            emit({ type: 'row', name: row.name, website: row.website || null, phone: row.phone || null, address: row.address || null, rating: row.rating ?? null, reviews_count: row.reviews_count ?? null, categories: row.categories || null, industry, location: null, source: 'apollo', method: row.method || 'apollo-api', page: null, query: q, fallback_used: Boolean(row.fallback_used) });
+            appendCsvRow({ name: row.name, website: row.website || null, phone: row.phone || null, address: row.address || null, rating: row.rating ?? null, reviews_count: row.reviews_count ?? null, categories: row.categories || null, query: q, apollo_profile_url: row.apolloProfileUrl || row._profileUrl || '', source: 'apollo' });
+          }
         } catch (e) {
           console.log(`Error adding Apollo company ${row.name}:`, e.message);
         }
@@ -368,6 +509,7 @@ async function main() {
       console.log(`Database has ${afterApolloRows.length} rows after Apollo (was ${initialRows.length})`);
       const apolloAdded = afterApolloRows.length - initialRows.length;
       console.log(`Apollo added ${apolloAdded} new rows to database`);
+      if (apolloAdded > 0) upsertJob({ rowsAdded: (readJobsSafe().find(j => j.id === jobId)?.rowsAdded || 0) + apolloAdded });
     } catch (e) {
       emit({ type: 'status', source: 'apollo', message: 'skipped', error: String(e?.message || e) });
       log.warn(`Apollo fetch skipped: ${e?.message || e}`);
@@ -456,6 +598,7 @@ async function main() {
                   email: row.email || null,
                 });
                 emit({ type: 'row', name: row.name, website: row.website || null, phone: row.phone || null, address: row.address || null, rating: row.rating ?? null, reviews_count: row.reviews_count ?? null, categories: row.categories || null, yp_listing_url: row.yp_listing_url || null, hours_text: row.hours_text || null, email: row.email || null, industry, location: cityName, source: 'yellowpages', method: row.method || 'yp-cheerio', page: pageNum, query: industry, fallback_used: Boolean(row.fallback_used) });
+                appendCsvRow({ name: row.name, website: row.website || null, phone: row.phone || null, address: row.address || null, rating: row.rating ?? null, reviews_count: row.reviews_count ?? null, categories: row.categories || null, query: industry, source: 'yellowpages' });
               }
             } catch {}
           },
@@ -486,7 +629,7 @@ async function main() {
         log.info(`YellowPages rows (summary): ${ypRows.length}`);
       } catch (err) {
         log.warn(`YellowPages fetch skipped for ${cityName}: ${err?.message || err}`);
-        emit({ type: 'status', source: 'yellowpages', message: 'skipped', city: cityName, error: String(err?.message || err) });
+      emit({ type: 'status', source: 'yellowpages', message: 'skipped', city: cityName, error: String(err?.message || err) });
       }
 
       const afterDomains = new Set(beforeDomains);
@@ -541,9 +684,10 @@ async function main() {
               categories: Array.isArray(row.categories) ? row.categories : (row.categories ? [row.categories] : null),
             });
             emit({ type: 'row', name: row.name, website: row.website || null, phone: row.phone || null, address: row.address || null, rating: row.rating ?? null, reviews_count: row.reviews_count ?? null, categories: row.categories || null, industry, location: cityName, source: 'googlemaps', method: row.method || 'gmaps-puppeteer' });
+            appendCsvRow({ name: row.name, website: row.website || null, phone: row.phone || null, address: row.address || null, rating: row.rating ?? null, reviews_count: row.reviews_count ?? null, categories: row.categories || null, query: industry, source: 'googlemaps' });
           } catch {}
         }
-        emit({ type: 'status', source: 'googlemaps', message: 'done', city: cityName, rows: gRows.length });
+      emit({ type: 'status', source: 'googlemaps', message: 'done', city: cityName, rows: gRows.length });
         log.info(`Google Maps rows (summary): ${gRows.length}`);
       } catch (e) {
         emit({ type: 'status', source: 'googlemaps', message: 'skipped', city: cityName, error: String(e?.message || e) });
@@ -552,29 +696,7 @@ async function main() {
     }
     emit({ type: 'status', message: 'city_done', city: cityName });
 
-    // Per-city export before moving to next city
-    try {
-      const rowsAll = listCompanies(db);
-      const rowsCity = rowsAll.filter(r => r.location === cityName);
-      const stamp = new Date().toISOString().slice(0, 10);
-      const slugCity = String(cityName).replace(/\s+/g, '-').toLowerCase();
-      const slugIndustry = String(industry).replace(/\s+/g, '-').toLowerCase();
-      fs.mkdirSync(outDir, { recursive: true });
-      if (format === 'csv' || format === 'both') {
-        const csvPath = path.join(outDir, `${stamp}_${slugIndustry}_${slugCity}.csv`);
-        exportToCsv(rowsCity, csvPath);
-        log.info(`CSV exported (city): ${csvPath} (${rowsCity.length} rows)`);
-        emit({ type: 'export', format: 'csv', path: csvPath, rows: rowsCity.length, city: cityName });
-      }
-      if (format === 'json' || format === 'both') {
-        const jsonPath = path.join(outDir, `${stamp}_${slugIndustry}_${slugCity}.json`);
-        exportToJson(rowsCity, jsonPath);
-        log.info(`JSON exported (city): ${jsonPath} (${rowsCity.length} rows)`);
-        emit({ type: 'export', format: 'json', path: jsonPath, rows: rowsCity.length, city: cityName });
-      }
-    } catch (e) {
-      log.warn(`Per-city export failed for ${cityName}: ${e?.message || e}`);
-    }
+    // Skip per-city exports in single-CSV-per-job mode
   }
   }
 
@@ -584,22 +706,8 @@ async function main() {
     apolloSession = null;
   }
 
-  const rows = listCompanies(db);
-  const stamp = new Date().toISOString().slice(0, 10);
-  fs.mkdirSync(outDir, { recursive: true });
-  const base = allCities ? `${stamp}_${industry}_all-cities` : `${stamp}_${industry}_${city.replace(/\s+/g,'-').toLowerCase()}`;
-  if (format === 'csv' || format === 'both') {
-    const csvPath = path.join(outDir, `${base}.csv`);
-    exportToCsv(rows, csvPath);
-    log.info(`CSV exported: ${csvPath} (${rows.length} rows)`);
-    emit({ type: 'export', format: 'csv', path: csvPath, rows: rows.length });
-  }
-  if (format === 'json' || format === 'both') {
-    const jsonPath = path.join(outDir, `${base}.json`);
-    exportToJson(rows, jsonPath);
-    log.info(`JSON exported: ${jsonPath} (${rows.length} rows)`);
-    emit({ type: 'export', format: 'json', path: jsonPath, rows: rows.length });
-  }
+  // Skip final full export; single CSV has been appended throughout the job
+  upsertJob({ status: 'done', finishedAt: new Date().toISOString() });
   emit({ type: 'done' });
 }
 

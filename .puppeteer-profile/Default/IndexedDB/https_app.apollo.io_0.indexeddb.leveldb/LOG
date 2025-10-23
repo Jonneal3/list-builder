@@ -1,3 +1,6 @@
-2025/10/16-00:23:22.071 16c5886 Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/IndexedDB/https_app.apollo.io_0.indexeddb.leveldb/MANIFEST-000001
-2025/10/16-00:23:22.072 16c5886 Recovering log #19
-2025/10/16-00:23:22.077 16c5886 Reusing old log /Users/jon/list-builder/.puppeteer-profile/Default/IndexedDB/https_app.apollo.io_0.indexeddb.leveldb/000019.log 
+2025/10/23-13:54:12.936 1bb45ca Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/IndexedDB/https_app.apollo.io_0.indexeddb.leveldb/MANIFEST-000001
+2025/10/23-13:54:12.937 1bb45ca Recovering log #70
+2025/10/23-13:54:12.941 1bb45ca Reusing old log /Users/jon/list-builder/.puppeteer-profile/Default/IndexedDB/https_app.apollo.io_0.indexeddb.leveldb/000070.log 
+2025/10/23-13:56:18.101 1bb45d7 Level-0 table #76: started
+2025/10/23-13:56:18.194 1bb45d7 Level-0 table #76: 1182987 bytes OK
+2025/10/23-13:56:18.200 1bb45d7 Delete type=0 #70
