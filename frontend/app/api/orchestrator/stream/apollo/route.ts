@@ -27,7 +27,8 @@ export async function GET(req: NextRequest) {
   const apolloEmail = (searchParams.get("apolloEmail") || "").trim();
   const apolloPassword = (searchParams.get("apolloPassword") || "").trim();
   const apolloListUrl = (searchParams.get("apolloListUrl") || "").trim();
-  const uiPages = Math.max(1, Number(searchParams.get("uiPages") || "5"));
+  // Clamp UI pages hard to <= 5 to avoid Apollo UI limits
+  const uiPages = Math.min(5, Math.max(1, Number(searchParams.get("uiPages") || "5")));
   const headless = String(searchParams.get("headless") || "true").toLowerCase() !== "false";
   const pageTimeoutMs = Math.max(5000, Number(searchParams.get("pageTimeoutMs") || "15000"));
   const puppeteerProxy = (searchParams.get("puppeteerProxy") || "").trim() || undefined;

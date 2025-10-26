@@ -170,6 +170,34 @@ async function main() {
   })();
   upsertJob({ csvPath: jobCsvPath });
   const csvSeenKeys = new Set();
+  // Canonical Apollo org ID extractor for stable CSV dedupe keys
+  function extractApolloOrgId(u) {
+    try {
+      if (!u) return '';
+      const abs = String(u).startsWith('http') ? String(u) : `https://app.apollo.io/${String(u).replace(/^#\/?/, '')}`;
+      const url = new URL(abs);
+      const idx = url.pathname.indexOf('/organizations/');
+      if (idx !== -1) {
+        const rest = url.pathname.slice(idx + '/organizations/'.length);
+        const id = rest.split(/[\/?#]/)[0];
+        return id || '';
+      }
+      const hash = url.hash || '';
+      const m = hash.match(/organizations\/([^\/?#]+)/);
+      return m ? m[1] : '';
+    } catch { return ''; }
+  }
+  function isGenericHost(host) {
+    if (!host) return false;
+    const h = String(host).toLowerCase();
+    const GENERIC = [
+      'facebook.com','linkedin.com','twitter.com','x.com','instagram.com','youtube.com',
+      'yelp.com','homeadvisor.com','angi.com','bbb.org','google.com','sites.google.com',
+      'wix.com','wixsite.com','wordpress.com','blogspot.com','godaddysites.com','square.site',
+      'squarespace.com','weebly.com','webs.com','hubspotpagebuilder.com',
+    ];
+    return GENERIC.some(g => h === g || h.endsWith('.' + g));
+  }
   function toCsvCell(value) {
     if (value == null) return '';
     const s = String(value);
@@ -189,9 +217,23 @@ async function main() {
   function appendCsvRow(msg) {
     try {
       ensureCsvHeader();
-      const key = `${String(msg.apollo_profile_url||msg._profileUrl||'').toLowerCase()}|${String(msg.website||'').toLowerCase()}|${String(msg.name||'').toLowerCase()}`;
-      if (csvSeenKeys.has(key)) return;
-      csvSeenKeys.add(key);
+      // Build canonical dedupe key: apollo org id -> normalized domain -> name
+      const apolloId = extractApolloOrgId(String(msg.apollo_profile_url || msg._profileUrl || ''));
+      const domain = normalizeDomain(msg.website || '');
+      const nameKey = String(msg.name || '').trim().toLowerCase();
+      let canonicalKey = '';
+      if (apolloId) {
+        canonicalKey = `apollo:${apolloId}`;
+      } else if (domain && !isGenericHost(domain)) {
+        canonicalKey = `domain:${domain}`;
+      } else if (nameKey) {
+        const stateLc = String(msg.address_state || '').trim().toLowerCase();
+        const cityLc = String(msg.address_city || '').trim().toLowerCase();
+        canonicalKey = (stateLc || cityLc) ? `name:${nameKey}|loc:${stateLc || cityLc}` : `name:${nameKey}`;
+      }
+      if (!canonicalKey) return;
+      if (csvSeenKeys.has(canonicalKey)) return;
+      csvSeenKeys.add(canonicalKey);
       const line = [
         toCsvCell(msg.name||''),
         toCsvCell(msg.website||''),
@@ -208,7 +250,7 @@ async function main() {
         toCsvCell(msg.query||industry||''),
         toCsvCell(msg.apollo_profile_url||msg._profileUrl||''),
         toCsvCell(msg.revenue||''),
-        toCsvCell(msg.employee_count||msg.employees||''),
+        toCsvCell(msg.employee_count||msg.employeeCount||msg.employees||''),
         toCsvCell(msg.keywords||''),
         toCsvCell(msg.linkedin_url||''),
         toCsvCell(msg.facebook_url||''),

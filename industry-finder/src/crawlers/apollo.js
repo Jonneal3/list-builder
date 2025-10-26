@@ -167,6 +167,62 @@ async function waitForSessionCookie(page, pageTimeoutMs) {
   return false;
 }
 
+// Apply Employee Range via URL hash params (no full reload, avoids Cloudflare)
+async function applyEmployeeRangeUI(page, rangeStr, timeoutMs, debug) {
+  const navTimeout = Math.max(5000, Math.min(30000, Number(timeoutMs || 10000)));
+  const parseRange = (s) => {
+    const parts = String(s || '').split(',');
+    let min = parts[0] ? parseInt(parts[0], 10) : null;
+    let max = parts[1] ? parseInt(parts[1], 10) : null;
+    if (!Number.isFinite(min)) min = null;
+    if (!Number.isFinite(max)) max = null;
+    return { min, max };
+  };
+  const { min, max } = parseRange(rangeStr);
+  try { if (typeof debug === 'function') debug({ info: 'ui_set_emp_start', min, max, range: rangeStr }); } catch {}
+  try {
+    await page.evaluate(({ min, max }) => {
+      const ensureCompaniesPath = (path) => (path && path.startsWith('/companies')) ? path : '/companies';
+      const current = new URL(window.location.href);
+      // Parse params from hash segment (Apollo SPA uses hash routing)
+      const hash = current.hash.replace(/^#/, '');
+      const idx = hash.indexOf('?');
+      const path = ensureCompaniesPath(idx === -1 ? hash : hash.slice(0, idx));
+      const qs = idx === -1 ? '' : hash.slice(idx + 1);
+      const sp = new URLSearchParams(qs);
+      // Remove existing employee range filters
+      const toDelete = [];
+      sp.forEach((v, k) => { if (k === 'organizationNumEmployeesRanges[]') toDelete.push(k); });
+      for (const k of toDelete) sp.delete(k);
+      // Set new range and reset to page 1
+      const rangeVal = `${min == null ? '' : String(min)},${max == null ? '' : String(max)}`;
+      sp.append('organizationNumEmployeesRanges[]', rangeVal);
+      sp.set('page', '1');
+      // Write back into hash without full reload
+      const nextHash = `${path}?${sp.toString()}`;
+      if (('#' + nextHash) !== window.location.hash) {
+        history.pushState({}, '', '#' + nextHash);
+        window.dispatchEvent(new HashChangeEvent('hashchange'));
+      }
+    }, { min, max });
+  } catch {}
+  // Wait for SPA to update list (pager text or table rows)
+  try {
+    const deadline = Date.now() + navTimeout;
+    let lastText = '';
+    while (Date.now() < deadline) {
+      const txt = await page.evaluate(() => {
+        const el = document.querySelector('[data-interaction-boundary="Table Pagination"] [class*="zp_tMpqI"]');
+        return el ? (el.textContent || '').trim() : '';
+      });
+      if (txt && txt !== lastText) break;
+      lastText = txt;
+      await new Promise(r => setTimeout(r, 200));
+    }
+  } catch {}
+  try { if (typeof debug === 'function') debug({ info: 'ui_set_emp_done', min, max }); } catch {}
+}
+
 async function createApolloSession(opts = { apolloLogin: false, apolloEmail: null, apolloPassword: null, headless: true, pageTimeoutMs: 20000, rotateViewport: false, puppeteerProxy: null, puppeteerProxyUser: null, puppeteerProxyPass: null, cookieHeader: null, apolloManualLogin: false, slowMoMs: 0 }) {
   const { browser, page } = await launchBrowser(opts);
   const navTimeout = Math.max(8000, Math.min(60000, Number(opts.pageTimeoutMs || 20000)));
@@ -437,7 +493,27 @@ async function createApolloSession(opts = { apolloLogin: false, apolloEmail: nul
 }
 
 function buildBaseUrl(industry, apolloListUrl) {
-  if (apolloListUrl) return apolloListUrl;
+  if (apolloListUrl) {
+    try {
+      // Ensure we always start at page=1 even if incoming URL specifies another page
+      const raw = String(apolloListUrl).trim();
+      const url = new URL(raw.startsWith('http') ? raw : `https://app.apollo.io/${raw.replace(/^#\/?/, '')}`);
+      // If hash contains companies path and query, reconstruct search params from it
+      if (url.hash && url.hash.includes('/companies')) {
+        // Parse the hash portion as its own URL to normalize page
+        const hashStr = url.hash.replace(/^#/, '');
+        const hashUrl = new URL(hashStr.startsWith('http') ? hashStr : `https://app.apollo.io/${hashStr.replace(/^\/?/, '')}`);
+        hashUrl.searchParams.set('page', '1');
+        return `https://app.apollo.io/#${hashUrl.pathname}${hashUrl.search}`;
+      }
+      // Fallback: operate on normal search params
+      url.searchParams.set('page', '1');
+      return url.toString();
+    } catch {
+      // If anything fails, fall back to the provided string
+      return apolloListUrl;
+    }
+  }
   const u = new URL('https://app.apollo.io/#/companies');
   if (industry) {
     u.searchParams.append('qOrganizationKeywordTags[]', industry);
@@ -552,36 +628,77 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
   const navTimeout = Math.max(8000, Math.min(60000, Number(opts.pageTimeoutMs || 20000)));
   const baseUrl = buildBaseUrl(industry, opts.apolloListUrl);
 
-  debug({ info: 'filtered_nav_start', url: baseUrl });
-  
-  // Enhanced navigation with better error handling
-  try {
-  await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: navTimeout });
-    // Handle Cloudflare challenge immediately after first navigation
-    try { await waitForCloudflare(page, navTimeout); } catch {}
-    // Wait for the page to stabilize
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    // Try to wait for any loading indicators to disappear
+  // Optional: skip navigation to reuse current page when UI already positioned
+  if (!(opts && opts.skipNavigate)) {
+    debug({ info: 'filtered_nav_start', url: baseUrl });
     try {
-      await page.waitForFunction(() => {
-        const loading = document.querySelector('[data-testid="loading"], .loading, .spinner');
-        return !loading || loading.style.display === 'none';
-      }, { timeout: 5000 });
-    } catch {}
-  } catch (error) {
-    debug({ info: 'navigation_error', error: error.message, url: baseUrl });
-    // Try to recover by refreshing
-    try {
-      await page.reload({ waitUntil: 'domcontentloaded', timeout: navTimeout });
-      await new Promise(resolve => setTimeout(resolve, 3000));
-    } catch (retryError) {
-      debug({ info: 'navigation_retry_failed', error: retryError.message });
+      await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: navTimeout });
+      try { await waitForCloudflare(page, navTimeout); } catch {}
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      try {
+        await page.waitForFunction(() => {
+          const loading = document.querySelector('[data-testid="loading"], .loading, .spinner');
+          return !loading || loading.style.display === 'none';
+        }, { timeout: 5000 });
+      } catch {}
+    } catch (error) {
+      debug({ info: 'navigation_error', error: error.message, url: baseUrl });
+      try {
+        await page.reload({ waitUntil: 'domcontentloaded', timeout: navTimeout });
+        await new Promise(resolve => setTimeout(resolve, 3000));
+      } catch (retryError) {
+        debug({ info: 'navigation_retry_failed', error: retryError.message });
+      }
     }
+    debug({ info: 'filtered_nav_done', url: baseUrl });
+  } else {
+    debug({ info: 'skip_nav', url: baseUrl });
   }
-  
-  debug({ info: 'filtered_nav_done', url: baseUrl });
+  // Ensure paginator starts at page 1 before any extraction
+  try {
+    const resetToFirstPage = async () => {
+      try {
+        const used = await page.evaluate(() => {
+          const root = document.querySelector('[data-interaction-boundary="Table Pagination"]') || document;
+          const firstBtn = root.querySelector('button[aria-label="First"]');
+          if (firstBtn) {
+            const htmlBtn = firstBtn;
+            if (!(htmlBtn).hasAttribute('disabled')) {
+              (htmlBtn).dispatchEvent(new MouseEvent('click', { bubbles: true }));
+              return 'first';
+            }
+          }
+          const prevBtn = root.querySelector('button[aria-label="Previous"]');
+          if (prevBtn && !(prevBtn).hasAttribute('disabled')) {
+            (prevBtn).dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            return 'prev';
+          }
+          return '';
+        });
+        if (used) {
+          const before = await (async () => {
+            try {
+              const el = await page.evaluate(() => {
+                const e = document.querySelector('[data-interaction-boundary="Table Pagination"] [class*="zp_tMpqI"]');
+                return e ? (e.textContent || '').trim() : '';
+              });
+              return el;
+            } catch { return ''; }
+          })();
+          try {
+            await page.waitForFunction((prev) => {
+              const el = document.querySelector('[data-interaction-boundary="Table Pagination"] [class*="zp_tMpqI"]');
+              const t = el ? (el.textContent || '').trim() : '';
+              return t && t !== prev && /^1\s*-\s*\d+\s*of\s*/i.test(t);
+            }, { timeout: 8000 }, before);
+          } catch {}
+          await new Promise(r => setTimeout(r, 400));
+        }
+      } catch {}
+    };
+    await resetToFirstPage();
+  } catch {}
 
-  // If this is the first US-wide pass (exact user-provided list URL), read and emit global total once and do not mutate filters
   try {
     const urlNow = page.url();
     if (opts && opts.apolloListUrl && typeof opts.onDebug === 'function') {
@@ -591,8 +708,46 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
     }
   } catch {}
 
+  // If provided, apply employee range via UI
+  if (opts && opts.setEmployeeRange != null) {
+    await applyEmployeeRangeUI(page, opts.setEmployeeRange, navTimeout, debug);
+    // After applying a bucket filter, reset to page 1 so the UI page never carries over
+    try {
+      const resetToFirstPage = async () => {
+        try {
+          const prevUsed = await page.evaluate(() => {
+            const root = document.querySelector('[data-interaction-boundary="Table Pagination"]') || document;
+            const firstBtn = root.querySelector('button[aria-label="First"]');
+            if (firstBtn) {
+              const htmlBtn = firstBtn;
+              if (!(htmlBtn).hasAttribute('disabled')) {
+                (htmlBtn).dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                return 'first';
+              }
+            }
+            const prevBtn = root.querySelector('button[aria-label="Previous"]');
+            if (prevBtn && !(prevBtn).hasAttribute('disabled')) {
+              (prevBtn).dispatchEvent(new MouseEvent('click', { bubbles: true }));
+              return 'prev';
+            }
+            return '';
+          });
+          if (prevUsed) {
+            try {
+              await page.waitForFunction(() => {
+                const el = document.querySelector('[data-interaction-boundary="Table Pagination"] [class*="zp_tMpqI"]');
+                const t = el ? (el.textContent || '').trim() : '';
+                return /^1\s*-\s*\d+\s*of\s*/i.test(t);
+              }, { timeout: 8000 });
+            } catch {}
+            await new Promise(r => setTimeout(r, 300));
+          }
+        } catch {}
+      };
+      await resetToFirstPage();
+    } catch {}
+  }
 
-  // Add debugging for page state
   try {
     const pageTitle = await page.title();
     const pageUrl = page.url();
@@ -603,6 +758,10 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
 
   const totalCount = await waitForStableTotalCount(page, navTimeout);
   debug({ info: 'total_count_simple', totalCount });
+
+  if (opts && opts.countOnly) {
+    return [];
+  }
 
   const rows = [];
   const unique = new Set();
@@ -615,6 +774,28 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
         return el ? (el.textContent || '').trim() : '';
       });
     } catch { return ''; }
+  };
+  const getCurrentUiPage = async () => {
+    try {
+      return await page.evaluate(() => {
+        const footer = document.querySelector('[data-interaction-boundary="Table Pagination"] [class*="zp_tMpqI"]');
+        const t = footer ? (footer.textContent || '').trim() : '';
+        // Common formats:
+        //  "1 - 25 of 1,234"   → page = 1
+        //  "26 - 50 of 1,234"  → page = 2
+        //  "51 - 75 of 1,234"  → page = 3
+        const m = t.match(/^(\d+)\s*-\s*(\d+)\s*of\s*(\d+)/i);
+        if (m) {
+          const start = parseInt(m[1], 10);
+          const end = parseInt(m[2], 10);
+          const perPage = Math.max(1, (end - start + 1));
+          const page = Math.max(1, Math.floor((start - 1) / perPage) + 1);
+          return page;
+        }
+        // Fallback: if it only starts with a number, assume page 1
+        return 1;
+      });
+    } catch { return 1; }
   };
   const gotoNextPage = async () => {
     const before = await getFooterText();
@@ -644,6 +825,14 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
   const maxPages = Math.max(1, Number((opts && opts.uiPages) || 5));
   while (safetyPages-- > 0) {
     debug({ info: 'starting_page_evaluation', page: i, label: opts && opts.label ? opts.label : undefined });
+    // Runtime guard: never exceed page 5 in UI
+    try {
+      const uiPos = await getCurrentUiPage();
+      if (uiPos > 5) {
+        debug({ info: 'ui_page_cap_hit', page: uiPos });
+        break;
+      }
+    } catch {}
     
     let pageItems = [];
     try {

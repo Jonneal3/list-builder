@@ -204,6 +204,16 @@ export default function Home() {
     return `${host}|${nameLc}`;
   }
 
+  // Canonical dedupe key: Layer 1 Apollo org ID; Layer 2 website host; ALWAYS enforce both
+  function canonicalKey(apolloUrl?: string | null, website?: string | null, name?: string | null): string {
+    const id = extractApolloOrgId(String(apolloUrl || ''));
+    if (id) return `apollo:${id}`;
+    const host = safeHostFromUrl(String(website || ''));
+    if (host) return `domain:${host}`;
+    const nameLc = String(name || '').trim().toLowerCase();
+    return nameLc ? `name:${nameLc}` : '';
+  }
+
   function extractApolloOrgId(u: string | undefined | null): string {
     if (!u) return '';
     try {
@@ -363,18 +373,30 @@ export default function Home() {
         // Drop noise: require at least website or apollo profile URL
         const hasUrl = Boolean(patch.website) || Boolean(patch.apollo_profile_url);
         if (!hasUrl) return;
+        // Gate on canonical key to prevent duplicate enqueue (Apollo ID, else domain, else name)
+        const keyCanonical = canonicalKey(patch.apollo_profile_url || null, patch.website || null, displayName);
+        if (keyCanonical && seenKeysRef.current.has(keyCanonical)) {
+          // Already seen; also try to merge if exists
+          const idx = findExistingRowIndex(rows, { ...msg, apollo_profile_url: patch.apollo_profile_url }, displayName);
+          if (idx >= 0) {
+            setRows((prev) => prev.map((r, i) => (i === idx ? mergePreferExisting(r, patch) : r)));
+          }
+          return;
+        }
         // Try to find an existing row to merge into
         const existingIdx = findExistingRowIndex(rows, { ...msg, apollo_profile_url: patch.apollo_profile_url }, displayName);
         if (existingIdx >= 0) {
           setRows((prev) => prev.map((r, i) => (i === existingIdx ? mergePreferExisting(r, patch) : r)));
+          if (keyCanonical) seenKeysRef.current.add(keyCanonical);
           return;
         }
         // Track multiple keys to avoid duplicates from alias messages
         const apolloId = extractApolloOrgId(String(patch.apollo_profile_url || ''));
         if (apolloId) seenKeysRef.current.add(`apollo:${apolloId}`);
-        if (host) seenKeysRef.current.add(`host:${host}`);
+        if (host) seenKeysRef.current.add(`domain:${host}`);
         const key = deriveKeyFromMsg(msg, displayName);
         seenKeysRef.current.add(key);
+        if (keyCanonical) seenKeysRef.current.add(keyCanonical);
         // enqueue row for batched rendering
         pendingRowsRef.current.push({
           name: displayName,
@@ -415,7 +437,18 @@ export default function Home() {
                     merged[idx] = mergePreferExisting(merged[idx], q);
                   } else {
                     // final guard: require URL
-                    if (q.website || q.apollo_profile_url) merged.push(q);
+                    if (q.website || q.apollo_profile_url) {
+                      // gate again by canonical key at insertion time (enforce Apollo-or-domain dedupe)
+                      const k = canonicalKey(q.apollo_profile_url || null, q.website || null, q.name || '');
+                      if (!k || !seenKeysRef.current.has(k)) {
+                        merged.push(q);
+                        if (k) seenKeysRef.current.add(k);
+                        const id = extractApolloOrgId(q.apollo_profile_url || '');
+                        const h = safeHostFromUrl(q.website);
+                        if (id) seenKeysRef.current.add(`apollo:${id}`);
+                        if (h) seenKeysRef.current.add(`domain:${h}`);
+                      }
+                    }
                   }
                 }
                 const next = merged;
@@ -450,6 +483,18 @@ export default function Home() {
             if (bits) pushLog("debug", `YP ${bits}`);
           }
         } else if (String(msg.source || "") === "apollo") {
+          // Fallback: some runs may only emit debug rows (info:"row"). Convert to real row events.
+          if (String(msg.info || '') === 'row') {
+            const synthetic = {
+              type: 'row',
+              name: String(msg.name || ''),
+              website: String(msg.website || ''),
+              apollo_profile_url: String(msg.apollo_profile_url || ''),
+              source: 'apollo',
+            } as any;
+            processMsg(synthetic, q);
+            return;
+          }
           const info = String(msg.info || msg.message || "");
           if (info === 'planned_nav') {
             const label = String(msg.label || '');
