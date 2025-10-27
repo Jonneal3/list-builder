@@ -73,18 +73,29 @@ export default function Home() {
   const [peopleOrgUrlColumn, setPeopleOrgUrlColumn] = useState<string>("");
   const [peopleMode, setPeopleMode] = useState<'find' | 'enrich'>('find');
   const [peopleLoading, setPeopleLoading] = useState<boolean>(false);
-  type PersonRow = {
+  const [peoplePages, setPeoplePages] = useState<number>(1);
+  const [peopleSortBy, setPeopleSortBy] = useState<string>('recommendations_score');
+  const [peopleSortAsc, setPeopleSortAsc] = useState<boolean>(false);
+  const [peopleSeniorities, setPeopleSeniorities] = useState<string>('owner,founder,c_suite,partner');
+  const [peoplePreviewOpen, setPeoplePreviewOpen] = useState<boolean>(true);
+  const [peopleShowLogs, setPeopleShowLogs] = useState<boolean>(true);
+  const [peopleLogsExpanded, setPeopleLogsExpanded] = useState<boolean>(false);
+  const [peopleLogs, setPeopleLogs] = useState<Array<{ ts: number; level: string; text: string }>>([]);
+  type PeopleCombinedRow = {
     orgId: string;
-    firstName: string;
-    lastName: string;
+    source: Record<string, string>;
     fullName: string;
     jobTitle: string;
     companyName: string;
     linkedinUrl: string;
+    personUrl: string;
     location: string;
   };
-  const [peopleRows, setPeopleRows] = useState<PersonRow[]>([]);
+  const [peopleCombinedRows, setPeopleCombinedRows] = useState<PeopleCombinedRow[]>([]);
   const peopleEsRef = useRef<EventSource | null>(null);
+  const peopleOrgIdToSourcesRef = useRef<Record<string, Record<string, string>[]>>({});
+  const [peopleIsPaused, setPeopleIsPaused] = useState<boolean>(false);
+  const peopleBufferedRef = useRef<any[]>([]);
 
   // Column resizing state (px widths)
   const [colWidths, setColWidths] = useState<Record<string, number>>({
@@ -1013,6 +1024,13 @@ export default function Home() {
       setPeopleCsvRows(records);
       const guess = autoSelectOrgUrlColumn(headers, records);
       setPeopleOrgUrlColumn(guess);
+      // Prepare on backend: extract orgIds and save token
+      try {
+        const body = [headers.join(','), ...records.map(r => headers.map(h => r[h] ?? '').join(','))].join('\n');
+        const res = await fetch(`/api/orchestrator/prepare/apollo-contacts?orgCol=${encodeURIComponent(guess)}`, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body });
+        const json = await res.json();
+        if (json && json.token) { (window as any).__peopleToken = json.token; }
+      } catch {}
     } catch (e: any) {
       setPeopleCsvError("Failed to read CSV");
       setPeopleCsvHeaders([]);
@@ -1039,59 +1057,141 @@ export default function Home() {
 
   function runPeopleFind() {
     if (!peopleCsvHeaders.length || !peopleOrgUrlColumn) return;
-    const idsSet = new Set<string>();
+    const token = (window as any).__peopleToken || '';
+    // Build mapping client-side so we can combine source rows with contacts
+    const orgIdToSources: Record<string, Record<string, string>[]> = {};
     for (const r of peopleCsvRows) {
       const v = String(r[peopleOrgUrlColumn] || '').trim();
       const id = extractApolloOrgIdFromAny(v);
-      if (id) idsSet.add(id);
+      if (!id) continue;
+      if (!orgIdToSources[id]) orgIdToSources[id] = [];
+      orgIdToSources[id].push(r);
     }
-    const orgIds = Array.from(idsSet);
+    const orgIds = Object.keys(orgIdToSources);
     if (!orgIds.length) {
       setPeopleCsvError('No Apollo organization IDs found in selected column');
       return;
     }
     try {
       setPeopleLoading(true);
-      setPeopleRows([]);
+      setPeopleCombinedRows([]);
+      setPeoplePreviewOpen(false);
+      setPeopleLogs([]);
+      setPeopleIsPaused(false);
+      peopleBufferedRef.current = [];
+      peopleOrgIdToSourcesRef.current = orgIdToSources;
       if (peopleEsRef.current) { try { peopleEsRef.current.close(); } catch {} peopleEsRef.current = null; }
       const params = new URLSearchParams();
-      params.set('orgIds', JSON.stringify(orgIds.slice(0, 200)));
+      if (token) params.set('token', token);
+      // Always pass a small seed set to avoid URL length limits; full set is available via token
+      params.set('orgIds', JSON.stringify(orgIds.slice(0, 40)));
       params.set('headless', showBrowser ? 'false' : 'true');
+      params.set('pages', String(peoplePages || 1));
+      if (peopleSeniorities && peopleSeniorities.trim()) params.set('seniorities', JSON.stringify(peopleSeniorities.split(',').map(s=>s.trim()).filter(Boolean)));
+      params.set('sortByField', peopleSortBy || 'recommendations_score');
+      params.set('sortAscending', peopleSortAsc ? 'true' : 'false');
       if (apolloEmail && apolloPassword) {
         params.set('apolloEmail', apolloEmail);
         params.set('apolloPassword', apolloPassword);
       }
+      // Frontend debug: log launch intent
+      setPeopleLogs(prev => [{ ts: Date.now(), level: 'info', text: `Launching contacts scrape: orgIds ${orgIds.length}, headless=${showBrowser ? 'false' : 'true'}` }, ...prev].slice(0,500));
       const es = new EventSource(`/api/orchestrator/stream/apollo-contacts?${params.toString()}`);
       peopleEsRef.current = es;
+      es.onopen = () => { setPeopleLogs(prev => [{ ts: Date.now(), level: 'info', text: 'SSE connected' }, ...prev].slice(0,500)); };
       const handleData = (e: MessageEvent) => {
         try {
           const msg = JSON.parse(e.data);
+          if (peopleIsPaused) { peopleBufferedRef.current.push(msg); return; }
           if (msg && msg.type === 'person') {
-            setPeopleRows((prev) => prev.concat([{
-              orgId: String(msg.orgId || ''),
-              firstName: String(msg.firstName || ''),
-              lastName: String(msg.lastName || ''),
-              fullName: String(msg.fullName || ''),
-              jobTitle: String(msg.jobTitle || ''),
-              companyName: String(msg.companyName || ''),
-              linkedinUrl: String(msg.linkedinUrl || ''),
-              location: String(msg.location || ''),
-            }]));
+            const orgId = String(msg.orgId || '');
+            const sources = peopleOrgIdToSourcesRef.current[orgId] || [];
+            if (sources.length) {
+              const rows: PeopleCombinedRow[] = sources.map((src) => ({
+                orgId,
+                source: src,
+                fullName: String(msg.fullName || `${msg.firstName || ''} ${msg.lastName || ''}`).trim(),
+                jobTitle: String(msg.jobTitle || ''),
+                companyName: String(msg.companyName || ''),
+                linkedinUrl: String(msg.linkedinUrl || ''),
+                personUrl: String(msg.personUrl || ''),
+                location: String(msg.location || ''),
+              }));
+              setPeopleCombinedRows((prev) => prev.concat(rows));
+            }
+          } else if (msg && (msg.type === 'status' || msg.type === 'stderr' || msg.type === 'error' || msg.type === 'log' || msg.type === 'debug')) {
+            const ts = Date.now();
+            const level = msg.type === 'stderr' || msg.type === 'error' ? 'error' : (msg.type === 'log' || msg.type === 'debug' ? 'debug' : 'info');
+            const text = typeof msg.message === 'string' ? msg.message : JSON.stringify(msg);
+            setPeopleLogs((prev) => [{ ts, level, text }, ...prev].slice(0, 500));
           }
         } catch {}
       };
       es.onmessage = handleData;
       es.addEventListener('person', handleData as any);
-      es.addEventListener('done', () => {
-        setPeopleLoading(false);
-        try { es.close(); } catch {}
-      });
-      es.onerror = () => {
-        setPeopleLoading(false);
-      };
+      es.addEventListener('done', () => { setPeopleLoading(false); try { es.close(); } catch {} });
+      es.onerror = () => { setPeopleLoading(false); setPeopleLogs(prev => [{ ts: Date.now(), level: 'error', text: 'SSE error' }, ...prev].slice(0,500)); };
     } catch {
       setPeopleLoading(false);
     }
+  }
+
+  function pausePeopleStream() {
+    if (!peopleLoading) return;
+    setPeopleIsPaused(true);
+    setPeopleLogs(prev => [{ ts: Date.now(), level: 'info', text: 'Paused' }, ...prev].slice(0, 500));
+  }
+
+  function resumePeopleStream() {
+    if (!peopleLoading) return;
+    setPeopleIsPaused(false);
+    const queued = peopleBufferedRef.current.splice(0);
+    if (queued.length) {
+      for (const msg of queued) {
+        if (msg && msg.type === 'person') {
+          const orgId = String(msg.orgId || '');
+          const sources = peopleOrgIdToSourcesRef.current[orgId] || [];
+          if (sources.length) {
+            const rows: PeopleCombinedRow[] = sources.map((src) => ({
+              orgId,
+              source: src,
+              fullName: String(msg.fullName || `${msg.firstName || ''} ${msg.lastName || ''}`).trim(),
+              jobTitle: String(msg.jobTitle || ''),
+              companyName: String(msg.companyName || ''),
+              linkedinUrl: String(msg.linkedinUrl || ''),
+              personUrl: String(msg.personUrl || ''),
+              location: String(msg.location || ''),
+            }));
+            setPeopleCombinedRows((prev) => prev.concat(rows));
+          }
+        } else if (msg && (msg.type === 'status' || msg.type === 'stderr' || msg.type === 'error' || msg.type === 'log' || msg.type === 'debug')) {
+          const ts = Date.now();
+          const level = msg.type === 'stderr' || msg.type === 'error' ? 'error' : (msg.type === 'log' || msg.type === 'debug' ? 'debug' : 'info');
+          const text = typeof msg.message === 'string' ? msg.message : JSON.stringify(msg);
+          setPeopleLogs((prev) => [{ ts, level, text }, ...prev].slice(0, 500));
+        }
+      }
+    }
+  }
+
+  function stopPeopleStream() {
+    try { if (peopleEsRef.current) { peopleEsRef.current.close(); peopleEsRef.current = null; } } catch {}
+    setPeopleLoading(false);
+    setPeopleIsPaused(false);
+    peopleBufferedRef.current = [];
+    setPeopleLogs(prev => [{ ts: Date.now(), level: 'info', text: 'Stopped' }, ...prev].slice(0, 500));
+  }
+
+  function pauseOrResumeCurrent() {
+    if (entityType === 'people') {
+      peopleIsPaused ? resumePeopleStream() : pausePeopleStream();
+    } else {
+      isPaused ? resumeStream() : pauseStream();
+    }
+  }
+
+  function stopCurrent() {
+    if (entityType === 'people') stopPeopleStream(); else stopStream();
   }
 
   function clearRows() {
@@ -1100,6 +1200,39 @@ export default function Home() {
     setStatus("");
     setIsLoading(false);
     try { if (esRef.current) { esRef.current.close(); esRef.current = null; } } catch {}
+  }
+
+  function exportPeopleCombinedCsv() {
+    const headers: string[] = [];
+    // Start with source headers (original CSV) in stable order
+    for (const h of peopleCsvHeaders) headers.push(h);
+    // Append contact fields
+    const contactHeaders = ['Contact Name','Title','LinkedIn','Apollo Person URL','Location'];
+    for (const h of contactHeaders) headers.push(h);
+    const rows = peopleCombinedRows.map((r) => {
+      const base = peopleCsvHeaders.map(h => String(r.source[h] ?? ''));
+      const contact = [
+        String(r.fullName || ''),
+        String(r.jobTitle || ''),
+        String(r.linkedinUrl || ''),
+        String(r.personUrl || ''),
+        String(r.location || ''),
+      ];
+      return base.concat(contact);
+    });
+    const csv = [headers, ...rows].map(cols => cols.map(c => {
+      const s = String(c ?? '');
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `people_contacts.csv`;
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
   }
 
   return (
@@ -1242,6 +1375,34 @@ export default function Home() {
                       ENRICH
                     </button>
                   </div>
+                  <div className="hidden md:flex items-center gap-2 ml-2">
+                    <label className="text-xs text-gray-700" title="Upload your organizations CSV. We'll read it and show the full table below.">Upload organizations CSV</label>
+                    <input
+                      type="file"
+                      accept=".csv,text/csv"
+                      onChange={(e) => { const f = e.target.files && e.target.files[0]; if (f) handlePeopleCsvUpload(f); }}
+                      className="block text-xs file:mr-3 file:py-2 file:px-3 file:rounded-full file:border file:bg-white file:hover:bg-gray-50 file:text-sm file:border-gray-300"
+                      title="Choose a .csv file containing your companies. We'll use it to find contacts and keep your original columns."
+                    />
+                    <label className="inline-flex items-center gap-1 text-xs text-gray-700" title="Open a visible browser window while scraping for easier debugging.">
+                      <input type="checkbox" checked={showBrowser} onChange={(e) => setShowBrowser(e.target.checked)} />
+                      Show browser
+                    </label>
+                    {peopleCsvHeaders.length > 0 && (
+                      <select
+                        className="border rounded-full px-2 h-10 text-sm bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                        value={peopleOrgUrlColumn}
+                        onChange={(e) => setPeopleOrgUrlColumn(e.target.value)}
+                        aria-label="Apollo org URL column"
+                        title="Select the column that contains Apollo organization URLs (e.g., app.apollo.io/#/organizations/...)."
+                      >
+                        {peopleCsvHeaders.map(h => (
+                          <option key={h} value={h}>{h}</option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                  {false && peopleMode === 'find' && (<div />)}
                   <button 
                     className="h-10 px-4 text-sm rounded-full text-white bg-gradient-to-br from-blue-600 to-blue-700 shadow hover:from-blue-700 hover:to-blue-800 disabled:opacity-60" 
                     disabled={peopleLoading || peopleCsvRows.length === 0 || !peopleOrgUrlColumn}
@@ -1256,6 +1417,15 @@ export default function Home() {
                     ) : (
                       peopleMode === 'find' ? "Find Contacts" : "Enrich Contacts"
                     )}
+                  </button>
+                  <button className="text-[11px] text-blue-700 underline" onClick={() => setPeopleShowLogs(v => !v)}>
+                    {peopleShowLogs ? "Hide details" : "Show details"}
+                  </button>
+                  <button
+                    className="h-8 px-3 text-[11px] rounded-full border bg-white hover:bg-gray-50 text-blue-700"
+                    onClick={() => { setPeopleCombinedRows([]); setPeopleLogs([]); }}
+                  >
+                    Clear
                   </button>
                 </>
               )}
@@ -1273,10 +1443,10 @@ export default function Home() {
               aria-label={isPaused ? "Resume" : "Pause"}
               title={isPaused ? "Resume" : "Pause"}
               className="h-8 w-8 rounded-full border bg-white hover:bg-gray-50 disabled:opacity-60 flex items-center justify-center shadow-sm"
-              disabled={!isLoading}
-              onClick={() => (isPaused ? resumeStream() : pauseStream())}
+              disabled={entityType === 'people' ? !peopleLoading : !isLoading}
+              onClick={pauseOrResumeCurrent}
             >
-              {isPaused ? (
+              {(entityType === 'people' ? peopleIsPaused : isPaused) ? (
                 // Play icon
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 text-gray-700">
                   <path d="M5.25 5.653c0-1.427 1.542-2.313 2.78-1.593l10.06 5.847c1.254.728 1.254 2.458 0 3.186L8.03 18.94c-1.238.72-2.78-.166-2.78-1.593V5.653z" />
@@ -1292,8 +1462,8 @@ export default function Home() {
               aria-label="Stop"
               title="Stop"
               className="h-8 w-8 rounded-full text-white bg-gradient-to-br from-rose-500 to-rose-600 shadow hover:from-rose-600 hover:to-rose-700 disabled:opacity-60 flex items-center justify-center"
-              disabled={!isLoading}
-              onClick={stopStream}
+              disabled={entityType === 'people' ? !peopleLoading : !isLoading}
+              onClick={stopCurrent}
             >
               {/* Stop icon */}
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
@@ -1348,6 +1518,31 @@ export default function Home() {
                 </li>
               ))}
               {logs.length === 0 && (
+                <li className="text-gray-400">No activity yet.</li>
+              )}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {peopleShowLogs && entityType === 'people' && (
+        <section className="w-full bg-white rounded-md border p-2 shadow-sm mb-2 px-2">
+          <div className="flex items-center justify-between mb-1">
+            <h3 className="font-medium text-sm">Activity</h3>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">{peopleLogs.length} logs</span>
+              <button className="text-xs text-blue-600" onClick={() => setPeopleLogs([])}>Clear</button>
+              <button className="text-xs text-blue-600" onClick={() => setPeopleLogsExpanded(v => !v)}>{peopleLogsExpanded ? 'Shrink' : 'Expand'}</button>
+            </div>
+          </div>
+          <div className={"overflow-auto text-[11px] font-mono leading-5 " + (peopleLogsExpanded ? 'max-h-80' : 'max-h-32')}>
+            <ul className="space-y-1">
+              {peopleLogs.map((l, i) => (
+                <li key={i} className={l.level === 'error' ? 'text-red-600' : l.level === 'debug' ? 'text-gray-600' : 'text-gray-800'}>
+                  <span className="text-gray-400">[{new Date(l.ts).toLocaleTimeString()}]</span> {l.text}
+                </li>
+              ))}
+              {peopleLogs.length === 0 && (
                 <li className="text-gray-400">No activity yet.</li>
               )}
             </ul>
@@ -1479,77 +1674,79 @@ export default function Home() {
         <section className="w-full mt-2">
           <div className="p-6 border rounded-md bg-white shadow-sm">
             {peopleMode === 'find' ? (
-              <div className="flex items-start gap-4 flex-wrap">
-                <div className="flex-1 min-w-[260px]">
-                  <h2 className="text-sm font-semibold mb-2">People • {peopleSource === 'apollo' ? 'Apollo' : peopleSource} • FIND</h2>
-                  <div className="space-y-2">
-                    <label className="block text-xs text-gray-700">Upload CSV</label>
-                    <input
-                      type="file"
-                      accept=".csv,text/csv"
-                      onChange={(e) => { const f = e.target.files && e.target.files[0]; if (f) handlePeopleCsvUpload(f); }}
-                      className="block w-full text-xs file:mr-3 file:py-2 file:px-3 file:rounded-full file:border file:bg-white file:hover:bg-gray-50 file:text-sm file:border-gray-300"
-                    />
-                    {peopleCsvError && <p className="text-xs text-rose-600">{peopleCsvError}</p>}
+              <div className="space-y-3">
+                <div className="w-full">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-xs text-gray-700">Preview ({peopleCsvRows.length} rows)</label>
+                    {peopleCsvHeaders.length > 0 && (
+                      <button className="text-[11px] text-blue-700 underline" onClick={() => setPeoplePreviewOpen(v => !v)}>
+                        {peoplePreviewOpen ? 'Hide preview' : 'Show preview'}
+                      </button>
+                    )}
                   </div>
-                  {peopleCsvHeaders.length > 0 && (
-                    <div className="mt-3 space-y-2">
-                      <label className="block text-xs text-gray-700">Apollo organization URL column</label>
-                      <select
-                        className="border rounded-full px-2 h-9 text-sm bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-                        value={peopleOrgUrlColumn}
-                        onChange={(e) => setPeopleOrgUrlColumn(e.target.value)}
-                      >
-                        {peopleCsvHeaders.map(h => (
-                          <option key={h} value={h}>{h}</option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-                </div>
-                <div className="flex-[2] min-w-[320px]">
-                  <label className="block text-xs text-gray-700 mb-2">Preview ({peopleCsvRows.length} rows)</label>
-                <div className="border rounded-md overflow-auto max-h-72">
-                    {peopleCsvHeaders.length === 0 ? (
-                    <div className="p-3 text-xs text-gray-500">No file uploaded.</div>
-                    ) : (
-                    <div className="grid grid-cols-1 gap-3 p-2">
-                      <div>
-                        <label className="block text-xs text-gray-700 mb-1">Org IDs detected</label>
-                        <div className="text-[11px] text-gray-700 bg-slate-50 border rounded p-2 max-h-28 overflow-auto">
-                          {Array.from(new Set(peopleCsvRows.map(r => extractApolloOrgIdFromAny(String(r[peopleOrgUrlColumn] || ''))).filter(Boolean))).slice(0, 50).join(', ')}
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-xs text-gray-700 mb-1">People (live results)</label>
+                  {peoplePreviewOpen && (
+                    <div className="border rounded-md overflow-auto max-h-72">
+                      {peopleCsvHeaders.length === 0 ? (
+                        <div className="p-3 text-xs text-gray-500">No file uploaded.</div>
+                      ) : (
                         <table className="min-w-full text-[11px]">
                           <thead className="bg-slate-50 sticky top-0">
                             <tr>
-                              {['Name','Title','Company','LinkedIn','Location'].map(h => (
-                                <th key={h} className="text-left px-2 py-1 border-b text-slate-600">{h}</th>
+                              {peopleCsvHeaders.map(h => (
+                                <th key={h} className={`text-left px-2 py-1 border-b text-slate-600 ${h === peopleOrgUrlColumn ? 'bg-yellow-50' : ''}`}>{h}</th>
                               ))}
                             </tr>
                           </thead>
                           <tbody>
-                            {peopleRows.slice(-300).map((p, i) => (
+                            {peopleCsvRows.map((r, i) => (
                               <tr key={i} className={i % 2 ? 'bg-white' : 'bg-slate-50'}>
-                                <td className="px-2 py-1 border-b align-top">{p.fullName || `${p.firstName} ${p.lastName}`}</td>
-                                <td className="px-2 py-1 border-b align-top">{p.jobTitle}</td>
-                                <td className="px-2 py-1 border-b align-top">{p.companyName}</td>
-                                <td className="px-2 py-1 border-b align-top break-words">{p.linkedinUrl ? <a className="text-blue-700 hover:underline" href={p.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a> : ''}</td>
-                                <td className="px-2 py-1 border-b align-top">{p.location}</td>
+                                {peopleCsvHeaders.map(h => (
+                                  <td key={h} className={`px-2 py-1 border-b align-top break-words min-w-[120px] ${h === peopleOrgUrlColumn ? 'bg-yellow-50' : ''}`}>{r[h]}</td>
+                                ))}
                               </tr>
                             ))}
-                            {peopleRows.length === 0 && (
-                              <tr><td className="px-2 py-2 text-xs text-gray-500" colSpan={5}>No contacts yet. Click Find Contacts.</td></tr>
+                            {peopleCsvRows.length === 0 && (
+                              <tr><td className="px-2 py-2 text-xs text-gray-500">No rows</td></tr>
                             )}
                           </tbody>
                         </table>
-                      </div>
+                      )}
                     </div>
-                    )}
+                  )}
+                </div>
+                <div className="mt-3 w-full">
+                  <label className="block text-xs text-gray-700 mb-1">People (live results)</label>
+                  <div className="border rounded-md overflow-auto max-h-72">
+                    <table className="min-w-full text-[11px]">
+                      <thead className="bg-slate-50 sticky top-0">
+                        <tr>
+                          {['Company Name','Company Website','Org URL','Contact Name','Title','LinkedIn','Location'].map(h => (
+                            <th key={h} className="text-left px-2 py-1 border-b text-slate-600">{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {peopleCombinedRows.slice(-300).map((p, i) => (
+                          <tr key={i} className={i % 2 ? 'bg-white' : 'bg-slate-50'}>
+                            <td className="px-2 py-1 border-b align-top">{p.source['Company Name'] || p.companyName}</td>
+                            <td className="px-2 py-1 border-b align-top break-words">{p.source['Website'] ? <a className="text-blue-700 hover:underline" href={p.source['Website']} target="_blank" rel="noreferrer">{p.source['Website']}</a> : ''}</td>
+                            <td className="px-2 py-1 border-b align-top break-words">{p.source[peopleOrgUrlColumn] ? <a className="text-blue-700 hover:underline" href={String(p.source[peopleOrgUrlColumn])} target="_blank" rel="noreferrer">Org</a> : ''}</td>
+                            <td className="px-2 py-1 border-b align-top">{p.fullName}</td>
+                            <td className="px-2 py-1 border-b align-top">{p.jobTitle}</td>
+                            <td className="px-2 py-1 border-b align-top break-words">{p.linkedinUrl ? <a className="text-blue-700 hover:underline" href={p.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a> : ''}</td>
+                            <td className="px-2 py-1 border-b align-top">{p.location}</td>
+                          </tr>
+                        ))}
+                        {peopleCombinedRows.length === 0 && (
+                          <tr><td className="px-2 py-2 text-xs text-gray-500" colSpan={7}>No contacts yet. Click Find Contacts.</td></tr>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
+                {false && (
+                  <div />
+                )}
               </div>
             ) : (
               <div className="p-8 text-center">
