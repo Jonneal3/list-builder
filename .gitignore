@@ -20,3 +20,11 @@ backend/api.log
 # Misc
 ai-industry-explorer (1).zip
 streamlit.log
+
+# Puppeteer/Chromium downloads (prevent accidental check-ins)
+frontend/.puppeteer/
+frontend/.local-chromium/
+frontend/.cache/puppeteer/
+industry-finder/.puppeteer/
+industry-finder/.local-chromium/
+industry-finder/.cache/puppeteer/
