@@ -44,7 +44,7 @@ export default function Home() {
   const bufferedRef = useRef<any[]>([]);
   const pendingRowsRef = useRef<Row[]>([]);
   const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const FLUSH_INTERVAL_MS = 150;
+  const FLUSH_INTERVAL_MS = 16;
   const MAX_ROWS = 1000000;
   const [logs, setLogs] = useState<Array<{ ts: number; level: string; text: string }>>([]);
   const [showLogs, setShowLogs] = useState<boolean>(false);
@@ -89,7 +89,7 @@ export default function Home() {
     apollo: 160,
     revenue: 100,
     source: 100,
-    query: 140,
+    
   });
   const resizingRef = useRef<{ key: string; startX: number; startW: number } | null>(null);
   useEffect(() => {
@@ -485,14 +485,50 @@ export default function Home() {
         } else if (String(msg.source || "") === "apollo") {
           // Fallback: some runs may only emit debug rows (info:"row"). Convert to real row events.
           if (String(msg.info || '') === 'row') {
-            const synthetic = {
-              type: 'row',
-              name: String(msg.name || ''),
-              website: String(msg.website || ''),
-              apollo_profile_url: String(msg.apollo_profile_url || ''),
-              source: 'apollo',
-            } as any;
-            processMsg(synthetic, q);
+            // Fast-path append of Apollo debug row events to ensure immediate UI visibility
+            const name = String(msg.name || '').trim();
+            const website = String(msg.website || '');
+            const apolloUrl = String(msg.apollo_profile_url || '');
+            const hasUrl = Boolean(website) || Boolean(apolloUrl);
+            if (hasUrl) {
+              pendingRowsRef.current.push({
+                name,
+                website,
+                city: '',
+                state: '',
+                query: q || '',
+                source: 'apollo',
+                apollo_profile_url: apolloUrl || null,
+                phone: null,
+                address: null,
+                rating: null,
+                reviews_count: null,
+                categories: null,
+                hours_text: null,
+                email: null,
+                employees: null,
+                industry: null,
+                keywords: null,
+                linkedin_url: null,
+                facebook_url: null,
+                twitter_url: null,
+                revenue: null,
+              });
+              if (!flushTimerRef.current) {
+                flushTimerRef.current = setTimeout(() => {
+                  flushTimerRef.current = null;
+                  const queued = pendingRowsRef.current.splice(0);
+                  if (queued.length) {
+                    setRows((prev) => {
+                      const next = prev.concat(queued);
+                      if (next.length > MAX_ROWS) next.length = MAX_ROWS;
+                      return next;
+                    });
+                    setRowCount((c) => c + queued.length);
+                  }
+                }, FLUSH_INTERVAL_MS);
+              }
+            }
             return;
           }
           const info = String(msg.info || msg.message || "");

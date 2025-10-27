@@ -366,52 +366,6 @@ async function createApolloSession(opts = { apolloLogin: false, apolloEmail: nul
   // Preload cookie header if provided and not using login
   let cookieHeader = String(opts.cookieHeader || '');
 
-  // Optional: try Unflare service to solve Cloudflare and return cookies/headers
-  // Enable with ENABLE_UNFLARE=true and provide UNFLARE_URL
-  if (!cookieHeader && process.env.UNFLARE_URL && String(process.env.ENABLE_UNFLARE || 'false').toLowerCase() === 'true') {
-    try {
-      const { requestUnflare } = require('../utils/unflare');
-      const json = await requestUnflare({
-        url: 'https://app.apollo.io/#/companies',
-        timeout: Math.max(30000, navTimeout),
-        proxy: opts && opts.puppeteerProxy ? {
-          host: String(opts.puppeteerProxy),
-          port: Number((opts.puppeteerProxy || '').split(':')[1] || 0) || undefined,
-          username: opts.puppeteerProxyUser,
-          password: opts.puppeteerProxyPass,
-        } : undefined,
-        apiUrl: process.env.UNFLARE_URL,
-        apiKey: process.env.UNFLARE_API_KEY,
-      });
-      
-      // Check for error response
-      if (json.code === 'error') {
-        emitStatus({ type: 'debug', source: 'apollo', info: 'unflare_error', message: json.message });
-      } else if (json && Array.isArray(json.cookies) && json.cookies.length) {
-        // Set cookies from Unflare response
-        try { 
-          await page.setCookie(...json.cookies); 
-          emitStatus({ type: 'debug', source: 'apollo', info: 'unflare_cookies_set', count: json.cookies.length }); 
-        } catch (cookieError) {
-          emitStatus({ type: 'debug', source: 'apollo', info: 'unflare_cookie_error', error: String(cookieError.message || cookieError) });
-        }
-        
-        // Also set headers if provided
-        if (json.headers && typeof json.headers === 'object') {
-          try {
-            await page.setExtraHTTPHeaders(json.headers);
-            emitStatus({ type: 'debug', source: 'apollo', info: 'unflare_headers_set' });
-          } catch (headerError) {
-            emitStatus({ type: 'debug', source: 'apollo', info: 'unflare_header_error', error: String(headerError.message || headerError) });
-          }
-        }
-      } else {
-        emitStatus({ type: 'debug', source: 'apollo', info: 'unflare_no_cookies', response: JSON.stringify(json).substring(0, 200) });
-      }
-    } catch (e) {
-      emitStatus({ type: 'debug', source: 'apollo', info: 'unflare_failed', error: String(e && (e.message || e)) });
-    }
-  }
   if (cookieHeader && !opts.apolloLogin) {
     try {
       const parts = cookieHeader.split(';').map(s => s.trim()).filter(Boolean);

@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "puppeteer": "^24.15.0"
+  },
+  "_npx": {
+    "packages": [
+      "puppeteer@24.15.0"
+    ]
+  }
+}

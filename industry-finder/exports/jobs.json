@@ -1,5 +1,356 @@
 [
   {
+    "id": "2025-10-27T02-46-19-404Z-05ba0k",
+    "createdAt": "2025-10-27T02:46:19.405Z",
+    "updatedAt": "2025-10-27T03:11:10.677Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": 9,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T02-46-19-404Z-05ba0k.csv",
+    "apolloTotal": 28
+  },
+  {
+    "id": "2025-10-27T02-31-17-783Z-1fcr8y",
+    "createdAt": "2025-10-27T02:31:17.784Z",
+    "updatedAt": "2025-10-27T02:46:17.087Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": 1,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T02-31-17-783Z-1fcr8y.csv",
+    "apolloTotal": 274
+  },
+  {
+    "id": "2025-10-27T02-30-11-748Z-uz0z79",
+    "createdAt": "2025-10-27T02:30:11.748Z",
+    "updatedAt": "2025-10-27T02:30:11.749Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": null,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T02-30-11-748Z-uz0z79.csv"
+  },
+  {
+    "id": "2025-10-27T02-29-01-661Z-at2jhk",
+    "createdAt": "2025-10-27T02:29:01.661Z",
+    "updatedAt": "2025-10-27T02:29:01.662Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": null,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T02-29-01-661Z-at2jhk.csv"
+  },
+  {
+    "id": "2025-10-27T02-23-15-900Z-c9bac3",
+    "createdAt": "2025-10-27T02:23:15.900Z",
+    "updatedAt": "2025-10-27T02:28:49.073Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": 1,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T02-23-15-900Z-c9bac3.csv",
+    "apolloTotal": 2
+  },
+  {
+    "id": "2025-10-27T02-22-24-478Z-5uv52j",
+    "createdAt": "2025-10-27T02:22:24.479Z",
+    "updatedAt": "2025-10-27T02:22:24.480Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": null,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T02-22-24-478Z-5uv52j.csv"
+  },
+  {
+    "id": "2025-10-27T02-18-17-731Z-cr5b7d",
+    "createdAt": "2025-10-27T02:18:17.731Z",
+    "updatedAt": "2025-10-27T02:20:50.907Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": 1,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T02-18-17-731Z-cr5b7d.csv",
+    "apolloTotal": 51
+  },
+  {
+    "id": "2025-10-27T02-01-15-820Z-mlf7sr",
+    "createdAt": "2025-10-27T02:01:15.820Z",
+    "updatedAt": "2025-10-27T02:14:55.948Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": 1,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T02-01-15-820Z-mlf7sr.csv",
+    "apolloTotal": 0
+  },
+  {
+    "id": "2025-10-27T01-51-49-557Z-lqqnfw",
+    "createdAt": "2025-10-27T01:51:49.558Z",
+    "updatedAt": "2025-10-27T01:59:30.860Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": 1,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T01-51-49-557Z-lqqnfw.csv",
+    "apolloTotal": 65
+  },
+  {
+    "id": "2025-10-27T01-45-10-956Z-nnkcj4",
+    "createdAt": "2025-10-27T01:45:10.956Z",
+    "updatedAt": "2025-10-27T01:51:31.294Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": 1,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T01-45-10-956Z-nnkcj4.csv",
+    "apolloTotal": 0
+  },
+  {
+    "id": "2025-10-27T01-43-26-428Z-dmyxbo",
+    "createdAt": "2025-10-27T01:43:26.429Z",
+    "updatedAt": "2025-10-27T01:43:26.430Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": null,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T01-43-26-428Z-dmyxbo.csv"
+  },
+  {
+    "id": "2025-10-27T01-33-59-527Z-dihqph",
+    "createdAt": "2025-10-27T01:33:59.527Z",
+    "updatedAt": "2025-10-27T01:41:25.493Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": 1,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T01-33-59-527Z-dihqph.csv",
+    "apolloTotal": 65
+  },
+  {
+    "id": "2025-10-27T01-32-35-839Z-i21kxy",
+    "createdAt": "2025-10-27T01:32:35.839Z",
+    "updatedAt": "2025-10-27T01:32:35.841Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": null,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T01-32-35-839Z-i21kxy.csv"
+  },
+  {
+    "id": "2025-10-27T01-30-28-878Z-klk8e4",
+    "createdAt": "2025-10-27T01:30:28.878Z",
+    "updatedAt": "2025-10-27T01:30:28.879Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": null,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-27_painting-company,-painting-services_job-2025-10-27T01-30-28-878Z-klk8e4.csv"
+  },
+  {
+    "id": "2025-10-26T22-45-36-479Z-22d4ar",
+    "createdAt": "2025-10-26T22:45:36.480Z",
+    "updatedAt": "2025-10-26T23:16:13.545Z",
+    "status": "done",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 3357,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": 1,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-26_painting-company,-painting-services_job-2025-10-26T22-45-36-479Z-22d4ar.csv",
+    "apolloTotal": 3,
+    "finishedAt": "2025-10-26T23:16:13.543Z"
+  },
+  {
+    "id": "2025-10-26T22-45-09-384Z-ksgmte",
+    "createdAt": "2025-10-26T22:45:09.384Z",
+    "updatedAt": "2025-10-26T22:45:09.386Z",
+    "status": "running",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": null,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-26_painting-company,-painting-services_job-2025-10-26T22-45-09-384Z-ksgmte.csv"
+  },
+  {
+    "id": "2025-10-26T22-42-19-907Z-txhhbj",
+    "createdAt": "2025-10-26T22:42:19.907Z",
+    "updatedAt": "2025-10-26T22:42:19.960Z",
+    "status": "done",
+    "source": "apollo",
+    "industry": "painting company, painting services",
+    "params": {
+      "uiPages": 5,
+      "apolloLimit": 50,
+      "apolloPerPage": 25,
+      "apolloMaxPagesPerBucket": 5
+    },
+    "rowsAdded": 0,
+    "pagesFetched": 0,
+    "currentCity": null,
+    "currentState": null,
+    "currentPage": null,
+    "csvPath": "/Users/jonneal/list-builder/industry-finder/exports/2025-10-26_painting-company,-painting-services_job-2025-10-26T22-42-19-907Z-txhhbj.csv",
+    "finishedAt": "2025-10-26T22:42:19.960Z"
+  },
+  {
     "id": "2025-10-25T21-04-59-580Z-3jtk0i",
     "createdAt": "2025-10-25T21:04:59.580Z",
     "updatedAt": "2025-10-25T21:12:39.980Z",

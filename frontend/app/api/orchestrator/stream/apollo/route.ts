@@ -55,6 +55,11 @@ export async function GET(req: NextRequest) {
   // Resolve orchestrator.js relative to repo root (frontend/..)
   const repoRoot = path.resolve(process.cwd(), "..");
   const scriptPath = path.join(repoRoot, "industry-finder", "src", "orchestrator.js");
+  // Local Puppeteer cache + system Chrome fallback to avoid missing browser errors
+  const puppeteerCacheDir = path.join(repoRoot, "industry-finder", ".puppeteer");
+  const defaultChrome = process.platform === "darwin"
+    ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    : (process.platform === "linux" ? "/usr/bin/google-chrome" : "");
 
   let childRef: import("child_process").ChildProcess | null = null;
   const stream = new ReadableStream<Uint8Array>({
@@ -98,11 +103,10 @@ export async function GET(req: NextRequest) {
       ];
 
       const child = spawn("node", args, { cwd: repoRoot, env: { ...process.env,
-        PUPPETEER_EXECUTABLE_PATH: process.env.PUPPETEER_EXECUTABLE_PATH || '',
+        // Ensure Puppeteer can find a browser (prefer env, else local cache, else system Chrome)
+        PUPPETEER_CACHE_DIR: process.env.PUPPETEER_CACHE_DIR || puppeteerCacheDir,
+        PUPPETEER_EXECUTABLE_PATH: process.env.PUPPETEER_EXECUTABLE_PATH || defaultChrome,
         IF_DB_PATH: process.env.IF_DB_PATH || "/tmp/industry-finder.sqlite",
-        ENABLE_UNFLARE: process.env.ENABLE_UNFLARE || 'false',
-        UNFLARE_URL: process.env.UNFLARE_URL || '',
-        UNFLARE_API_KEY: process.env.UNFLARE_API_KEY || '',
       } });
       childRef = child;
 
@@ -127,7 +131,12 @@ export async function GET(req: NextRequest) {
             if (obj && typeof obj.social_profiles === 'string') {
               try { obj.social_profiles = JSON.parse(obj.social_profiles); } catch {}
             }
-            enqueue(sse(obj));
+            // Tag row events explicitly for clients listening to named events
+            if (obj && obj.type === 'row') {
+              enqueue(sse(obj, 'row'));
+            } else {
+              enqueue(sse(obj));
+            }
           } catch {
             enqueue(sse({ type: "log", message: line }));
           }

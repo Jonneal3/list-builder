@@ -453,7 +453,7 @@ async function main() {
                 });
               } catch {}
               const q = `${industry}${evt.address_state ? ' - ' + String(evt.address_state) : ''}`;
-            emit({ ...evt, query: q });
+              try { process.stdout.write(JSON.stringify({ ...evt, query: q }) + '\n'); } catch {}
             appendCsvRow({ ...evt, query: q, source: 'apollo' });
               apolloRowsAdded += 1;
             },

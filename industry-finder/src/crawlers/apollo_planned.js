@@ -142,7 +142,28 @@ async function plannedApolloScrape({
         if (seen.has(k)) continue;
         seen.add(k);
         outRows.push(r);
-        const payload = { type: 'row', source: 'apollo', ...r, apollo_profile_url: r.profileUrl || r._profileUrl || null, method: r.method || 'apollo-planned', query: (keywords || []).join(', ') };
+        const payload = {
+          type: 'row',
+          source: 'apollo',
+          name: r.companyName || r.name || '',
+          website: r.companyUrl || r.website || '',
+          address_city: r.address_city || r.city || '',
+          address_state: r.address_state || r.state || '',
+          apollo_profile_url: r.profileUrl || r._profileUrl || null,
+          phone: r.phone || null,
+          address: r.address || null,
+          employees: r.employeeCount || r.employees || null,
+          industry: r.industry || null,
+          keywords: r.keywords || null,
+          linkedin_url: r.linkedin_url || null,
+          facebook_url: r.facebook_url || null,
+          twitter_url: r.twitter_url || null,
+          revenue: r.revenue || null,
+          email: r.email || null,
+          categories: r.categories || null,
+          method: r.method || 'apollo-planned',
+          query: (keywords || []).join(', '),
+        };
         if (emit) emit(payload);
         if (typeof onRow === 'function') { try { await onRow(payload); } catch {} }
       }
@@ -196,7 +217,28 @@ async function plannedApolloScrape({
       seen.add(k);
       outRows.push(r);
       count += 1;
-      const payload = { type: 'row', source: 'apollo', ...r, apollo_profile_url: r.profileUrl || r._profileUrl || null, method: r.method || 'apollo-planned', query: (keywords || []).join(', ') };
+      const payload = {
+        type: 'row',
+        source: 'apollo',
+        name: r.companyName || r.name || '',
+        website: r.companyUrl || r.website || '',
+        address_city: r.address_city || r.city || '',
+        address_state: r.address_state || r.state || '',
+        apollo_profile_url: r.profileUrl || r._profileUrl || null,
+        phone: r.phone || null,
+        address: r.address || null,
+        employees: r.employeeCount || r.employees || null,
+        industry: r.industry || null,
+        keywords: r.keywords || null,
+        linkedin_url: r.linkedin_url || null,
+        facebook_url: r.facebook_url || null,
+        twitter_url: r.twitter_url || null,
+        revenue: r.revenue || null,
+        email: r.email || null,
+        categories: r.categories || null,
+        method: r.method || 'apollo-planned',
+        query: (keywords || []).join(', '),
+      };
       if (emit) emit(payload);
       if (typeof onRow === 'function') { try { await onRow(payload); } catch {} }
     }
