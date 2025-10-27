@@ -5,8 +5,8 @@ import path from "path";
 export async function POST(request: NextRequest) {
   try {
     // Create a signal file to notify the orchestrator that login is confirmed
-    // The orchestrator runs from the industry-finder directory, so we need to create the file there
-    const signalFile = path.join(process.cwd(), '..', 'industry-finder', 'apollo_login_signal.tmp');
+    // The orchestrator runs from the backend directory, so we need to create the file there
+    const signalFile = path.join(process.cwd(), '..', 'backend', 'apollo_login_signal.tmp');
     fs.writeFileSync(signalFile, 'confirmed');
     console.log('Apollo login confirmed via POST - signal file created');
     return NextResponse.json({ success: true });

@@ -62,6 +62,29 @@ export default function Home() {
   const [apolloPassword, setApolloPassword] = useState<string>("");
   // Cookie input removed: we now prioritize login-based Apollo auth
   const [apolloIndustryTagIdsStr, setApolloIndustryTagIdsStr] = useState<string>("");
+  const [entityType, setEntityType] = useState<'companies' | 'people'>(
+    'companies'
+  );
+  // People mode state
+  const [peopleSource, setPeopleSource] = useState<'apollo' | 'future1' | 'future2'>('apollo');
+  const [peopleCsvHeaders, setPeopleCsvHeaders] = useState<string[]>([]);
+  const [peopleCsvRows, setPeopleCsvRows] = useState<Array<Record<string, string>>>([]);
+  const [peopleCsvError, setPeopleCsvError] = useState<string>("");
+  const [peopleOrgUrlColumn, setPeopleOrgUrlColumn] = useState<string>("");
+  const [peopleMode, setPeopleMode] = useState<'find' | 'enrich'>('find');
+  const [peopleLoading, setPeopleLoading] = useState<boolean>(false);
+  type PersonRow = {
+    orgId: string;
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    jobTitle: string;
+    companyName: string;
+    linkedinUrl: string;
+    location: string;
+  };
+  const [peopleRows, setPeopleRows] = useState<PersonRow[]>([]);
+  const peopleEsRef = useRef<EventSource | null>(null);
 
   // Column resizing state (px widths)
   const [colWidths, setColWidths] = useState<Record<string, number>>({
@@ -909,6 +932,168 @@ export default function Home() {
     a.remove();
   }
 
+  // Simple CSV parsing with quoted field support
+  function parseCsv(text: string): { headers: string[]; records: Array<Record<string, string>> } {
+    const rows: string[][] = [];
+    let field = "";
+    let row: string[] = [];
+    let inQuotes = false;
+    const pushField = () => { row.push(field); field = ""; };
+    const pushRow = () => { rows.push(row); row = []; };
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          const next = text[i + 1];
+          if (next === '"') { field += '"'; i++; } else { inQuotes = false; }
+        } else {
+          field += c;
+        }
+      } else {
+        if (c === '"') { inQuotes = true; }
+        else if (c === ',') { pushField(); }
+        else if (c === '\n') { pushField(); pushRow(); }
+        else if (c === '\r') {
+          const next = text[i + 1];
+          if (next === '\n') { i++; }
+          pushField(); pushRow();
+        } else { field += c; }
+      }
+    }
+    // flush trailing
+    if (field.length > 0 || row.length > 0) { pushField(); pushRow(); }
+    // drop empty rows
+    const compact = rows.filter(r => r.some(cell => String(cell || '').trim() !== ''));
+    if (compact.length === 0) return { headers: [], records: [] };
+    const headerRow = compact[0].map(h => String(h || '').trim());
+    const headers: string[] = headerRow.map((h, idx) => h || `Column ${idx + 1}`);
+    // ensure unique header names
+    const used: Record<string, number> = {};
+    for (let i = 0; i < headers.length; i++) {
+      let h = headers[i];
+      if (used[h] != null) { used[h] += 1; h = `${h}_${used[h]}`; headers[i] = h; }
+      else { used[h] = 0; }
+    }
+    const dataRows = compact.slice(1);
+    const records = dataRows.map(r => {
+      const rec: Record<string, string> = {};
+      for (let i = 0; i < headers.length; i++) rec[headers[i]] = String(r[i] ?? "");
+      return rec;
+    });
+    return { headers, records };
+  }
+
+  function autoSelectOrgUrlColumn(headers: string[], records: Array<Record<string, string>>): string {
+    const lc = (s: string) => s.toLowerCase();
+    const heuristics = [
+      (h: string) => /apollo/.test(lc(h)) && /(org|organization)/.test(lc(h)),
+      (h: string) => /(org|organization).*url/.test(lc(h)),
+      (h: string) => /apollo/.test(lc(h)) && /url/.test(lc(h)),
+    ];
+    for (const fn of heuristics) {
+      const h = headers.find(fn);
+      if (h) return h;
+    }
+    // Fallback: check contents for Apollo org URL pattern
+    const pattern = /app\.apollo\.io.*\/organizations\//i;
+    for (const h of headers) {
+      const hit = records.slice(0, 50).some(r => pattern.test(String(r[h] || '')));
+      if (hit) return h;
+    }
+    return headers[0] || "";
+  }
+
+  async function handlePeopleCsvUpload(file: File) {
+    try {
+      setPeopleCsvError("");
+      const text = await file.text();
+      const { headers, records } = parseCsv(text);
+      if (!headers.length) { setPeopleCsvHeaders([]); setPeopleCsvRows([]); setPeopleOrgUrlColumn(""); setPeopleCsvError("No headers found in CSV"); return; }
+      setPeopleCsvHeaders(headers);
+      setPeopleCsvRows(records);
+      const guess = autoSelectOrgUrlColumn(headers, records);
+      setPeopleOrgUrlColumn(guess);
+    } catch (e: any) {
+      setPeopleCsvError("Failed to read CSV");
+      setPeopleCsvHeaders([]);
+      setPeopleCsvRows([]);
+      setPeopleOrgUrlColumn("");
+    }
+  }
+
+  function extractApolloOrgIdFromAny(u: string): string {
+    try {
+      const abs = u.startsWith('http') ? u : `https://app.apollo.io/${u.replace(/^#\/?/, '')}`;
+      const url = new URL(abs);
+      const idx = url.pathname.indexOf('/organizations/');
+      if (idx !== -1) {
+        const rest = url.pathname.slice(idx + '/organizations/'.length);
+        const id = rest.split(/[/?#]/)[0];
+        return id || '';
+      }
+      const hash = url.hash || '';
+      const m = hash.match(/organizations\/([^\/?#]+)/);
+      return m ? m[1] : '';
+    } catch { return ''; }
+  }
+
+  function runPeopleFind() {
+    if (!peopleCsvHeaders.length || !peopleOrgUrlColumn) return;
+    const idsSet = new Set<string>();
+    for (const r of peopleCsvRows) {
+      const v = String(r[peopleOrgUrlColumn] || '').trim();
+      const id = extractApolloOrgIdFromAny(v);
+      if (id) idsSet.add(id);
+    }
+    const orgIds = Array.from(idsSet);
+    if (!orgIds.length) {
+      setPeopleCsvError('No Apollo organization IDs found in selected column');
+      return;
+    }
+    try {
+      setPeopleLoading(true);
+      setPeopleRows([]);
+      if (peopleEsRef.current) { try { peopleEsRef.current.close(); } catch {} peopleEsRef.current = null; }
+      const params = new URLSearchParams();
+      params.set('orgIds', JSON.stringify(orgIds.slice(0, 200)));
+      params.set('headless', showBrowser ? 'false' : 'true');
+      if (apolloEmail && apolloPassword) {
+        params.set('apolloEmail', apolloEmail);
+        params.set('apolloPassword', apolloPassword);
+      }
+      const es = new EventSource(`/api/orchestrator/stream/apollo-contacts?${params.toString()}`);
+      peopleEsRef.current = es;
+      const handleData = (e: MessageEvent) => {
+        try {
+          const msg = JSON.parse(e.data);
+          if (msg && msg.type === 'person') {
+            setPeopleRows((prev) => prev.concat([{
+              orgId: String(msg.orgId || ''),
+              firstName: String(msg.firstName || ''),
+              lastName: String(msg.lastName || ''),
+              fullName: String(msg.fullName || ''),
+              jobTitle: String(msg.jobTitle || ''),
+              companyName: String(msg.companyName || ''),
+              linkedinUrl: String(msg.linkedinUrl || ''),
+              location: String(msg.location || ''),
+            }]));
+          }
+        } catch {}
+      };
+      es.onmessage = handleData;
+      es.addEventListener('person', handleData as any);
+      es.addEventListener('done', () => {
+        setPeopleLoading(false);
+        try { es.close(); } catch {}
+      });
+      es.onerror = () => {
+        setPeopleLoading(false);
+      };
+    } catch {
+      setPeopleLoading(false);
+    }
+  }
+
   function clearRows() {
     setRows([]);
     seenKeysRef.current.clear();
@@ -946,74 +1131,144 @@ export default function Home() {
       )}
       
       <div className="sticky top-0 z-20 border-b bg-white/80 backdrop-blur">
-        <div className="px-2 py-1">
-          <div className="flex items-center gap-2">
+        <div className="px-3 py-2">
+          <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-md bg-gradient-to-br from-blue-500 to-blue-700 shadow-sm" />
-              <h1 className="text-xs font-semibold tracking-tight">AI List Builder</h1>
+              <div className="h-7 w-7 rounded-md bg-gradient-to-br from-blue-500 to-blue-700 shadow-sm" />
+              <h1 className="text-sm font-semibold tracking-tight">AI List Builder</h1>
             </div>
-            <div className="flex-1 flex items-center gap-2">
-              <input
-                className="border rounded-full px-3 h-8 text-xs w-full max-w-[1200px] bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-                placeholder="Company keywords (comma-separated, e.g., painting services, painting company)"
-                value={industry}
-                onChange={(e) => setIndustry(e.target.value)}
-              />
-              {source === 'apollo' && (
-                <div className="flex items-center gap-2">
-                  <label className="inline-flex items-center gap-1 text-xs text-gray-700">
-                    <input type="checkbox" checked={showBrowser} onChange={(e) => setShowBrowser(e.target.checked)} />
-                    Show browser
-                  </label>
-                  <input
-                    className="border rounded-full px-3 h-8 text-xs w-28 bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-                    placeholder="Industry tag IDs (comma-separated)"
-                    value={apolloIndustryTagIdsStr}
-                    onChange={(e) => setApolloIndustryTagIdsStr(e.target.value)}
-                  />
-                  <input
-                    className="border rounded-full px-3 h-8 text-xs w-44 bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-                    placeholder="Apollo email (optional)"
-                    value={apolloEmail}
-                    onChange={(e) => setApolloEmail(e.target.value)}
-                  />
-                  <input
-                    className="border rounded-full px-3 h-8 text-xs w-40 bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-                    placeholder="Password"
-                    type="password"
-                    value={apolloPassword}
-                    onChange={(e) => setApolloPassword(e.target.value)}
-                  />
+            <div className="flex-1 flex items-center gap-3">
+              <div className="inline-flex items-center">
+                <div className="inline-flex bg-white border rounded-full shadow-sm overflow-hidden">
+                  <button
+                    className={(entityType === 'companies' ? 'bg-blue-600 text-white ' : 'text-gray-700 hover:bg-gray-50 ') + 'px-3 h-10 text-sm'}
+                    onClick={() => setEntityType('companies')}
+                    aria-pressed={entityType === 'companies'}
+                    type="button"
+                  >
+                    Companies
+                  </button>
+                  <button
+                    className={(entityType === 'people' ? 'bg-blue-600 text-white ' : 'text-gray-700 hover:bg-gray-50 ') + 'px-3 h-10 text-sm'}
+                    onClick={() => setEntityType('people')}
+                    aria-pressed={entityType === 'people'}
+                    type="button"
+                  >
+                    People
+                  </button>
                 </div>
+              </div>
+              {entityType === 'companies' ? (
+                <>
+                  <input
+                    className="border rounded-full px-3 h-10 text-sm w-full max-w-[1200px] bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                    placeholder="Company keywords (comma-separated, e.g., painting services, painting company)"
+                    value={industry}
+                    onChange={(e) => setIndustry(e.target.value)}
+                  />
+                  {source === 'apollo' && (
+                    <div className="flex items-center gap-2">
+                      <label className="inline-flex items-center gap-1 text-xs text-gray-700">
+                        <input type="checkbox" checked={showBrowser} onChange={(e) => setShowBrowser(e.target.checked)} />
+                        Show browser
+                      </label>
+                      <input
+                        className="border rounded-full px-3 h-10 text-sm w-28 bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                        placeholder="Industry tag IDs (comma-separated)"
+                        value={apolloIndustryTagIdsStr}
+                        onChange={(e) => setApolloIndustryTagIdsStr(e.target.value)}
+                      />
+                      <input
+                        className="border rounded-full px-3 h-10 text-sm w-44 bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                        placeholder="Apollo email (optional)"
+                        value={apolloEmail}
+                        onChange={(e) => setApolloEmail(e.target.value)}
+                      />
+                      <input
+                        className="border rounded-full px-3 h-10 text-sm w-40 bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                        placeholder="Password"
+                        type="password"
+                        value={apolloPassword}
+                        onChange={(e) => setApolloPassword(e.target.value)}
+                      />
+                    </div>
+                  )}
+                  <select
+                    className="border rounded-full px-2 h-10 text-sm bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                    value={source}
+                    onChange={(e) => setSource(e.target.value as any)}
+                    aria-label="Source"
+                  >
+                    <option value="yellowpages">Yellow Pages</option>
+                    <option value="googlemaps">Google Maps</option>
+                    <option value="apollo">Apollo</option>
+                  </select>
+                  <button className="h-10 px-4 text-sm rounded-full text-white bg-gradient-to-br from-blue-600 to-blue-700 shadow hover:from-blue-700 hover:to-blue-800 disabled:opacity-60" disabled={isLoading || industry.trim().length === 0} onClick={() => runStream(industry.trim()) } title={industry.trim().length === 0 ? 'Enter an industry to start' : undefined}>
+                    {isLoading ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0"></path></svg>
+                        Working…
+                      </span>
+                    ) : (
+                      "Search"
+                    )}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <select
+                    className="border rounded-full px-2 h-10 text-sm bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                    value={peopleSource}
+                    onChange={(e) => setPeopleSource(e.target.value as any)}
+                    aria-label="People source"
+                  >
+                    <option value="apollo">Apollo</option>
+                  </select>
+                  <div className="inline-flex bg-white border rounded-full shadow-sm overflow-hidden">
+                    <button
+                      className={(peopleMode === 'find' ? 'bg-green-600 text-white ' : 'text-gray-700 hover:bg-gray-50 ') + 'px-3 h-10 text-sm'}
+                      onClick={() => setPeopleMode('find')}
+                      aria-pressed={peopleMode === 'find'}
+                      type="button"
+                    >
+                      FIND
+                    </button>
+                    <button
+                      className={(peopleMode === 'enrich' ? 'bg-blue-600 text-white ' : 'text-gray-700 hover:bg-gray-50 ') + 'px-3 h-10 text-sm'}
+                      onClick={() => setPeopleMode('enrich')}
+                      aria-pressed={peopleMode === 'enrich'}
+                      type="button"
+                    >
+                      ENRICH
+                    </button>
+                  </div>
+                  <button 
+                    className="h-10 px-4 text-sm rounded-full text-white bg-gradient-to-br from-blue-600 to-blue-700 shadow hover:from-blue-700 hover:to-blue-800 disabled:opacity-60" 
+                    disabled={peopleLoading || peopleCsvRows.length === 0 || !peopleOrgUrlColumn}
+                    onClick={() => { if (peopleMode === 'find') runPeopleFind(); }}
+                    title={peopleCsvRows.length === 0 ? 'Upload a CSV first' : (!peopleOrgUrlColumn ? 'Select org URL column' : undefined)}
+                  >
+                    {peopleLoading ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0"></path></svg>
+                        Working…
+                      </span>
+                    ) : (
+                      peopleMode === 'find' ? "Find Contacts" : "Enrich Contacts"
+                    )}
+                  </button>
+                </>
               )}
-              <select
-                className="border rounded-full px-2 h-8 text-xs bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
-                value={source}
-                onChange={(e) => setSource(e.target.value as any)}
-                aria-label="Source"
-              >
-                <option value="yellowpages">Yellow Pages</option>
-                <option value="googlemaps">Google Maps</option>
-                <option value="apollo">Apollo</option>
-              </select>
-              <button className="h-8 px-3 text-[11px] rounded-full text-white bg-gradient-to-br from-blue-600 to-blue-700 shadow hover:from-blue-700 hover:to-blue-800 disabled:opacity-60" disabled={isLoading || industry.trim().length === 0} onClick={() => runStream(industry.trim()) } title={industry.trim().length === 0 ? 'Enter an industry to start' : undefined}>
-                {isLoading ? (
-                  <span className="inline-flex items-center gap-1.5">
-                    <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0"></path></svg>
-                    Working…
-                  </span>
-                ) : (
-                  "Search"
-                )}
-              </button>
             </div>
-            {currentTerm && (
+            {currentTerm && entityType === 'companies' && (
               <span className="hidden md:inline text-[11px] text-blue-700 bg-blue-50 border border-blue-100 rounded-full px-2 py-0.5">Now: <span className="font-medium">{currentTerm}</span></span>
             )}
-            {currentCity && (
+            {currentCity && entityType === 'companies' && (
               <span className="hidden md:inline text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">City: <span className="font-medium">{currentCity}</span></span>
             )}
-            <span className="text-[11px] text-gray-700 bg-gray-100 rounded-full px-2 py-0.5">Counter: <span className="font-medium">{rows.length} / {apolloGlobalTotal == null ? '—' : apolloGlobalTotal}</span></span>
+            {entityType === 'companies' && (
+              <span className="text-[11px] text-gray-700 bg-gray-100 rounded-full px-2 py-0.5">Counter: <span className="font-medium">{rows.length} / {apolloGlobalTotal == null ? '—' : apolloGlobalTotal}</span></span>
+            )}
             <button
               aria-label={isPaused ? "Resume" : "Pause"}
               title={isPaused ? "Resume" : "Pause"}
@@ -1056,7 +1311,7 @@ export default function Home() {
               >
                 Clear
               </button>
-              {status && (
+              {status && entityType === 'companies' && (
                 <p className="text-[11px] text-gray-700 inline-flex items-center gap-1.5">
                   <svg className="animate-spin h-3 w-3 text-blue-600" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0"></path></svg>
                   {status}
@@ -1068,7 +1323,7 @@ export default function Home() {
         </div>
       </div>
 
-      {showLogs && (
+      {showLogs && entityType === 'companies' && (
         <section className="w-full bg-white rounded-md border p-2 shadow-sm mb-2 px-2">
           <div className="flex items-center justify-between mb-1">
             <h3 className="font-medium text-sm">Activity</h3>
@@ -1100,10 +1355,11 @@ export default function Home() {
         </section>
       )}
 
-      <section className="w-full mt-1 bg-white p-0">
-        <div className="max-h-[calc(100vh-64px)] overflow-auto" ref={listRef}>
-          <div className="overflow-x-auto">
-            <table className="min-w-max border-collapse text-[11px] leading-5">
+      {entityType === 'companies' ? (
+        <section className="w-full mt-1 bg-white p-0">
+          <div className="max-h-[calc(100vh-96px)] overflow-auto" ref={listRef}>
+            <div className="overflow-x-auto">
+              <table className="min-w-max border-collapse text-[11px] leading-5">
               <colgroup>
                 <col style={{ width: colWidths.idx }} />
                 <col style={{ width: colWidths.name }} />
@@ -1215,10 +1471,96 @@ export default function Home() {
                   </tr>
                 )}
               </tbody>
-            </table>
+              </table>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section className="w-full mt-2">
+          <div className="p-6 border rounded-md bg-white shadow-sm">
+            {peopleMode === 'find' ? (
+              <div className="flex items-start gap-4 flex-wrap">
+                <div className="flex-1 min-w-[260px]">
+                  <h2 className="text-sm font-semibold mb-2">People • {peopleSource === 'apollo' ? 'Apollo' : peopleSource} • FIND</h2>
+                  <div className="space-y-2">
+                    <label className="block text-xs text-gray-700">Upload CSV</label>
+                    <input
+                      type="file"
+                      accept=".csv,text/csv"
+                      onChange={(e) => { const f = e.target.files && e.target.files[0]; if (f) handlePeopleCsvUpload(f); }}
+                      className="block w-full text-xs file:mr-3 file:py-2 file:px-3 file:rounded-full file:border file:bg-white file:hover:bg-gray-50 file:text-sm file:border-gray-300"
+                    />
+                    {peopleCsvError && <p className="text-xs text-rose-600">{peopleCsvError}</p>}
+                  </div>
+                  {peopleCsvHeaders.length > 0 && (
+                    <div className="mt-3 space-y-2">
+                      <label className="block text-xs text-gray-700">Apollo organization URL column</label>
+                      <select
+                        className="border rounded-full px-2 h-9 text-sm bg-white shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                        value={peopleOrgUrlColumn}
+                        onChange={(e) => setPeopleOrgUrlColumn(e.target.value)}
+                      >
+                        {peopleCsvHeaders.map(h => (
+                          <option key={h} value={h}>{h}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
+                <div className="flex-[2] min-w-[320px]">
+                  <label className="block text-xs text-gray-700 mb-2">Preview ({peopleCsvRows.length} rows)</label>
+                <div className="border rounded-md overflow-auto max-h-72">
+                    {peopleCsvHeaders.length === 0 ? (
+                    <div className="p-3 text-xs text-gray-500">No file uploaded.</div>
+                    ) : (
+                    <div className="grid grid-cols-1 gap-3 p-2">
+                      <div>
+                        <label className="block text-xs text-gray-700 mb-1">Org IDs detected</label>
+                        <div className="text-[11px] text-gray-700 bg-slate-50 border rounded p-2 max-h-28 overflow-auto">
+                          {Array.from(new Set(peopleCsvRows.map(r => extractApolloOrgIdFromAny(String(r[peopleOrgUrlColumn] || ''))).filter(Boolean))).slice(0, 50).join(', ')}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs text-gray-700 mb-1">People (live results)</label>
+                        <table className="min-w-full text-[11px]">
+                          <thead className="bg-slate-50 sticky top-0">
+                            <tr>
+                              {['Name','Title','Company','LinkedIn','Location'].map(h => (
+                                <th key={h} className="text-left px-2 py-1 border-b text-slate-600">{h}</th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {peopleRows.slice(-300).map((p, i) => (
+                              <tr key={i} className={i % 2 ? 'bg-white' : 'bg-slate-50'}>
+                                <td className="px-2 py-1 border-b align-top">{p.fullName || `${p.firstName} ${p.lastName}`}</td>
+                                <td className="px-2 py-1 border-b align-top">{p.jobTitle}</td>
+                                <td className="px-2 py-1 border-b align-top">{p.companyName}</td>
+                                <td className="px-2 py-1 border-b align-top break-words">{p.linkedinUrl ? <a className="text-blue-700 hover:underline" href={p.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a> : ''}</td>
+                                <td className="px-2 py-1 border-b align-top">{p.location}</td>
+                              </tr>
+                            ))}
+                            {peopleRows.length === 0 && (
+                              <tr><td className="px-2 py-2 text-xs text-gray-500" colSpan={5}>No contacts yet. Click Find Contacts.</td></tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-8 text-center">
+                <h2 className="text-sm font-semibold mb-2">People • {peopleSource === 'apollo' ? 'Apollo' : peopleSource} • ENRICH</h2>
+                <p className="text-sm text-gray-600 mb-4">Enrich mode coming soon</p>
+                <p className="text-xs text-gray-500">This will allow you to upload a CSV of contacts and enrich them with additional data.</p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
     </main>
   );
 }

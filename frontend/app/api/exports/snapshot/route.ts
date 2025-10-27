@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 export async function POST(_req: NextRequest) {
   const repoRoot = path.resolve(process.cwd(), "..");
-  const scriptPath = path.join(repoRoot, "industry-finder", "src", "export_snapshot.js");
+  const scriptPath = path.join(repoRoot, "backend", "src", "export_snapshot.js");
   return new Promise<Response>((resolve) => {
     const child = spawn("node", [scriptPath], { cwd: repoRoot, env: { ...process.env } });
     let out = "";

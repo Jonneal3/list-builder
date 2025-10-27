@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
 
   // Resolve orchestrator.js relative to repo root (frontend/..)
   const repoRoot = path.resolve(process.cwd(), "..");
-  const scriptPath = path.join(repoRoot, "industry-finder", "src", "orchestrator.js");
+  const scriptPath = path.join(repoRoot, "backend", "src", "orchestrator.js");
 
   let childRef: import("child_process").ChildProcess | null = null;
   const stream = new ReadableStream<Uint8Array>({

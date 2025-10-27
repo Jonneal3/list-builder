@@ -54,9 +54,9 @@ export async function GET(req: NextRequest) {
 
   // Resolve orchestrator.js relative to repo root (frontend/..)
   const repoRoot = path.resolve(process.cwd(), "..");
-  const scriptPath = path.join(repoRoot, "industry-finder", "src", "orchestrator.js");
+  const scriptPath = path.join(repoRoot, "backend", "src", "orchestrator.js");
   // Local Puppeteer cache + system Chrome fallback to avoid missing browser errors
-  const puppeteerCacheDir = path.join(repoRoot, "industry-finder", ".puppeteer");
+  const puppeteerCacheDir = path.join(repoRoot, "backend", ".puppeteer");
   const defaultChrome = process.platform === "darwin"
     ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     : (process.platform === "linux" ? "/usr/bin/google-chrome" : "");

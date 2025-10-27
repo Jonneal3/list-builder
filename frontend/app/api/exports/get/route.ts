@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   }
   const isVercel = Boolean(process.env.VERCEL);
   const repoRoot = path.resolve(process.cwd(), "..");
-  const exportsDir = isVercel ? "/tmp/exports" : path.join(repoRoot, "industry-finder", "exports");
+  const exportsDir = isVercel ? "/tmp/exports" : path.join(repoRoot, "backend", "exports");
   const full = path.join(exportsDir, name);
   try {
     const st = fs.statSync(full);

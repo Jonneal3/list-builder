@@ -8,9 +8,9 @@ export const revalidate = 0;
 
 export async function GET(_req: NextRequest) {
   try {
-    const isVercel = Boolean(process.env.VERCEL);
-    const repoRoot = path.resolve(process.cwd(), "..");
-    const exportsDir = isVercel ? "/tmp/exports" : path.join(repoRoot, "industry-finder", "exports");
+      const isVercel = Boolean(process.env.VERCEL);
+      const repoRoot = path.resolve(process.cwd(), "..");
+      const exportsDir = isVercel ? "/tmp/exports" : path.join(repoRoot, "backend", "exports");
     // Read jobs if available
     let jobs: any[] = [];
     try {
