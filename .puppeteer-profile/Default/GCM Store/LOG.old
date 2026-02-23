@@ -1,2 +1,3 @@
-2025/10/27-16:13:05.128 1dd06bd Creating DB /Users/jon/list-builder/.puppeteer-profile/Default/GCM Store since it was missing.
-2025/10/27-16:13:05.133 1dd06bd Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/GCM Store/MANIFEST-000001
+2025/10/28-23:12:06.740 1edff01 Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/GCM Store/MANIFEST-000001
+2025/10/28-23:12:06.747 1edff01 Recovering log #3
+2025/10/28-23:12:06.753 1edff01 Reusing old log /Users/jon/list-builder/.puppeteer-profile/Default/GCM Store/000003.log 

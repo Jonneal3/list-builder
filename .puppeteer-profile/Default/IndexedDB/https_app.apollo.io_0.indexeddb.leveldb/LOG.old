@@ -1,0 +1,12 @@
+2025/10/28-23:18:05.826 1ee23c8 Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/IndexedDB/https_app.apollo.io_0.indexeddb.leveldb/MANIFEST-000001
+2025/10/28-23:18:05.826 1ee23c8 Recovering log #20
+2025/10/28-23:18:05.847 1ee23c8 Reusing old log /Users/jon/list-builder/.puppeteer-profile/Default/IndexedDB/https_app.apollo.io_0.indexeddb.leveldb/000020.log 
+2025/10/28-23:24:25.286 1ee23c4 Level-0 table #25: started
+2025/10/28-23:24:25.302 1ee23c4 Level-0 table #25: 1134078 bytes OK
+2025/10/28-23:24:25.306 1ee23c4 Delete type=0 #20
+2025/10/28-23:28:15.557 1ee23c7 Compacting 1@1 + 1@2 files
+2025/10/28-23:28:15.568 1ee23c7 Generated table #26@1: 67 keys, 5214 bytes
+2025/10/28-23:28:15.568 1ee23c7 Compacted 1@1 + 1@2 files => 5214 bytes
+2025/10/28-23:28:15.570 1ee23c7 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/10/28-23:28:15.571 1ee23c7 Delete type=2 #22
+2025/10/28-23:28:15.572 1ee23c7 Delete type=2 #25

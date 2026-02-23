@@ -1,3 +1,3 @@
-2025/10/27-16:13:31.956 1dd0576 Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/Sync Data/LevelDB/MANIFEST-000001
-2025/10/27-16:13:31.957 1dd0576 Recovering log #3
-2025/10/27-16:13:31.957 1dd0576 Reusing old log /Users/jon/list-builder/.puppeteer-profile/Default/Sync Data/LevelDB/000003.log 
+2025/10/28-23:16:18.623 1ee23c7 Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/Sync Data/LevelDB/MANIFEST-000001
+2025/10/28-23:16:18.631 1ee23c7 Recovering log #3
+2025/10/28-23:16:18.631 1ee23c7 Reusing old log /Users/jon/list-builder/.puppeteer-profile/Default/Sync Data/LevelDB/000003.log 

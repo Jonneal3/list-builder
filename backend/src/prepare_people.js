@@ -74,7 +74,22 @@ function extractApolloOrgId(u) {
     const repoRoot = path.resolve(process.cwd(), '..');
     const dir = path.join(repoRoot, 'backend', 'data', 'people_tokens');
     try { fs.mkdirSync(dir, { recursive: true }); } catch {}
-    const out = { orgIds: ids, orgCol: col };
+    // Store original row data mapped by org ID for preserving all original information
+    const orgIdToOriginalRow = {};
+    for (const r of records) {
+      const v = String(r[col] || '').trim();
+      const id = extractApolloOrgId(v);
+      if (id && !orgIdToOriginalRow[id]) {
+        orgIdToOriginalRow[id] = r; // Store the entire original row
+      }
+    }
+    
+    const out = { 
+      orgIds: ids, 
+      orgCol: col, 
+      originalRows: orgIdToOriginalRow,
+      headers: headers
+    };
     fs.writeFileSync(path.join(dir, `${token}.json`), JSON.stringify(out));
     console.log(JSON.stringify({ token, orgIds: ids.length }));
   });

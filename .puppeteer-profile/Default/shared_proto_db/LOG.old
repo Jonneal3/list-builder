@@ -1,2 +1,3 @@
-2025/10/27-16:13:02.819 1dd0577 Creating DB /Users/jon/list-builder/.puppeteer-profile/Default/shared_proto_db since it was missing.
-2025/10/27-16:13:02.822 1dd0577 Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/shared_proto_db/MANIFEST-000001
+2025/10/28-23:11:58.936 1edff00 Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/shared_proto_db/MANIFEST-000001
+2025/10/28-23:11:58.936 1edff00 Recovering log #3
+2025/10/28-23:11:58.936 1edff00 Reusing old log /Users/jon/list-builder/.puppeteer-profile/Default/shared_proto_db/000003.log 

@@ -873,6 +873,8 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
         let location = '';
         let addressCity = '';
         let addressState = '';
+        let addressStreet = '';
+        let addressPostalCode = '';
         let employeeCount = '';
         let industry = '';
         let keywords = '';
@@ -936,6 +938,25 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
           }
         }
         
+        // Extract street address (look for patterns like "123 Main St" or "456 Oak Avenue")
+        for (const cell of cells) {
+          const text = cell.textContent?.trim() || '';
+          // Look for patterns like: "123 Main St", "456 Oak Avenue", "789 Business Blvd"
+          if (text && /^\d+\s+[A-Za-z\s]+(?:St|Street|Ave|Avenue|Blvd|Boulevard|Rd|Road|Dr|Drive|Ln|Lane|Way|Ct|Court|Pl|Place)$/i.test(text) && text.length < 100) {
+            addressStreet = text;
+            break;
+          }
+        }
+        
+        // Extract postal code (look for US ZIP codes: 12345 or 12345-6789)
+        for (const cell of cells) {
+          const text = cell.textContent?.trim() || '';
+          if (text && /^\d{5}(?:-\d{4})?$/.test(text)) {
+            addressPostalCode = text;
+            break;
+          }
+        }
+        
         // Extract employee count (look for numbers)
         for (const cell of cells) {
           const text = cell.textContent?.trim() || '';
@@ -979,6 +1000,8 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
             location, 
             address_city: addressCity,
             address_state: addressState,
+            address_street: addressStreet,
+            address_postal_code: addressPostalCode,
             employeeCount, 
             phone: '', // Not available in list view
             industry, 
@@ -1071,6 +1094,8 @@ async function scrapeApolloWithSession(page, industry, city, opts = { pageTimeou
         address: null,
         address_city: it.address_city || null,
         address_state: it.address_state || null,
+        address_street: it.address_street || null,
+        address_postal_code: it.address_postal_code || null,
         employeeCount: it.employeeCount || null,
         industry: it.industry || null,
         keywords: it.keywords || null,

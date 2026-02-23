@@ -1,3 +1,9 @@
-2025/10/27-16:13:31.959 1dd05b2 Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/Local Storage/leveldb/MANIFEST-000001
-2025/10/27-16:13:31.961 1dd05b2 Recovering log #3
-2025/10/27-16:13:31.961 1dd05b2 Reusing old log /Users/jon/list-builder/.puppeteer-profile/Default/Local Storage/leveldb/000003.log 
+2025/10/28-23:16:18.661 1ee240e Reusing MANIFEST /Users/jon/list-builder/.puppeteer-profile/Default/Local Storage/leveldb/MANIFEST-000001
+2025/10/28-23:16:18.663 1ee240e Recovering log #19
+2025/10/28-23:16:18.664 1ee240e Reusing old log /Users/jon/list-builder/.puppeteer-profile/Default/Local Storage/leveldb/000019.log 
+2025/10/28-23:18:03.517 1ee240e Level-0 table #24: started
+2025/10/28-23:18:03.548 1ee240e Level-0 table #24: 18906 bytes OK
+2025/10/28-23:18:03.560 1ee240e Delete type=0 #19
+2025/10/28-23:37:24.137 1ee2411 Level-0 table #26: started
+2025/10/28-23:37:24.146 1ee2411 Level-0 table #26: 17823 bytes OK
+2025/10/28-23:37:24.152 1ee2411 Delete type=0 #23

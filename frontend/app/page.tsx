@@ -81,6 +81,7 @@ export default function Home() {
   const [peopleShowLogs, setPeopleShowLogs] = useState<boolean>(true);
   const [peopleLogsExpanded, setPeopleLogsExpanded] = useState<boolean>(false);
   const [peopleLogs, setPeopleLogs] = useState<Array<{ ts: number; level: string; text: string }>>([]);
+  const peopleListRef = useRef<HTMLDivElement | null>(null);
   type PeopleCombinedRow = {
     orgId: string;
     source: Record<string, string>;
@@ -148,6 +149,12 @@ export default function Home() {
       document.removeEventListener('mouseup', onUp);
     };
   }, [resizingRef.current]);
+  // Auto-scroll People live results to bottom on new rows
+  useEffect(() => {
+    if (peopleListRef.current) {
+      peopleListRef.current.scrollTop = peopleListRef.current.scrollHeight;
+    }
+  }, [peopleCombinedRows.length]);
   // Auto-scroll to bottom on new rows
   useEffect(() => {
     if (listRef.current) {
@@ -1118,6 +1125,18 @@ export default function Home() {
                 location: String(msg.location || ''),
               }));
               setPeopleCombinedRows((prev) => prev.concat(rows));
+            } else {
+              const row: PeopleCombinedRow = {
+                orgId,
+                source: {},
+                fullName: String(msg.fullName || `${msg.firstName || ''} ${msg.lastName || ''}`).trim(),
+                jobTitle: String(msg.jobTitle || ''),
+                companyName: String(msg.companyName || ''),
+                linkedinUrl: String(msg.linkedinUrl || ''),
+                personUrl: String(msg.personUrl || ''),
+                location: String(msg.location || ''),
+              };
+              setPeopleCombinedRows((prev) => prev.concat([row]));
             }
           } else if (msg && (msg.type === 'status' || msg.type === 'stderr' || msg.type === 'error' || msg.type === 'log' || msg.type === 'debug')) {
             const ts = Date.now();
@@ -1163,6 +1182,18 @@ export default function Home() {
               location: String(msg.location || ''),
             }));
             setPeopleCombinedRows((prev) => prev.concat(rows));
+          } else {
+            const row: PeopleCombinedRow = {
+              orgId,
+              source: {},
+              fullName: String(msg.fullName || `${msg.firstName || ''} ${msg.lastName || ''}`).trim(),
+              jobTitle: String(msg.jobTitle || ''),
+              companyName: String(msg.companyName || ''),
+              linkedinUrl: String(msg.linkedinUrl || ''),
+              personUrl: String(msg.personUrl || ''),
+              location: String(msg.location || ''),
+            };
+            setPeopleCombinedRows((prev) => prev.concat([row]));
           }
         } else if (msg && (msg.type === 'status' || msg.type === 'stderr' || msg.type === 'error' || msg.type === 'log' || msg.type === 'debug')) {
           const ts = Date.now();
@@ -1532,6 +1563,17 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-500">{peopleLogs.length} logs</span>
               <button className="text-xs text-blue-600" onClick={() => setPeopleLogs([])}>Clear</button>
+              <button
+                className="text-xs text-blue-600"
+                onClick={() => {
+                  const text = peopleLogs
+                    .slice()
+                    .reverse()
+                    .map(l => `[${new Date(l.ts).toLocaleTimeString()}] ${l.level.toUpperCase()} ${l.text}`)
+                    .join('\n');
+                  try { navigator.clipboard.writeText(text); setPeopleLogs(prev => [{ ts: Date.now(), level: 'info', text: 'Logs copied to clipboard' }, ...prev].slice(0, 500)); } catch { setPeopleLogs(prev => [{ ts: Date.now(), level: 'error', text: 'Copy failed' }, ...prev].slice(0, 500)); }
+                }}
+              >Copy</button>
               <button className="text-xs text-blue-600" onClick={() => setPeopleLogsExpanded(v => !v)}>{peopleLogsExpanded ? 'Shrink' : 'Expand'}</button>
             </div>
           </div>
@@ -1716,7 +1758,7 @@ export default function Home() {
                 </div>
                 <div className="mt-3 w-full">
                   <label className="block text-xs text-gray-700 mb-1">People (live results)</label>
-                  <div className="border rounded-md overflow-auto max-h-72">
+                  <div ref={peopleListRef} className="border rounded-md overflow-auto max-h-[calc(100vh-260px)]">
                     <table className="min-w-full text-[11px]">
                       <thead className="bg-slate-50 sticky top-0">
                         <tr>
@@ -1726,7 +1768,7 @@ export default function Home() {
                         </tr>
                       </thead>
                       <tbody>
-                        {peopleCombinedRows.slice(-300).map((p, i) => (
+                        {peopleCombinedRows.map((p, i) => (
                           <tr key={i} className={i % 2 ? 'bg-white' : 'bg-slate-50'}>
                             <td className="px-2 py-1 border-b align-top">{p.source['Company Name'] || p.companyName}</td>
                             <td className="px-2 py-1 border-b align-top break-words">{p.source['Website'] ? <a className="text-blue-700 hover:underline" href={p.source['Website']} target="_blank" rel="noreferrer">{p.source['Website']}</a> : ''}</td>
